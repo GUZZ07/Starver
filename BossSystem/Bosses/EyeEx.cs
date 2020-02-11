@@ -195,7 +195,7 @@ namespace Starvers.BossSystem.Bosses
 					{
 						if (0 <= Target && Target < Starver.Players.Length && (TargetPlayer?.Active ?? false))
 						{
-							idx = Proj(vector + FromPolar(PI / 3 * i, 16 * 20), Vector.Zero, ProjectileID.Explosives, 1000);
+							idx = Proj(vector + FromPolar(PI / 3 * i, 16 * 20), Vector.Zero, ProjectileID.Explosives, 100);
 							Main.projectile[idx].aiStyle = -1;
 							Main.projectile[idx].owner = Target;
 						}
@@ -252,12 +252,14 @@ namespace Starvers.BossSystem.Bosses
 			if (GazingState == 0 && Lifes <= LifesMax / 2)
 			{
 				Mode = BossMode.Gazing;
+				TargetPlayer.SendMessage("Gazing you...", 255,0,255);
 				GazingState |= 0b00000001;
 				return;
 			}
 			else if (GazingState == 0b00000001 && Lifes <= LifesMax / 4)
 			{
 				Mode = BossMode.Gazing;
+				TargetPlayer.SendMessage("Gazing you...", 255,0,188);
 				GazingState |= 0b00000011;
 				return;
 			}
@@ -279,6 +281,7 @@ namespace Starvers.BossSystem.Bosses
 					ModesLoopCount++;
 					if (ModesLoopCount % 3 == 0 && Lifes <= LifesMax / 2)
 					{
+						TargetPlayer.SendMessage("Gazing you...", 255,0,200);
 						Mode = BossMode.Gazing;
 					}
 					else

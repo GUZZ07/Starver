@@ -532,6 +532,13 @@ namespace Starvers.TaskSystem.Branches
 									}
 								}
 							}
+							else
+							{
+								if (args.NPC.life > 200 && !Main.hardMode)
+								{
+									args.NPC.life = 200;
+								}
+							}
 							break;
 						}
 					case 4:
