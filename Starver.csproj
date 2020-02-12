@@ -117,6 +117,8 @@
     <Compile Include="AuraSystem\Skills\NatureGuard.cs" />
     <Compile Include="AuraSystem\Skills\NatureRage.cs" />
     <Compile Include="AuraSystem\Skills\NatureStorm.cs" />
+    <Compile Include="AuraSystem\Skills\NightMana.cs" />
+    <Compile Include="AuraSystem\Skills\RealmOfDefense.cs" />
     <Compile Include="AuraSystem\Skills\StarEruption.cs" />
     <Compile Include="AuraSystem\Skills\TheWorld.cs" />
     <Compile Include="AuraSystem\Skills\UltimateSlash.cs" />

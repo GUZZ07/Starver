@@ -309,7 +309,7 @@ namespace Starvers.TaskSystem
 						var Normal = new TaskItem[]
 						{
 							(ItemID.HellstoneBar, 70),
-							(ItemID.LavaBatBanner, 1)
+							(ItemID.HellbatBanner, 1)
 						};
 						var Hard = new TaskItem[]
 						{
@@ -320,7 +320,7 @@ namespace Starvers.TaskSystem
 						var Hell = new TaskItem[]
 						{
 							(ItemID.Hellstone, 999),
-							(ItemID.LavaBatBanner, 5),
+							(ItemID.HellbatBanner, 5),
 							(ItemID.LavaSlimeBanner, 5),
 							(ItemID.FireblossomSeeds, 5)
 						};

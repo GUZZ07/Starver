@@ -36,7 +36,7 @@ namespace Starvers.BossSystem.Bosses
 			TaskNeed = 26;
 			Name = "dark膜法师";
 			LifeperPlayerType = ByLifes;
-			RawType = Starver.IsPE ? NPCID.MartianProbe : NPCID.DD2DarkMageT3;
+			RawType = Starver.IsPE ? NPCID.RuneWizard : NPCID.DD2DarkMageT3;
 			DefaultLifes = 60;
 			DamagedIndex = 0.0004f;
 			DefaultLife = 32500;
@@ -135,8 +135,18 @@ namespace Starvers.BossSystem.Bosses
 		#endregion
 		#region AIs
 		#region DarkMageSigil
-		private unsafe void DarkMageSigil()
+		private void DarkMageSigil()
 		{
+			if (Starver.IsPE)
+			{
+				Vel = FromPolar(StarverAI[0], 170);
+				vector = Vel;
+				Vel.Length = 4;
+				Proj(TargetPlayer.Center + vector, -Vel, ProjectileID.CultistRitual, 129);
+				rtime++;
+				StarverAI[0] += PI / 18;
+				return;
+			}
 			Vel = FromPolar(StarverAI[0], 170);
 			vector = Vel;
 			Vel.Length = 4;
@@ -150,7 +160,8 @@ namespace Starvers.BossSystem.Bosses
 		{
 			Vel = (Vector)(TargetPlayer.Center - Center);
 			Vel.Length = 15;
-			ProjSector(Center, Vel.Length, 0, Vel.Angle, Math.PI / 5, 127, ProjectileID.DD2DrakinShot, 5);
+			int shot = Starver.IsPE ? ProjectileID.RuneBlast : ProjectileID.DD2DrakinShot;
+			ProjSector(Center, Vel.Length, 0, Vel.Angle, Math.PI / 5, 127, shot, 5);
 			rtime++;
 		}
 		#endregion
@@ -160,8 +171,9 @@ namespace Starvers.BossSystem.Bosses
 			Vel = (Vector)(TargetPlayer.Center - Center);
 			Vel.Length = 20;
 			vector =Vel.Vertical();
-			vector.Length = 16 * 20;
-			ProjLine(Center + vector, Center - vector, Vel, 18, 127, ProjectileID.DD2DarkMageBolt);
+			vector.Length = 16 * 10;
+			int shot = Starver.IsPE ? ProjectileID.PhantasmalDeathray : ProjectileID.DD2DarkMageBolt;
+			ProjLine(Center + vector, Center - vector, Vel, 13, 127, shot);
 			FakeVelocity = Vel;
 		}
 		#endregion
@@ -169,12 +181,13 @@ namespace Starvers.BossSystem.Bosses
 		private new void SummonFollows()
 		{
 			count = AlivePlayers();
+			int follow = Starver.IsPE ? NPCID.ArmoredSkeleton : NPCID.DD2SkeletonT1;
 			if (rtime++ % 3 != 0)
 			{
 				vector = (Vector)Rand.NextVector2(100, 100);
 				Vel = -vector;
 				Vel.Length = 10;
-				NewNPC((Vector)(Center + vector), Vel, NPCID.DD2SkeletonT1, 100 * count);
+				NewNPC((Vector)(Center + vector), Vel, follow, 100 * count);
 			}
 			else
 			{
@@ -183,7 +196,7 @@ namespace Starvers.BossSystem.Bosses
 					vector = (Vector)Rand.NextVector2(100, 100);
 					Vel = -vector;
 					Vel.Length = 10;
-					NewNPC((Vector)(Center + vector), Vel, NPCID.DD2SkeletonT1, 1200 * count);
+					NewNPC((Vector)(Center + vector), Vel, follow, 1200 * count);
 				}
 			}
 		}

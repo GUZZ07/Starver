@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 using Terraria;
 using TerrariaApi.Server;
 using TShockAPI;
-	using Microsoft.Xna.Framework;
-	using Terraria.ID;
+using Microsoft.Xna.Framework;
+using Terraria.ID;
 
 namespace Starvers.BossSystem
 {

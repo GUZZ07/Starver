@@ -11,10 +11,12 @@ using TShockAPI;
 
 namespace Starvers.AuraSystem
 {
-	public class SkillManager
+	public static class SkillManager
 	{
 		#region Skills
-		public static Skill[] Skills { get; private set; } = new Skill[]
+		public static Skill[] Skills { get; private set; }
+#if false
+			= new Skill[]
 		{
 			new Avalon(),
 			new ExCalibur(),
@@ -58,9 +60,22 @@ namespace Starvers.AuraSystem
 			new UnstableTele(),
 			new GreenCrit()
 		};
+#endif
+		#endregion
+		#region LoadSkills
+		public static void LoadSkills()
+		{
+			var members = typeof(SkillIDs).GetEnumNames();
+			Skills = new Skill[members.Length];
+			var ass = typeof(Skill).Assembly;
+			for (int i = 0; i < members.Length; i++)
+			{
+				Skills[i] = Activator.CreateInstance(ass.GetType($"Starvers.AuraSystem.Skills.{members[i]}")) as Skill;
+			}
+		}
 		#endregion
 		#region Handle
-		public void Handle(StarverPlayer player,Vector2 vel,int slot)
+		public static void Handle(StarverPlayer player, Vector2 vel, int slot)
 		{
 			try
 			{
@@ -89,7 +104,7 @@ namespace Starvers.AuraSystem
 				{
 					player.SendCombatMSsg("MP不足", Color.Pink);
 				}
-				else if (player.ForceIgnoreCD == false && (player.IgnoreCD == false || skill.ForceCD) && player.CDs[slot] > 0) 
+				else if (player.ForceIgnoreCD == false && (player.IgnoreCD == false || skill.ForceCD) && player.CDs[slot] > 0)
 				{
 					player.SendCombatMSsg("技能冷却中", Color.Pink);
 				}
@@ -106,7 +121,7 @@ namespace Starvers.AuraSystem
 
 				player.ReleasedSkill(args);
 			}
-			catch(Exception e)
+			catch (Exception e)
 			{
 				TSPlayer.Server.SendErrorMessage(e.ToString());
 				player.SendMessage($"技能使用失败, 原因请查询日志", Color.Red);

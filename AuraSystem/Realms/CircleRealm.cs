@@ -16,7 +16,7 @@ namespace Starvers.AuraSystem.Realms
 	/// </summary>
 	public abstract class CircleRealm : StarverRealm
 	{
-		public float Radium { get; protected set; }
+		public float Radium { get; set; }
 
 		public override bool InRange(Entity entity)
 		{

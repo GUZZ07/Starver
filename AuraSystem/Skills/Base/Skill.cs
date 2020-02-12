@@ -44,10 +44,14 @@ namespace Starvers.AuraSystem.Skills.Base
 			}
 			return condition;
 		}
-		public Skill(SkillIDs idx)
+		protected Skill()
+		{
+			Name = GetType().Name;
+			Index = (int)(SkillIDs)Enum.Parse(typeof(SkillIDs), Name);
+		}
+		protected Skill(SkillIDs idx) : this()
 		{
 			Index = (int)idx;
-			Name = GetType().Name;
 		}
 		protected void SetText()
 		{

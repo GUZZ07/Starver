@@ -48,6 +48,8 @@ namespace Starvers.AuraSystem
 		UniverseBlast,
 		NatureStorm,
 		UnstableTele,
-		GreenCrit
+		GreenCrit,
+		RealmOfDefense,
+		NightMana
 	}
 }

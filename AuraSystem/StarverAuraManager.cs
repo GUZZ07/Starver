@@ -27,7 +27,6 @@ namespace Starvers.AuraSystem
 		internal Vector2[] LastPos;
 		private Command AuraCommand;
 		private Command TestCommand;
-		private SkillManager Skill;
 		private string[] SkillLists;
 		private Queue<IRealm> TheRealms;
 		private List<Type> RealmTypes;
@@ -85,7 +84,7 @@ namespace Starvers.AuraSystem
 				}
 			}
 #endif
-			Skill = new SkillManager();
+			SkillManager.LoadSkills();
 			TheRealms = new Queue<IRealm>();
 			RealmTypes = new List<Type>
 			{
@@ -254,7 +253,7 @@ namespace Starvers.AuraSystem
 			if (slot > 0 && slot < 6 && (DateTime.Now - Starver.Players[args.Owner].LastHandle).TotalSeconds > 1)
 			{
 				Starver.Players[args.Owner].LastHandle = DateTime.Now;
-				Skill.Handle(Starver.Players[args.Owner], args.Velocity, slot);
+				SkillManager.Handle(Starver.Players[args.Owner], args.Velocity, slot);
 			}
 		}
 		#endregion
