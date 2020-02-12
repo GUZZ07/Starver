@@ -14,7 +14,7 @@ namespace Starvers.AuraSystem.Skills
 		public LimitlessSpark() : base(SkillIDs.LimitlessSpark)
 		{
 			MP = 20;
-			CD = 60 * 60;
+			CD = 60 * 30;
 			Author = "wither";
 			Level = 500;
 			Description = "耗光你所有的MP,制造咒火团";

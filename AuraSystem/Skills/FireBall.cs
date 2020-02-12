@@ -14,7 +14,7 @@ namespace Starvers.AuraSystem.Skills
 		public FireBall() : base(SkillIDs.FireBall)
 		{
 			MP = 18;
-			CD = 60 * 6;
+			CD = 60 * 3;
 			Author = "三叶草";
 			Level = 5;
 			Description = "发射若干个小火球"; 

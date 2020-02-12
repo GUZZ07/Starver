@@ -117,7 +117,7 @@ namespace Starvers.AuraSystem.Skills
 		private Action<StarverPlayer, Vector2>[] RandFuns;
 		public MiracleMana() : base(SkillIDs.MiracleMana)
 		{
-			CD = 60 * 60;
+			CD = 60 * 10;
 			MP = 50;
 			Level = 70;
 			Author = "zhou_Qi";

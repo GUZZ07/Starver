@@ -13,11 +13,11 @@ namespace Starvers.AuraSystem.Skills
 	{
 		public JusticeFromSky():base(SkillIDs.JusticeFromSky)
 		{
-			CD = 60 * 20;
+			CD = 60 * 13;
 			MP = 100;
 			Level = 350;
 			Author = "1413";
-			Description = "\"其实这只是饥饿的轰炸炸错了位置\"";
+			Description = @"""其实这只是饥饿的轰炸炸错了位置""";
 			SetText();
 		}
 		public override void Release(StarverPlayer player, Vector2 vel)

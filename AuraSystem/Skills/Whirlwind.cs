@@ -13,7 +13,7 @@ namespace Starvers.AuraSystem.Skills
 		public Whirlwind() : base(SkillIDs.Whirlwind)
 		{
 			CD = 60 * 10;
-			MP = 12;
+			MP = 30;
 			Level = 165;
 			Author = "三叶草";
 			Description = "制造一个攻击一群敌人的风暴";

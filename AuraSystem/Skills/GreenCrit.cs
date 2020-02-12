@@ -18,7 +18,7 @@ namespace Starvers.AuraSystem.Skills
 		{
 			CD = 60 * 300;
 			MP = 25000;
-			Level = 25000;
+			Level = 200000;
 		}
 		public override void Release(StarverPlayer player, Vector2 vel)
 		{

@@ -28,19 +28,23 @@ namespace Starvers.AuraSystem.Skills
 		#region Ctor
 		public NatureStorm() : base(SkillIDs.NatureStorm)
 		{
-			Level = 50000;
+			Level = 30000;
 			MP = 8000;
-			CD = 60 * 60 * 10;
+			CD = 60 * 100;
 			ForceCD = true;
+			Author = "至今尚未查出来源";
+			Description = @"Excalibur, NStrike, UltimateSlash与UniverseBlast———
+还有角落里的Lawaias不解的注视着它
+[c/00ed00:""无论是MP消耗, 等级要求, 还是CD, 代码量乃至bug量, 你都比我们要多""]
+[c/00ed00:""我们不明白, 同样是终极技能, 为什么你会得到如此高的待遇...""]
+[c/0000ed:""原因很简单], [c/ff0000:?***%Key?=NotFound][c/0000ed:""]";
+			SetText();
 		}
 		#endregion
 		#region Release
 		public override void Release(StarverPlayer player, Vector2 vel)
 		{
-			unsafe
-			{
-				AsyncRelease(player, *(Vector*)&vel);
-			}
+			AsyncRelease(player, (Vector)vel);
 		}
 		private async void AsyncRelease(StarverPlayer player, Vector vel)
 		{

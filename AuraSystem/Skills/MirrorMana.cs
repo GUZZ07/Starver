@@ -14,7 +14,7 @@ namespace Starvers.AuraSystem.Skills
 		public MirrorMana() : base(SkillIDs.MirrorMana)
 		{
 			Level = 15;
-			CD = 60 * 60 * 3 / 2;
+			CD = 60 * 40;
 			MP = 35;
 			Author = "zhou_Qi";
 			Description = @"将你带回到最初始的位置，恢复少许MP与HP
@@ -25,8 +25,8 @@ namespace Starvers.AuraSystem.Skills
 		public override void Release(StarverPlayer player, Vector2 vel)
 		{
 			player.TSPlayer.Spawn();
-			player.MP += 30;
-			player.Life += 40;
+			player.MP += player.MaxMP / 3;
+			player.Life += player.LifeMax / 3;
 		}
 	}
 }

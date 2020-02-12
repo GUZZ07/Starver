@@ -23,6 +23,7 @@ namespace Starvers.BossSystem.Bosses.Base
 	public abstract class StarverBoss : StarverEntity
 	{
 		#region Fields
+		protected bool[] playerInteraction;
 		protected bool NightBoss = true;
 		protected bool ExVersion;
 		/// <summary>
@@ -79,10 +80,8 @@ namespace Starvers.BossSystem.Bosses.Base
 		{
 			get
 			{
-#pragma warning disable CS1030 // #警告:“"boss难度削弱"”
 #warning "boss难度削弱"
-				return (float)(Math.Sqrt(Math.Sqrt(Math.Sqrt(LifesMax / (Lifes + 1)))) + (float)Level / CriticalLevel);
-#pragma warning restore CS1030 // #警告:“"boss难度削弱"”
+				return Math.Max(1, (float)(Math.Log(LifesMax / (Lifes + 1)) + (float)Level / CriticalLevel));
 				// 下面是原来的
 				// return (float)(Math.Sqrt(LifesMax / (Lifes + 1)) + (float)Level / CriticalLevel);
 			}
@@ -123,6 +122,7 @@ namespace Starvers.BossSystem.Bosses.Base
 		#region Ctor
 		private StarverBoss()
 		{
+			playerInteraction = new bool[Main.myPlayer];
 			TypeName = Name = GetType().Name;
 		}
 		protected StarverBoss(int ainum) : this()
@@ -197,6 +197,7 @@ namespace Starvers.BossSystem.Bosses.Base
 		#region DropItems
 		protected void DropItems()
 		{
+			Array.Copy(playerInteraction, 0, Main.npc[Index].playerInteraction, 0, playerInteraction.Length);
 			foreach (var item in Drops)
 			{
 				item.Drop(Main.npc[Index]);
@@ -306,6 +307,7 @@ namespace Starvers.BossSystem.Bosses.Base
 			Index = 0;
 			Index = NPC.NewNPC((int)where.X, (int)where.Y, RawType);
 			SendData();
+			Array.Clear(playerInteraction, 0, playerInteraction.Length);
 			Defense = DefaultDefense * (int)(100 * Math.Log(Level + Math.E));
 			RealNPC.aiStyle = -1;
 			RealNPC.Center += Rand.NextVector2(54f, 54f);
@@ -372,6 +374,7 @@ namespace Starvers.BossSystem.Bosses.Base
 				type = NPCID.MoonLordCore
 			};
 			SendData();
+			Array.Clear(playerInteraction, 0, playerInteraction.Length);
 			Defense = DefaultDefense * (int)(100 * Math.Log(Level));
 			RealNPC.aiStyle = -1;
 			RealNPC.Center += Rand.NextVector2(54f, 54f);
@@ -418,8 +421,17 @@ namespace Starvers.BossSystem.Bosses.Base
 		/// 
 		/// </summary>
 		/// <param name="damage">已经计算过防御的伤害</param>
-		public virtual void ReceiveDamage(int damage)
+#if DEBUG
+		[MethodImpl(MethodImplOptions.NoInlining)]
+#else
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+		public virtual void ReceiveDamage(int attacker, int damage)
 		{
+			if (0 <= attacker && attacker < playerInteraction.Length)
+			{
+				playerInteraction[attacker] = true;
+			}
 			while (damage >= Life)
 			{
 				damage -= Life;

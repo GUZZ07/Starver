@@ -15,7 +15,7 @@ namespace Starvers.AuraSystem.Skills
 		/// <summary>
 		/// 陪衬弹幕
 		/// </summary>
-		private int[] LiningProjs =
+		private readonly int[] LiningProjs =
 		{
 			ProjectileID.HallowStar,
 			ProjectileID.FallingStar,
@@ -24,7 +24,7 @@ namespace Starvers.AuraSystem.Skills
 		/// <summary>
 		/// 主弹幕
 		/// </summary>
-		private int[] MainProjs =
+		private readonly int[] MainProjs =
 		{
 			ProjectileID.StarWrath,
 			ProjectileID.Meteor1,

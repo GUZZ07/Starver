@@ -442,7 +442,7 @@ namespace Starvers
 			}
 			if (TheBoss != null)
 			{
-				TheBoss.ReceiveDamage(realdamage);
+				TheBoss.ReceiveDamage(player, realdamage);
 				RealNPC.playerInteraction[player.Index] = true;
 				player.TPlayer.OnHit((int)RealNPC.Center.X, (int)RealNPC.Center.Y, RealNPC);
 				NArgs.KilledNPC = !TheBoss.Active;
@@ -959,7 +959,10 @@ namespace Starvers
 							npc.damage *= 10;
 							goto senddata;
 						default:
-							npc.life = npc.lifeMax = StarverAuraManager.NPCLife(npc.lifeMax);
+							if (Main.hardMode) // 防止肉前空气怪
+							{
+								npc.life = npc.lifeMax = StarverAuraManager.NPCLife(npc.lifeMax);
+							}
 							npc.defense = StarverAuraManager.NPCDefense(npc.defense);
 							npc.damage = StarverAuraManager.NPCDamage(npc.damage);
 							goto senddata;

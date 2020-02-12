@@ -15,7 +15,7 @@ namespace Starvers.AuraSystem.Skills
 	{
 		public ChordMana() : base(SkillIDs.ChordMana)
 		{
-			CD = 60 * 2 * 60;
+			CD = 60 * 20;
 			MP = 40;
 			Level = 500;
 			Description = @"释放音符的力量
@@ -32,42 +32,49 @@ namespace Starvers.AuraSystem.Skills
 		{
 			await Task.Run(() =>
 			{
-				unsafe
+				try
 				{
-					int Count = 20;
-					Vector* Block = stackalloc Vector[Count];
-					Vector vel;
-					int level = 0;
-					int MaxLevels = 7;
-					double offset = 0;
-					float length = 16 * 6f;
-					ProjQueue Projs = new ProjQueue((MaxLevels + 1) * Count);
+					unsafe
 					{
-						while (level < MaxLevels)
+						int Count = 20;
+						Vector* Block = stackalloc Vector[Count];
+						Vector vel;
+						int level = 0;
+						int MaxLevels = 7;
+						double offset = 0;
+						float length = 16 * 6f;
+						ProjQueue Projs = new ProjQueue((MaxLevels + 1) * Count);
 						{
-							for (int i = 0; i < Count; i++)
+							while (level < MaxLevels)
 							{
-								Block[i] = Vector.FromPolar(offset + Math.PI * 2 * i / Count, length);
-								vel = Block[i];
-								vel.Angle -= Math.PI * 2 / 4;
-								vel.Length = 8 - level;
-								Projs.Push(player.NewProj(player.Center + Block[i], Block[i].ToVector2().ToLenOf(0.4f), ProjectileID.TiedEighthNote, 420 - level * 6, 4), vel);
-								if (i % 5 == 0)
+								for (int i = 0; i < Count; i++)
 								{
-									Thread.Sleep(1);
+									Block[i] = Vector.FromPolar(offset + Math.PI * 2 * i / Count, length);
+									vel = Block[i];
+									vel.Angle -= Math.PI * 2 / 4;
+									vel.Length = 8 - level;
+									Projs.Push(player.NewProj(player.Center + Block[i], Block[i].ToVector2().ToLenOf(0.4f), ProjectileID.TiedEighthNote, 420 - level * 6, 4), vel);
+									if (i % 5 == 0)
+									{
+										Thread.Sleep(1);
+									}
 								}
+								length += 16 * 3.5f;
+								offset += Math.PI / 3 / 7;
+								level++;
+								Thread.Sleep(100 - 1 * Count / 5);
 							}
-							length += 16 * 3.5f;
-							offset += Math.PI / 3 / 7;
-							level++;
-							Thread.Sleep(100 - 1 * Count / 5);
-						}
-						while (level-- >= 0)
-						{
-							Projs.Launch(Count);
-							Thread.Sleep(200);
+							while (level-- >= 0)
+							{
+								Projs.Launch(Count);
+								Thread.Sleep(200);
+							}
 						}
 					}
+				}
+				catch
+				{
+
 				}
 			});
 		}

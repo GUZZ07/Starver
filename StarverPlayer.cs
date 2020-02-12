@@ -1260,6 +1260,10 @@ namespace Starvers
 		public void OnPickAnalogItem(AuraSystem.Realms.AnalogItem item)
 		{
 			BranchTask?.OnPickAnalogItem(item);
+			if (!item.Active)
+			{
+				item.Kill();
+			}
 		}
 		public void OnGetData(GetDataEventArgs args)
 		{

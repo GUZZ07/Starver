@@ -234,10 +234,7 @@ namespace Starvers.BossSystem
 			{
 				try
 				{
-					if (boss.Active)
-					{
-						boss.AI();
-					}
+					boss.AI();
 				}
 				catch(KeyNotFoundException)
 				{
@@ -281,43 +278,43 @@ namespace Starvers.BossSystem
 					case 2:
 						if (EndBossDelay-- == 60 * 30)
 						{
-							StarverPlayer.All.SendMessage("你们可曾记得", Color.BlueViolet);
+							StarverPlayer.All.SendMessage("Empty", Color.BlueViolet);
 						}
 						else if (EndBossDelay == 60 * 28)
 						{
-							StarverPlayer.All.SendMessage("在那个世界里", Color.BlueViolet);
+							StarverPlayer.All.SendMessage("Empty", Color.BlueViolet);
 						}
 						else if (EndBossDelay == 60 * 26)
 						{
-							StarverPlayer.All.SendMessage("你们的噩梦吗", Color.BlueViolet);
+							StarverPlayer.All.SendMessage("Empty", Color.BlueViolet);
 						}
 						else if (EndBossDelay == 60 * 23)
 						{
-							StarverPlayer.All.SendMessage("是的", Color.BlueViolet);
+							StarverPlayer.All.SendMessage("Empty", Color.BlueViolet);
 						}
 						else if (EndBossDelay == 60 * 20)
 						{
-							StarverPlayer.All.SendMessage("这次", Color.BlueViolet);
+							StarverPlayer.All.SendMessage("Empty", Color.BlueViolet);
 						}
 						else if (EndBossDelay == 60 * 18)
 						{
-							StarverPlayer.All.SendMessage("你们要对付的第一个", Color.BlueViolet);
+							StarverPlayer.All.SendMessage("Empty", Color.BlueViolet);
 						}
 						else if (EndBossDelay == 60 * 13)
 						{
-							StarverPlayer.All.SendMessage("就是他", Color.BlueViolet);
+							StarverPlayer.All.SendMessage("Empty", Color.BlueViolet);
 						}
 						else if (EndBossDelay == 60 * 10)
 						{
-							StarverPlayer.All.SendMessage("越来越近了", Color.BlueViolet);
+							StarverPlayer.All.SendMessage("Empty", Color.BlueViolet);
 						}
 						else if (EndBossDelay == 60 * 7)
 						{
-							StarverPlayer.All.SendMessage("是他来了", Color.BlueViolet);
+							StarverPlayer.All.SendMessage("Empty", Color.BlueViolet);
 						}
 						else if (EndBossDelay == 60 * 3)
 						{
-							StarverPlayer.All.SendMessage("祝你们好运", Color.BlueViolet);
+							StarverPlayer.All.SendMessage("Empty", Color.BlueViolet);
 						}
 						else if (EndBossDelay == 60 * 1)
 						{
@@ -347,39 +344,39 @@ namespace Starvers.BossSystem
 					case 4:
 						if (EndBossDelay-- == 60 * 30)
 						{
-							StarverPlayer.All.SendMessage("Text", Color.BlueViolet);
+							StarverPlayer.All.SendMessage("Empty", Color.BlueViolet);
 						}
 						else if (EndBossDelay == 60 * 28)
 						{
-							StarverPlayer.All.SendMessage("Text", Color.BlueViolet);
+							StarverPlayer.All.SendMessage("Empty", Color.BlueViolet);
 						}
 						else if (EndBossDelay == 60 * 26)
 						{
-							StarverPlayer.All.SendMessage("Text", Color.BlueViolet);
+							StarverPlayer.All.SendMessage("Empty", Color.BlueViolet);
 						}
 						else if (EndBossDelay == 60 * 23)
 						{
-							StarverPlayer.All.SendMessage("Text", Color.BlueViolet);
+							StarverPlayer.All.SendMessage("Empty", Color.BlueViolet);
 						}
 						else if (EndBossDelay == 60 * 20)
 						{
-							StarverPlayer.All.SendMessage("Text", Color.BlueViolet);
+							StarverPlayer.All.SendMessage("Empty", Color.BlueViolet);
 						}
 						else if (EndBossDelay == 60 * 18)
 						{
-							StarverPlayer.All.SendMessage("Text", Color.BlueViolet);
+							StarverPlayer.All.SendMessage("Empty", Color.BlueViolet);
 						}
 						else if (EndBossDelay == 60 * 13)
 						{
-							StarverPlayer.All.SendMessage("Text", Color.BlueViolet);
+							StarverPlayer.All.SendMessage("Empty", Color.BlueViolet);
 						}
 						else if (EndBossDelay == 60 * 10)
 						{
-							StarverPlayer.All.SendMessage("Text", Color.BlueViolet);
+							StarverPlayer.All.SendMessage("Empty", Color.BlueViolet);
 						}
 						else if (EndBossDelay == 60 * 7)
 						{
-							StarverPlayer.All.SendMessage("Text", Color.BlueViolet);
+							StarverPlayer.All.SendMessage("Empty", Color.BlueViolet);
 						}
 						else if (EndBossDelay == 60 * 3)
 						{
@@ -412,23 +409,23 @@ namespace Starvers.BossSystem
 					case 6:
 						if (EndBossDelay-- == 60 * 30)
 						{
-							StarverPlayer.All.SendMessage("是谁?", Color.DeepPink);
+							StarverPlayer.All.SendMessage("Empty", Color.DeepPink);
 						}
 						else if (EndBossDelay == 60 * 28)
 						{
-							StarverPlayer.All.SendMessage("噩梦可不只一个", Color.DeepPink);
+							StarverPlayer.All.SendMessage("Empty", Color.DeepPink);
 						}
 						else if (EndBossDelay == 60 * 26)
 						{
-							StarverPlayer.All.SendMessage("我还曾是另一个噩梦的噩梦", Color.DeepPink);
+							StarverPlayer.All.SendMessage("Empty", Color.DeepPink);
 						}
 						else if (EndBossDelay == 60 * 23)
 						{
-							StarverPlayer.All.SendMessage("人都去哪了", Color.DeepPink);
+							StarverPlayer.All.SendMessage("Empty", Color.DeepPink);
 						}
 						else if (EndBossDelay == 60 * 20)
 						{
-							StarverPlayer.All.SendMessage("别让我找到你", Color.DeepPink);
+							StarverPlayer.All.SendMessage("Empty", Color.DeepPink);
 						}
 						else if (EndBossDelay == 60 * 18)
 						{

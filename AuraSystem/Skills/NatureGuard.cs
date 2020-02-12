@@ -17,7 +17,7 @@ namespace Starvers.AuraSystem.Skills
 		public NatureGuard() : base(SkillIDs.NatureGuard)
 		{
 			MP = 10;
-			CD = 60 * 60;
+			CD = 60 * 22;
 			Level = 50;
 			Author = "zhou_Qi";
 			Description = @"生成几个纯粹由自然之力构成的哨卫
@@ -32,19 +32,26 @@ namespace Starvers.AuraSystem.Skills
 		{
 			await Task.Run(() =>
 			{
-				int[] arr = new int[Rand.Next(4) + 1];
-				int damage = (int)(50 * Math.Log(player.Level));
-				for (int i = 0; i < arr.Length; i++)
+				try
 				{
-					arr[i] = player.NewProj(player.Center, Rand.NextVector2(9), ProjectileID.SporeGas, damage, 20f);
-				}
-				while (Main.projectile[arr[0]].active && Main.projectile[arr[0]].owner == player.Index)
-				{
-					foreach (var idx in arr)
+					int[] arr = new int[Rand.Next(4) + 1];
+					int damage = (int)(50 * Math.Log(player.Level));
+					for (int i = 0; i < arr.Length; i++)
 					{
-						player.NewProj(Main.projectile[idx].Center, Rand.NextVector2(15), ProjectileID.TerrarianBeam, damage * 3 / 2, 20f);
+						arr[i] = player.NewProj(player.Center, Rand.NextVector2(9), ProjectileID.SporeGas, damage, 20f);
 					}
-					Thread.Sleep(25);
+					while (Main.projectile[arr[0]].active && Main.projectile[arr[0]].owner == player.Index)
+					{
+						foreach (var idx in arr)
+						{
+							player.NewProj(Main.projectile[idx].Center, Rand.NextVector2(15), ProjectileID.TerrarianBeam, damage * 3 / 2, 20f);
+						}
+						Thread.Sleep(25);
+					}
+				}
+				catch
+				{
+
 				}
 			});
 		}

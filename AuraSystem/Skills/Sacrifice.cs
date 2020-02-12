@@ -8,14 +8,15 @@ using Starvers.AuraSystem.Skills.Base;
 
 namespace Starvers.AuraSystem.Skills
 {
-	public class Sacrifice:Skill
+	public class Sacrifice : Skill
 	{
-		public Sacrifice():base(SkillIDs.Sacrifice)
+		public Sacrifice() : base(SkillIDs.Sacrifice)
 		{
 			MP = 0;
 			CD = 60 * 20;
 			Author = "三叶草";
-			Description = "血量减少最大血量的一半,回复你所有的mp";
+			Description = @"来源未知的古老秘术
+血量减少最大血量的一半,回复你所有的mp";
 			Level = 10;
 			SetText();
 		}
@@ -23,7 +24,7 @@ namespace Starvers.AuraSystem.Skills
 		{
 			player.MP = player.MaxMP;
 			player.TPlayer.statLife /= 2;
-			if(player.TPlayer.statLife < 1)
+			if (player.TPlayer.statLife < 1)
 			{
 				player.TSPlayer.KillPlayer();
 			}

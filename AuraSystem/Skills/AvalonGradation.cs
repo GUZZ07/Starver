@@ -37,7 +37,7 @@ namespace Starvers.AuraSystem.Skills
 		}
 		public AvalonGradation() : base(SkillIDs.AvalonGradation)
 		{
-			CD = 60 * 60;
+			CD = 60 * 50;
 			MP = 180;
 			Level = 1000;
 			Author = "1413";

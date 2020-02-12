@@ -13,7 +13,7 @@ namespace Starvers.AuraSystem.Skills
 		public Chaos() : base(SkillIDs.Chaos)
 		{
 			Level = 4000;
-			CD = 60 * 6 * 60;
+			CD = 60 * 30;
 			MP = 0;
 			ForceCD = true;
 			Author = "zhou_Qi";

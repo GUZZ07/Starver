@@ -29,7 +29,7 @@ namespace Starvers.AuraSystem.Skills
 		};
 		public FrozenCraze() : base(SkillIDs.FrozenCraze)
 		{
-			CD = 60 * 60;
+			CD = 60 * 30;
 			Level = 50;
 			MP = 60;
 			Author = "zhou_Qi";

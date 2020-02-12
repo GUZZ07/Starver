@@ -15,7 +15,7 @@ namespace Starvers.AuraSystem.Skills
 		{
 			MP = 190;
 			Level = 400;
-			CD = 60 * 20;
+			CD = 60 * 15;
 			Author = "Deaths";
 			Description = "制造一片毒雾";
 			SetText();

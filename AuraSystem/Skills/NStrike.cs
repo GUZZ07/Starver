@@ -15,12 +15,11 @@ namespace Starvers.AuraSystem.Skills
 		private const float rec = 16 * 30;
 		public NStrike() : base(SkillIDs.NStrike)
 		{
-			MP = 350;
-			CD = 60 * 500;
-			Level = 50000;
+			MP = 3500;
+			CD = 60 * 70;
+			Level = 20000;
 			Author = "wither";
 			Description = "能够和咖喱棒平起平坐的技能!\n对一定范围内的敌对生物发动攻击";
-			BossBan = true;
 			SetText();
 		}
 		public override void Release(StarverPlayer player, Vector2 vel)

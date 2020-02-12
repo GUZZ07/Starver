@@ -13,10 +13,9 @@ namespace Starvers.AuraSystem.Skills
 	{
 		public ExCalibur() : base(SkillIDs.ExCalibur)
 		{
-			BossBan = true;
-			MP = 200;
-			CD = 60 * 500;
-			Level = 50000;
+			MP = 2000;
+			CD = 60 * 70;
+			Level = 20000;
 			Description = "三叶草制作的最强技能";
 			Author = "三叶草";
 			SetText();

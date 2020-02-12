@@ -14,7 +14,7 @@ namespace Starvers.AuraSystem.Skills
 		{
 			BossBan = true;
 			MP = 45;
-			CD = 60 * 32;
+			CD = 60 * 15;
 			Level = 350;
 			Author = "三叶草";
 			Description = "发着一支速度极快的黎明";

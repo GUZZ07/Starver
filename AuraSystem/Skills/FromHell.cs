@@ -17,7 +17,7 @@ namespace Starvers.AuraSystem.Skills
 		{
 			Level = 90;
 			MP = 30;
-			CD = 60 * 60 * 2;
+			CD = 60 * 25;
 			Author = "zhou_Qi";
 			Description = @"释放来自地狱的亡灵力量
 ""弥漫岩浆与热流的灰烬之地，无数的亡灵在其中挣扎翻腾，他们呼唤着同一个名字""";

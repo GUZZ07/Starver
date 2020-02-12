@@ -14,7 +14,7 @@ namespace Starvers.AuraSystem.Skills
 		public CDLess() : base(SkillIDs.CDLess)
 		{
 			Author = "1413";
-			Description = "技能CD太长了？来试试他吧!\n5s内其他技能无CD";
+			Description = "技能CD太长了？来试试他吧!\n10s内其他技能无CD";
 			CD = 60 * 360;
 			MP = 20;
 			Level = 500;
@@ -34,7 +34,7 @@ namespace Starvers.AuraSystem.Skills
 			}
 			await Task.Run(() =>
 			{
-				Thread.Sleep(5000);
+				Thread.Sleep(10000);
 			});
 			player.IgnoreCD = false;
 		}

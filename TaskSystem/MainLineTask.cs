@@ -120,18 +120,18 @@ namespace Starvers.TaskSystem
 						};
 						var Normal = new TaskItem[]
 						{
-							(ItemID.Lens, 15),
+							(ItemID.Lens, 20),
 							(ItemID.DemonEyeBanner, 1)
 						};
 						var Hard = new TaskItem[]
 						{
-							(ItemID.Lens, 36),
-							(ItemID.DemonEyeBanner, 2)
+							(ItemID.Lens, 40),
+							(ItemID.DemonEyeBanner, 3)
 						};
 						var Hell = new TaskItem[]
 						{
-							(ItemID.Lens, 42),
-							(ItemID.DemonEyeBanner, 3)
+							(ItemID.Lens, 80),
+							(ItemID.DemonEyeBanner, 6)
 						};
 
 						NeedEx = new ItemLists
@@ -210,9 +210,9 @@ namespace Starvers.TaskSystem
 						};
 						var Hell = new TaskItem[]
 						{
-							(ItemID.FallenStar, 50),
+							(ItemID.FallenStar, 70),
 							(ItemID.MolotovCocktail, 99),
-							(ItemID.GoldBar, 30)
+							(ItemID.GoldBar, 99)
 						};
 
 						NeedEx = new ItemLists
@@ -256,8 +256,11 @@ namespace Starvers.TaskSystem
 						};
 						var Hell = new TaskItem[]
 						{
-							(ItemID.HornetBanner, 3),
+							(ItemID.HornetBanner, 4),
 							(ItemID.Hive, 99),
+							(ItemID.Hive, 99),
+							(ItemID.BottledHoney, 30),
+							(ItemID.BottledHoney, 30),
 							(ItemID.BottledHoney, 30)
 						};
 
@@ -283,12 +286,12 @@ namespace Starvers.TaskSystem
 					{
 						[TaskDifficulty.Easy] = new TaskItem[] { (ItemID.Bone, 100) },
 						[TaskDifficulty.Normal] = new TaskItem[] { (ItemID.Bone, 300) },
-						[TaskDifficulty.Hard] = new TaskItem[] { (ItemID.BoneKey) },
-						[TaskDifficulty.Hell] = new TaskItem[] { (ItemID.BoneKey), (ItemID.BoneKey) }
+						[TaskDifficulty.Hard] = new TaskItem[] { (ItemID.BoneKey), (ItemID.BoneKey) },
+						[TaskDifficulty.Hell] = new TaskItem[] { (ItemID.BoneKey), (ItemID.BoneKey), (ItemID.BoneKey), (ItemID.BoneKey) }
 					};
 					Rewards = new TaskItem[]
 					{
-						(ItemID.BoneKey),
+						(ItemID.BoneKey, (int)difficulty),
 						(ItemID.ClothierVoodooDoll)
 					};
 					break;
@@ -310,12 +313,13 @@ namespace Starvers.TaskSystem
 						};
 						var Hard = new TaskItem[]
 						{
-							(ItemID.HellstoneBrick, 100),
+							(ItemID.Hellstone, 500),
 							(ItemID.LavaSlimeBanner, 4),
 							(ItemID.Fireblossom, 20)
 						};
 						var Hell = new TaskItem[]
 						{
+							(ItemID.Hellstone, 999),
 							(ItemID.LavaBatBanner, 5),
 							(ItemID.LavaSlimeBanner, 5),
 							(ItemID.FireblossomSeeds, 5)
@@ -366,7 +370,7 @@ namespace Starvers.TaskSystem
 						{
 							(ItemID.SoulofLight, 300),
 							(ItemID.CrystalShard, 80),
-							(ItemID.LightShard, 10)
+							(ItemID.LightShard, 13)
 						};
 
 						NeedEx = new ItemLists
@@ -423,7 +427,7 @@ namespace Starvers.TaskSystem
 						{
 							(ItemID.SoulofNight, 130070),
 							(material, 80),
-							(ItemID.DarkShard, 10)
+							(ItemID.DarkShard, 13)
 						};
 
 						material.RuntimeBind = true;
@@ -502,18 +506,34 @@ namespace Starvers.TaskSystem
 							(ItemID.CursedSkullBanner),
 							(ItemID.OrichalcumOre, 222 * 2 / 3)
 						};
+						var Normal = new TaskItem[]
+						{
+							(ItemID.Bone, 250),
+							(ItemID.AngryBonesBanner, 4),
+							(ItemID.CursedSkullBanner),
+							(ItemID.OrichalcumOre, 333 * 2 / 3)
+						};
 						var Hard = new TaskItem[]
 						{
-							(ItemID.Bone, 280),
+							(ItemID.Bone, 380),
 							(ItemID.AngryBonesBanner, 6),
 							(ItemID.CursedSkullBanner, 2),
 							(ItemID.OrichalcumOre, 444 * 2 / 3),
+						};
+						var Hell = new TaskItem[]
+						{
+							(ItemID.Bone, 700),
+							(ItemID.AngryBonesBanner, 6),
+							(ItemID.CursedSkullBanner, 4),
+							(ItemID.OrichalcumOre, 666 * 2 / 3),
 						};
 
 						NeedEx = new ItemLists
 						{
 							[TaskDifficulty.Easy] = Easy,
-							[TaskDifficulty.Hard] = Hard
+							[TaskDifficulty.Normal] = Normal,
+							[TaskDifficulty.Hard] = Hard,
+							[TaskDifficulty.Hell] = Hell
 						};
 						Rewards = new TaskItem[]
 						{
@@ -546,11 +566,23 @@ namespace Starvers.TaskSystem
 							(banner, 2),
 							(ItemID.TitaniumOre, 222 / 3)
 						};
+						var Normal = new TaskItem[]
+						{
+							(material, 30),
+							(banner, 3),
+							(ItemID.TitaniumOre, 333 / 3)
+						};
 						var Hard = new TaskItem[]
 						{
 							(material, 60),
 							(banner, 6),
 							(ItemID.TitaniumOre, 444 / 3)
+						};
+						var Hell = new TaskItem[]
+						{
+							(material, 90),
+							(banner, 10),
+							(ItemID.TitaniumOre, 666 / 3)
 						};
 
 						material.RuntimeBind = true;
@@ -559,7 +591,9 @@ namespace Starvers.TaskSystem
 						NeedEx = new ItemLists
 						{
 							[TaskDifficulty.Easy] = Easy,
-							[TaskDifficulty.Hard] = Hard
+							[TaskDifficulty.Normal] = Normal,
+							[TaskDifficulty.Hard] = Hard,
+							[TaskDifficulty.Hell] = Hell
 						};
 
 						Rewards = new TaskItem[]
@@ -581,17 +615,31 @@ namespace Starvers.TaskSystem
 							(ItemID.SoulofSight, 140),
 							(ItemID.SoulofFright,140)
 						};
+						var Normal = new TaskItem[]
+						{
+							(ItemID.SoulofMight, 200),
+							(ItemID.SoulofSight, 200),
+							(ItemID.SoulofFright,200)
+						};
 						var Hard = new TaskItem[]
 						{
-							(ItemID.SoulofMight, 270),
-							(ItemID.SoulofSight, 270),
-							(ItemID.SoulofFright,270)
+							(ItemID.SoulofMight, 333),
+							(ItemID.SoulofSight, 333),
+							(ItemID.SoulofFright,333)
+						};
+						var Hell = new TaskItem[]
+						{
+							(ItemID.SoulofMight, 450),
+							(ItemID.SoulofSight, 450),
+							(ItemID.SoulofFright,450)
 						};
 
 						NeedEx = new ItemLists
 						{
 							[TaskDifficulty.Easy] = Easy,
-							[TaskDifficulty.Hard] = Hard
+							[TaskDifficulty.Normal] = Normal,
+							[TaskDifficulty.Hard] = Hard,
+							[TaskDifficulty.Hell] = Hell
 						};
 						Rewards = new TaskItem[]
 						{
@@ -611,17 +659,30 @@ namespace Starvers.TaskSystem
 							(ItemID.ChlorophyteOre, 333),
 							(ItemID.AngryTrapperBanner),
 						};
+						var Normal = new TaskItem[]
+						{
+							(ItemID.ChlorophyteOre, 444),
+							(ItemID.AngryTrapperBanner,2),
+						};
 						var Hard = new TaskItem[]
 						{
-							(ItemID.ChlorophyteOre,666),
-							(ItemID.TortoiseBanner,1),
-							(ItemID.AngryTrapperBanner,3),
+							(ItemID.ChlorophyteOre, 666),
+							(ItemID.TortoiseBanner, 1),
+							(ItemID.AngryTrapperBanner, 3),
+						};
+						var Hell = new TaskItem[]
+						{
+							(ItemID.ChlorophyteOre, 999),
+							(ItemID.TortoiseBanner, 2),
+							(ItemID.AngryTrapperBanner, 4),
 						};
 
 						NeedEx = new ItemLists
 						{
 							[TaskDifficulty.Easy] = Easy,
-							[TaskDifficulty.Hard] = Hard
+							[TaskDifficulty.Normal] = Normal,
+							[TaskDifficulty.Hard] = Hard,
+							[TaskDifficulty.Hell] = Hell
 						};
 						Rewards = new TaskItem[]
 						{
@@ -645,6 +706,13 @@ namespace Starvers.TaskSystem
 							(ItemID.FlyingSnakeBanner, 2),
 							(ItemID.LunarTabletFragment, 33)
 						};
+						var Normal = new TaskItem[]
+						{
+							(ItemID.TempleKey, 9),
+							(ItemID.LihzahrdBanner, 2),
+							(ItemID.FlyingSnakeBanner, 2),
+							(ItemID.LunarTabletFragment, 33)
+						};
 						var Hard = new TaskItem[]
 						{
 							(ItemID.TempleKey, 15),
@@ -652,11 +720,21 @@ namespace Starvers.TaskSystem
 							(ItemID.FlyingSnakeBanner, 6),
 							(ItemID.LunarTabletFragment, 66)
 						};
+						var Hell = new TaskItem[]
+						{
+							(ItemID.TempleKey, 15),
+							(ItemID.LihzahrdBanner, 6),
+							(ItemID.FlyingSnakeBanner, 6),
+							(ItemID.LunarTabletFragment, 99),
+							(ItemID.LunarTabletFragment, 99),
+						};
 
 						NeedEx = new ItemLists
 						{
 							[TaskDifficulty.Easy] = Easy,
-							[TaskDifficulty.Hard] = Hard
+							[TaskDifficulty.Normal] = Normal,
+							[TaskDifficulty.Hard] = Hard,
+							[TaskDifficulty.Hell] = Hell
 						};
 						Rewards = new TaskItem[]
 						{
@@ -676,16 +754,29 @@ namespace Starvers.TaskSystem
 							(ItemID.MartianConduitPlating, 150),
 							(ItemID.BeetleHusk, 50)
 						};
+						var Normal = new TaskItem[]
+						{
+							(ItemID.MartianConduitPlating, 300),
+							(ItemID.BeetleHusk, 50)
+						};
 						var Hard = new TaskItem[]
 						{
 							(ItemID.MartianConduitPlating, 450),
 							(ItemID.BeetleHusk, 99)
 						};
+						var Hell = new TaskItem[]
+						{
+							(ItemID.MartianConduitPlating, 999),
+							(ItemID.BeetleHusk, 99),
+							(ItemID.BeetleHusk, 99),
+						};
 
 						NeedEx = new ItemLists
 						{
 							[TaskDifficulty.Easy] = Easy,
-							[TaskDifficulty.Hard] = Hard
+							[TaskDifficulty.Normal] = Normal,
+							[TaskDifficulty.Hard] = Hard,
+							[TaskDifficulty.Hell] = Hell,
 						};
 						break;
 					}
@@ -718,11 +809,26 @@ namespace Starvers.TaskSystem
 							(ItemID.NightKey),
 							(ItemID.LightKey)
 						};
+						var Hell = new TaskItem[]
+						{
+							(ItemID.GoldenKey),
+							(ItemID.ShadowKey),
+							(evilKey),
+							(ItemID.FrozenKey),
+							(ItemID.JungleKey),
+							(ItemID.HallowedKey),
+							(ItemID.CosmicCarKey),
+							(ItemID.NightKey),
+							(ItemID.LightKey),
+							(ItemID.BoneKey)
+						};
 
 						NeedEx = new ItemLists
 						{
 							[TaskDifficulty.Easy] = Easy,
-							[TaskDifficulty.Hard] = Hard
+							[TaskDifficulty.Normal] = Easy,
+							[TaskDifficulty.Hard] = Hard,
+							[TaskDifficulty.Hell] = Hell
 						};
 						Rewards = new TaskItem[]
 						{
@@ -751,6 +857,18 @@ namespace Starvers.TaskSystem
 							(ItemID.EyeofCthulhuTrophy),
 							(ItemID.QueenBeeTrophy),
 							(ItemID.WallofFleshTrophy),
+						};
+						var Normal = new TaskItem[]
+						{
+							(ItemID.KingSlimeTrophy),
+							(ItemID.EyeofCthulhuTrophy),
+							(ItemID.QueenBeeTrophy),
+							(ItemID.WallofFleshTrophy),
+							(ItemID.RetinazerTrophy),
+							(ItemID.SkeletronPrimeTrophy),
+							(ItemID.SpazmatismTrophy),
+							(ItemID.DestroyerTrophy),
+							(ItemID.PlanteraTrophy)
 						};
 						var Hard = new TaskItem[]
 						{
@@ -795,12 +913,13 @@ namespace Starvers.TaskSystem
 						NeedEx = new ItemLists
 						{
 							[TaskDifficulty.Easy] = Easy,
+							[TaskDifficulty.Normal] = Normal,
 							[TaskDifficulty.Hard] = Hard,
 							[TaskDifficulty.Hell] = Hell
 						};
 						Rewards = new TaskItem[]
 						{
-							(ItemID.PlatinumCoin,99)
+							(ItemID.PlatinumCoin, 200)
 						};
 						break;
 					}
@@ -850,8 +969,8 @@ namespace Starvers.TaskSystem
 						};
 						Rewards = new TaskItem[]
 						{
-							(ItemID.SolarMonolith,99),
-							(ItemID.NebulaMonolith,99)
+							(ItemID.SolarMonolith, 99),
+							(ItemID.NebulaMonolith, 99)
 						};
 						break;
 					}
@@ -864,27 +983,43 @@ namespace Starvers.TaskSystem
 
 						var Easy = new TaskItem[]
 						{
-								(ItemID.StardustJellyfishBanner),
-								(ItemID.StardustLargeCellBanner),
-								(ItemID.StardustWormBanner),
-								(ItemID.StardustSoldierBanner)
+							(ItemID.StardustJellyfishBanner),
+							(ItemID.StardustLargeCellBanner),
+							(ItemID.StardustWormBanner),
+							(ItemID.StardustSoldierBanner)
+						};
+						var Normal = new TaskItem[]
+						{
+							(ItemID.StardustJellyfishBanner, 2),
+							(ItemID.StardustLargeCellBanner, 2),
+							(ItemID.StardustWormBanner, 2),
+							(ItemID.StardustSoldierBanner, 2)
 						};
 						var Hard = new TaskItem[]
 						{
-								(ItemID.StardustJellyfishBanner, 3),
-								(ItemID.StardustLargeCellBanner, 3),
-								(ItemID.StardustWormBanner, 3),
-								(ItemID.StardustSoldierBanner, 3)
+							(ItemID.StardustJellyfishBanner, 3),
+							(ItemID.StardustLargeCellBanner, 3),
+							(ItemID.StardustWormBanner, 3),
+							(ItemID.StardustSoldierBanner, 3)
+						};
+						var Hell = new TaskItem[]
+						{
+							(ItemID.StardustJellyfishBanner, 4),
+							(ItemID.StardustLargeCellBanner, 4),
+							(ItemID.StardustWormBanner, 4),
+							(ItemID.StardustSoldierBanner, 4)
 						};
 
 						NeedEx = new ItemLists
 						{
 							[TaskDifficulty.Easy] = Easy,
-							[TaskDifficulty.Hard] = Hard
+							[TaskDifficulty.Normal] = Normal,
+							[TaskDifficulty.Hard] = Hard,
+							[TaskDifficulty.Hell] = Hell
 						};
 						Rewards = new TaskItem[]
 						{
-							(ItemID.StardustMonolith,99)
+							(ItemID.StardustMonolith, 99)
 						};
 						break;
 					}
@@ -899,19 +1034,32 @@ namespace Starvers.TaskSystem
 						{
 							(ItemID.VortexSoldierBanner),
 							(ItemID.VortexRiflemanBanner, 2),
+						};
+						var Normal = new TaskItem[]
+						{
+							(ItemID.VortexSoldierBanner),
+							(ItemID.VortexRiflemanBanner, 2),
 							(ItemID.VortexHornetQueenBanner, 5)
 						};
 						var Hard = new TaskItem[]
-						 {
+						{
 							(ItemID.VortexSoldierBanner, 3),
 							(ItemID.VortexRiflemanBanner, 4),
 							(ItemID.VortexHornetQueenBanner, 15)
-						 };
+						};
+						var Hell = new TaskItem[]
+						{
+							(ItemID.VortexSoldierBanner, 4),
+							(ItemID.VortexRiflemanBanner, 5),
+							(ItemID.VortexHornetQueenBanner, 15)
+						};
 
 						NeedEx = new ItemLists
 						{
 							[TaskDifficulty.Easy] = Easy,
-							[TaskDifficulty.Hard] = Hard
+							[TaskDifficulty.Normal] = Normal,
+							[TaskDifficulty.Hard] = Hard,
+							[TaskDifficulty.Hell] = Hell
 						};
 						Rewards = new TaskItem[]
 						{
@@ -927,12 +1075,12 @@ namespace Starvers.TaskSystem
 						Story = "恐惧的本质是什么？未知的事物？死亡的接近？力量总是与诅咒并存，张裂的瞳膜里只剩下恐惧与悲伤";
 
 						var Easy = new TaskItem[]
-						 {
+						{
 							(ItemID.Lens, 20),
 							(ItemID.BlackLens),
 							(ItemID.SoulofFright, 60),
 							(ItemID.WillsWings)
-						 };
+						};
 						var Hard = new TaskItem[]
 						{
 							(ItemID.Lens, 50),
@@ -940,11 +1088,20 @@ namespace Starvers.TaskSystem
 							(ItemID.SoulofFright, 180),
 							(ItemID.WillsWings)
 						};
+						var Hell = new TaskItem[]
+						{
+							(ItemID.Lens, 80),
+							(ItemID.BlackLens, 3),
+							(ItemID.SoulofFright, 300),
+							(ItemID.WillsWings)
+						};
 
 						NeedEx = new ItemLists
 						{
 							[TaskDifficulty.Easy] = Easy,
-							[TaskDifficulty.Hard] = Hard
+							[TaskDifficulty.Normal] = Easy,
+							[TaskDifficulty.Hard] = Hard,
+							[TaskDifficulty.Hell] = Hell
 						};
 						Rewards = new TaskItem[]
 						{
@@ -969,6 +1126,14 @@ namespace Starvers.TaskSystem
 							(ItemID.SoulofLight, 100),
 							(ItemID.Vertebrae, 44)
 						};
+						var Normal = new TaskItem[]
+						{
+							(ItemID.Ichor, 66),
+							(ItemID.CrimsonFishingCrate, 7),
+							(ItemID.SoulofNight, 125),
+							(ItemID.SoulofLight, 125),
+							(ItemID.Vertebrae, 55)
+						};
 						var Hard = new TaskItem[]
 						{
 							(ItemID.Ichor, 99),
@@ -977,11 +1142,22 @@ namespace Starvers.TaskSystem
 							(ItemID.SoulofLight, 200),
 							(ItemID.Vertebrae, 77)
 						};
+						var Hell = new TaskItem[]
+						{
+							(ItemID.Ichor, 99),
+							(ItemID.Ichor, 99),
+							(ItemID.CrimsonFishingCrate, 20),
+							(ItemID.SoulofNight, 250),
+							(ItemID.SoulofLight, 250),
+							(ItemID.Vertebrae, 99)
+						};
 
 						NeedEx = new ItemLists
 						{
 							[TaskDifficulty.Easy] = Easy,
-							[TaskDifficulty.Hard] = Hard
+							[TaskDifficulty.Normal] = Normal,
+							[TaskDifficulty.Hard] = Hard,
+							[TaskDifficulty.Hell] = Hell
 						};
 						Rewards = new TaskItem[]
 						{
@@ -1016,7 +1192,9 @@ namespace Starvers.TaskSystem
 						NeedEx = new ItemLists
 						{
 							[TaskDifficulty.Easy] = Easy,
-							[TaskDifficulty.Hard] = Hard
+							[TaskDifficulty.Normal] = Easy,
+							[TaskDifficulty.Hard] = Hard,
+							[TaskDifficulty.Hell] = Hard
 						};
 						Rewards = new TaskItem[]
 						{
@@ -1048,11 +1226,21 @@ namespace Starvers.TaskSystem
 							(ItemID.LockBox, 16),
 							(ItemID.PaladinBanner, 3)
 						};
+						var Hell = new TaskItem[]
+						{
+							(ItemID.Bone, 999),
+							(ItemID.Bone, 999),
+							(ItemID.LockBox, 20),
+							(ItemID.PaladinBanner, 4)
+						};
+
 
 						NeedEx = new ItemLists
 						{
 							[TaskDifficulty.Easy] = Easy,
-							[TaskDifficulty.Hard] = Hard
+							[TaskDifficulty.Normal] = Easy,
+							[TaskDifficulty.Hard] = Hard,
+							[TaskDifficulty.Hell] = Hell
 						};
 						Rewards = new TaskItem[]
 						{
@@ -1078,14 +1266,16 @@ namespace Starvers.TaskSystem
 						{
 							(ItemID.DefenderMedal, 999),
 							(ItemID.ManaCrystal, 60),
-							(ItemID.DD2EnergyCrystal, 50),
+							(ItemID.DD2EnergyCrystal, 10),
 							(ItemID.Yoraiz0rWings)
 						};
 
 						NeedEx = new ItemLists
 						{
 							[TaskDifficulty.Easy] = Easy,
-							[TaskDifficulty.Hard] = Hard
+							[TaskDifficulty.Normal] = Easy,
+							[TaskDifficulty.Hard] = Hard,
+							[TaskDifficulty.Hell] = Hard
 						};
 						Rewards = new TaskItem[]
 						{
@@ -1120,7 +1310,9 @@ namespace Starvers.TaskSystem
 						NeedEx = new ItemLists
 						{
 							[TaskDifficulty.Easy] = Easy,
-							[TaskDifficulty.Hard] = Hard
+							[TaskDifficulty.Normal] = Easy,
+							[TaskDifficulty.Hard] = Hard,
+							[TaskDifficulty.Hell] = Hard
 						};
 						Rewards = new TaskItem[]
 						{
@@ -1157,7 +1349,9 @@ namespace Starvers.TaskSystem
 						NeedEx = new ItemLists
 						{
 							[TaskDifficulty.Easy] = Easy,
-							[TaskDifficulty.Hard] = Hard
+							[TaskDifficulty.Normal] = Easy,
+							[TaskDifficulty.Hard] = Hard,
+							[TaskDifficulty.Hell] = Hard
 						};
 						Rewards = new TaskItem[]
 						{
@@ -1196,7 +1390,9 @@ namespace Starvers.TaskSystem
 						NeedEx = new ItemLists
 						{
 							[TaskDifficulty.Easy] = Easy,
-							[TaskDifficulty.Hard] = Hard
+							[TaskDifficulty.Normal] = Easy,
+							[TaskDifficulty.Hard] = Hard,
+							[TaskDifficulty.Hell] = Hard
 						};
 						Rewards = new TaskItem[]
 						{
@@ -1252,7 +1448,9 @@ namespace Starvers.TaskSystem
 						NeedEx = new ItemLists
 						{
 							[TaskDifficulty.Easy] = Easy,
-							[TaskDifficulty.Hard] = Hard
+							[TaskDifficulty.Normal] = Easy,
+							[TaskDifficulty.Hard] = Hard,
+							[TaskDifficulty.Hell] = Hard
 						};
 						Rewards = new TaskItem[]
 						{
@@ -1319,11 +1517,21 @@ namespace Starvers.TaskSystem
 							(ItemID.InfernoFork),
 							//(ItemID.FlarefinKoi, 120)
 						};
+						var Hell = new TaskItem[]
+						{
+							(ItemID.LivingFireBlock, 800),
+							(ItemID.FireFeather, 4),
+							(ItemID.UnholyTrident),
+							(ItemID.InfernoFork),
+							//(ItemID.FlarefinKoi, 120)
+						};
 
 						NeedEx = new ItemLists
 						{
 							[TaskDifficulty.Easy] = Easy,
-							[TaskDifficulty.Hard] = Hard
+							[TaskDifficulty.Normal] = Easy,
+							[TaskDifficulty.Hard] = Hard,
+							[TaskDifficulty.Hell] = Hell
 						};
 						Rewards = new TaskItem[]
 						{
@@ -1359,11 +1567,21 @@ namespace Starvers.TaskSystem
 							(ItemID.FishingSeaweed, 15),
 							(ItemID.TinCan, 15)
 						};
+						var Hell = new TaskItem[]
+						{
+							(ItemID.Bacon, 20),
+							(ItemID.ScalyTruffle),
+							(ItemID.OldShoe, 30),
+							(ItemID.FishingSeaweed, 30),
+							(ItemID.TinCan, 30)
+						};
 
 						NeedEx = new ItemLists
 						{
 							[TaskDifficulty.Easy] = Easy,
-							[TaskDifficulty.Hard] = Hard
+							[TaskDifficulty.Normal] = Easy,
+							[TaskDifficulty.Hard] = Hard,
+							[TaskDifficulty.Hell] = Hell
 						};
 						Rewards = new TaskItem[]
 						{
@@ -1403,7 +1621,9 @@ namespace Starvers.TaskSystem
 						NeedEx = new ItemLists
 						{
 							[TaskDifficulty.Easy] = Easy,
-							[TaskDifficulty.Hard] = Hard
+							[TaskDifficulty.Normal] = Easy,
+							[TaskDifficulty.Hard] = Hard,
+							[TaskDifficulty.Hell] = Hard
 						};
 						Rewards = new TaskItem[]
 						{
@@ -1458,7 +1678,9 @@ namespace Starvers.TaskSystem
 						NeedEx = new ItemLists
 						{
 							[TaskDifficulty.Easy] = Easy,
-							[TaskDifficulty.Hard] = Hard
+							[TaskDifficulty.Normal] = Easy,
+							[TaskDifficulty.Hard] = Hard,
+							[TaskDifficulty.Hell] = Hard
 						};
 						Rewards = new TaskItem[]
 						{

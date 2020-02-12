@@ -15,7 +15,7 @@ namespace Starvers.AuraSystem.Skills
 		{
 			Level = 1000;
 			MP = 200;
-			CD = 60 * 6 * 60;
+			CD = 60 * 60;
 			ForceCD = true;
 			Author = "zhou_Qi";
 			Description = @"重置绝大多数技能的冷却，使用者即刻死亡

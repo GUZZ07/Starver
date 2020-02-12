@@ -40,23 +40,30 @@ namespace Starvers.AuraSystem.Skills
 					break;
 				}
 			}
-			new Thread(RealSkill).Start(player);
+			Task.Run(() => RealSkill(player));
 		}
-		protected static void RealSkill(object ply)
+		protected static void RealSkill(StarverPlayer player)
 		{
-			StarverPlayer player = ply as StarverPlayer;
-			int t = 0;
-			while (t++ < 6)
+			try
 			{
-				Thread.Sleep(1000);
-				if (Target != -1 && Main.npc[Target].active)
+				int t = 0;
+				int extend = (int)Math.Log(player.Level);
+				while (t++ < 10 + extend)
 				{
-					player.ProjCircle(Main.npc[Target].Center, 16 * 25, 9, ProjectileID.VortexBeaterRocket, player.Level > 200 ? 8 : 16, 80);
+					Thread.Sleep(1000);
+					if (Target != -1 && Main.npc[Target].active)
+					{
+						player.ProjCircle(Main.npc[Target].Center, 16 * 25, 9, ProjectileID.VortexBeaterRocket, player.Level > 200 ? 8 : 16, 80);
+					}
+					else
+					{
+						player.ProjCircle(player.Center, 16 * 25, 9, ProjectileID.VortexBeaterRocket, player.Level > 200 ? 8 : 16, 80);
+					}
 				}
-				else
-				{
-					player.ProjCircle(player.Center, 16 * 25, 9, ProjectileID.VortexBeaterRocket, player.Level > 200 ? 8 : 16, 80);
-				}
+			}
+			catch
+			{
+
 			}
 		}
 	}

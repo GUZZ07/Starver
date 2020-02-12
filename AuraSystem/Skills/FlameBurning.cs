@@ -14,7 +14,7 @@ namespace Starvers.AuraSystem.Skills
 	{
 		public FlameBurning():base(SkillIDs.FlameBurning)
 		{
-			CD = 60 * 15;
+			CD = 60 * 6;
 			MP = 20;
 			Author = "麦克虚妄";
 			Description = "制造一片扇形的火焰";
