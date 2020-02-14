@@ -663,7 +663,14 @@ namespace Starvers
 				}
 			}
 			Level = lvl;
-			exp = (int)ExpGet;
+			try
+			{
+				exp = (int)ExpGet;
+			}
+			catch
+			{
+
+			}
 		}
 		#endregion
 		#region DataOperations
@@ -1132,7 +1139,13 @@ namespace Starvers
 		}
 		#endregion
 		#region Damage
-		public void Damage(int damage,PlayerDeathReason reason = null)
+		public void Damage(int damage)
+		{
+			damage = Math.Min(23000, damage);
+			TSPlayer.DamagePlayer(damage);
+			//NetMessage.SendPlayerHurt(Index, PlayerDeathReason.LegacyDefault(), damage, Index, false, false, 0);
+		}
+		public void Damage(int damage, PlayerDeathReason reason = null)
 		{
 			damage = Math.Min(23000, damage);
 			NetMessage.SendPlayerHurt(Index, reason ?? PlayerDeathReason.LegacyDefault(), damage, new Random().Next(-1, 1), false, false, 0);

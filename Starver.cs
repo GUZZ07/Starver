@@ -418,6 +418,10 @@ namespace Starvers
 				interdamage *= snpc.DamagedIndex;
 			}
 			int realdamage = (int)interdamage;
+			if(player.Level > 1000000)
+			{
+				realdamage = int.MaxValue;
+			}
 
 			var NArgs = new NPCStrikeEventArgs(args.Npc, RealNPC, interdamage)
 			{

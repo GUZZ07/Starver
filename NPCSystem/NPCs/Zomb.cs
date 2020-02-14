@@ -71,10 +71,21 @@ namespace Starvers.NPCSystem.NPCs
 					}
 					if (Microsoft.Xna.Framework.Vector2.Distance(TargetPlayer.Center, Center) < 16 * 15)
 					{
-						ply.Damage(200, PlayerDeathReason.ByProjectile(ply, idx));
+						if (Starver.IsPE)
+						{
+							ply.Damage(200);
+						}
+						else
+						{
+							WhatItIs(ply, idx);
+						}
 					}
 				}
 			}
+		}
+		private static void WhatItIs(StarverPlayer ply, int idx)
+		{
+			ply.Damage(200, PlayerDeathReason.ByProjectile(ply, idx));
 		}
 		#endregion
 		#region OnSpawn

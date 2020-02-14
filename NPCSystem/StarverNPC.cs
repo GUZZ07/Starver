@@ -491,11 +491,22 @@ namespace Starvers.NPCSystem
 						}
 						if ((!Handled) && RealNPC.damage > 0 && !ply.TPlayer.immune)
 						{
-							ply.Damage(RealNPC.damage, PlayerDeathReason.ByNPC(i));
+							if(Starver.IsPE)
+							{
+								ply.Damage(RealNPC.damage);
+							}
+							else
+							{
+								OfPC1353(ply, RealNPC);
+							}
 						}
 					}
 				}
 			}
+		}
+		private static void OfPC1353(StarverPlayer ply, Terraria.NPC npc)
+		{
+			ply.Damage(npc.damage, PlayerDeathReason.ByNPC(npc.whoAmI));
 		}
 		#endregion
 		#region OnCollide
