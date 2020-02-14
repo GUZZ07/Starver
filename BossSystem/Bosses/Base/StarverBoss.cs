@@ -571,7 +571,26 @@ namespace Starvers.BossSystem.Bosses.Base
 				TSPlayer.Server.SetTime(false, 0);
 			}
 			++Timer;
-			RealAI();
+			try
+			{
+				RealAI();
+			}
+			catch(IndexOutOfRangeException)
+			{
+				if (Target < 0 || Target >= Starver.Players.Length || TargetPlayer == null || !TargetPlayer.Active)
+				{
+					TargetClosest();
+					if (Target < 0 || Target >= Starver.Players.Length || TargetPlayer == null || !TargetPlayer.Active)
+					{
+						//if (TShock.Utils.ActivePlayers() > 0)
+						{
+							OnFail();
+						}
+						KillMe();
+						return;
+					}
+				}
+			}
 			if (WallActive)
 			{
 				UpdateWall();
