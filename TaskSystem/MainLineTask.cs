@@ -1121,7 +1121,6 @@ namespace Starvers.TaskSystem
 						var Easy = new TaskItem[]
 						{
 							(ItemID.Ichor, 55),
-							(ItemID.CrimsonFishingCrate, 5),
 							(ItemID.SoulofNight, 100),
 							(ItemID.SoulofLight, 100),
 							(ItemID.Vertebrae, 44)
@@ -1129,7 +1128,6 @@ namespace Starvers.TaskSystem
 						var Normal = new TaskItem[]
 						{
 							(ItemID.Ichor, 66),
-							(ItemID.CrimsonFishingCrate, 7),
 							(ItemID.SoulofNight, 125),
 							(ItemID.SoulofLight, 125),
 							(ItemID.Vertebrae, 55)
@@ -1137,7 +1135,6 @@ namespace Starvers.TaskSystem
 						var Hard = new TaskItem[]
 						{
 							(ItemID.Ichor, 99),
-							(ItemID.CrimsonFishingCrate, 15),
 							(ItemID.SoulofNight, 200),
 							(ItemID.SoulofLight, 200),
 							(ItemID.Vertebrae, 77)
@@ -1146,7 +1143,6 @@ namespace Starvers.TaskSystem
 						{
 							(ItemID.Ichor, 99),
 							(ItemID.Ichor, 99),
-							(ItemID.CrimsonFishingCrate, 20),
 							(ItemID.SoulofNight, 250),
 							(ItemID.SoulofLight, 250),
 							(ItemID.Vertebrae, 99)
@@ -1178,14 +1174,12 @@ namespace Starvers.TaskSystem
 						{
 							(ItemID.LifeFruit, 25),
 							(ItemID.SoulofFlight, 100),
-							(ItemID.Honeyfin, 10),
 							(ItemID.Hive, 222)
 						};
 						var Hard = new TaskItem[]
 						{
 							(ItemID.LifeFruit, 75),
 							(ItemID.SoulofFlight, 200),
-							(ItemID.Honeyfin, 30),
 							(ItemID.Hive, 666)
 						};
 

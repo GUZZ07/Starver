@@ -1132,10 +1132,10 @@ namespace Starvers
 		}
 		#endregion
 		#region Damage
-		public void Damage(int damage)
+		public void Damage(int damage,PlayerDeathReason reason = null)
 		{
 			damage = Math.Min(23000, damage);
-			TSPlayer.DamagePlayer(damage);
+			NetMessage.SendPlayerHurt(Index, reason ?? PlayerDeathReason.LegacyDefault(), damage, new Random().Next(-1, 1), false, false, 0);
 			//NetMessage.SendPlayerHurt(Index, PlayerDeathReason.LegacyDefault(), damage, Index, false, false, 0);
 		}
 		public void Damage(int damage, Color effectTextColor)

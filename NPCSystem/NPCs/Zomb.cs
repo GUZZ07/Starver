@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Terraria.DataStructures;
 using Terraria.ID;
 
 namespace Starvers.NPCSystem.NPCs
@@ -23,7 +24,7 @@ namespace Starvers.NPCSystem.NPCs
 		};
 		#endregion
 		#region Properties
-		protected override float CollidingIndex => DamageIndex;
+		protected override float CollidingIndex => (float)Math.Sqrt(DamageIndex);
 		#endregion
 		#region Ctor
 		public Zomb()
@@ -37,7 +38,7 @@ namespace Starvers.NPCSystem.NPCs
 			AIStyle = 3;
 			Types = ZombieTypes;
 			DamagedIndex = 0.1f;
-			CollideDamage = 200;
+			CollideDamage = 100;
 		}
 		#endregion
 		#region CheckSpawn
@@ -70,7 +71,7 @@ namespace Starvers.NPCSystem.NPCs
 					}
 					if (Microsoft.Xna.Framework.Vector2.Distance(TargetPlayer.Center, Center) < 16 * 15)
 					{
-						ply.Damage((int)(2000 * DamageIndex));
+						ply.Damage(200, PlayerDeathReason.ByProjectile(ply, idx));
 					}
 				}
 			}

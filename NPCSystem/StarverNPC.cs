@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Terraria.DataStructures;
 using TShockAPI;
 
 namespace Starvers.NPCSystem
@@ -66,7 +67,7 @@ namespace Starvers.NPCSystem
 		protected virtual float CollidingIndex { get; set; } = 1;
 		protected virtual float DefenseIndex => (StarverConfig.Config.TaskNow - 20) / 2f;
 		protected virtual bool Enabled => true;
-		public override float DamageIndex => (StarverConfig.Config.TaskNow - 20) / 5f + 1;
+		public override float DamageIndex => (float)Math.Sqrt(StarverConfig.Config.TaskNow - 20) / 5f + 1;
 		public bool OverrideRawDrop { get; protected set; } = false;
 		#endregion
 		#region Ctor & Release
@@ -457,15 +458,15 @@ namespace Starvers.NPCSystem
 			Terraria.NPC RealNPC;
 			for (int i = 0; i < Terraria.Main.maxNPCs; i++)
 			{
-				if(!Terraria.Main.npc[i].active)
+				if (!Terraria.Main.npc[i].active)
 				{
 					continue;
 				}
-				if(Terraria.Main.npc[i].friendly)
+				if (Terraria.Main.npc[i].friendly)
 				{
 					continue;
 				}
-				if(Terraria.Main.npc[i].damage < 1)
+				if (Terraria.Main.npc[i].damage < 1)
 				{
 					continue;
 				}
@@ -490,7 +491,7 @@ namespace Starvers.NPCSystem
 						}
 						if ((!Handled) && RealNPC.damage > 0 && !ply.TPlayer.immune)
 						{
-							ply.Damage(RealNPC.damage);
+							ply.Damage(RealNPC.damage, PlayerDeathReason.ByNPC(i));
 						}
 					}
 				}
@@ -503,7 +504,7 @@ namespace Starvers.NPCSystem
 		/// </summary>
 		/// <param name="player">撞上那个玩家</param>
 		/// <param name="handled">是否处理完毕</param>
-		protected virtual void OnCollide(StarverPlayer player,ref bool handled)
+		protected virtual void OnCollide(StarverPlayer player, ref bool handled)
 		{
 
 		}

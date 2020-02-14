@@ -25,6 +25,7 @@ namespace Starvers.NPCSystem.NPCs
 		private Vector2 myVector;
 		#endregion
 		#region Properties
+		public override float DamageIndex { get; set; } = 1;
 		protected override float CollidingIndex => DamageIndex;
 		#endregion
 		#region Ctor
@@ -177,7 +178,7 @@ namespace Starvers.NPCSystem.NPCs
 			if (Timer % 45 == 0 && Timer % (2 * 60 + 3 * 45) <= 3 * 45)
 			{
 				Vel = (Vector)(Center - TargetPlayer.Center);
-				NewProjSector(Center, 18, 16, Vel.Angle, PI * 4 / 9, 53, ProjectileID.BulletDeadeye, 5);
+				ProjSector(Center, 18, 16, Vel.Angle, PI * 4 / 9, 53, ProjectileID.BulletDeadeye, 5);
 			}
 		}
 		/// <summary>
@@ -189,7 +190,7 @@ namespace Starvers.NPCSystem.NPCs
 			{
 				Vel = (Vector)(TargetPlayer.Center - Center);
 				Vel.Length = 27;
-				NewProj(Center, Vel, ProjectileID.BulletDeadeye, 28, 13);
+				Proj(Center, Vel, ProjectileID.BulletDeadeye, 28, 13);
 			}
 		}
 		/// <summary>
@@ -201,7 +202,7 @@ namespace Starvers.NPCSystem.NPCs
 			{
 				Vel = (Vector)(TargetPlayer.Center - Center);
 				Vel.Length = 230;
-				NewProj(Center, Vel, ProjectileID.BulletDeadeye, 16);
+				Proj(Center, Vel, ProjectileID.BulletDeadeye, 16);
 			}
 		}
 		/// <summary>
@@ -213,7 +214,7 @@ namespace Starvers.NPCSystem.NPCs
 			{
 				Vel = (Vector)(TargetPlayer.Center - Center);
 				Vel.Length = 50;
-				NewProj(Center, Vel, ProjectileID.BulletDeadeye, 74, 20);
+				Proj(Center, Vel, ProjectileID.BulletDeadeye, 74, 20);
 			}
 		}
 		/// <summary>
@@ -229,7 +230,7 @@ namespace Starvers.NPCSystem.NPCs
 					Vel.Length = 20;
 					Vel.Angle -= PI / 5 / 2;
 					Vel.Angle += PI / 5 * (Timer % (60 * 3) / 3) / (60);
-					NewProj(Center, Vel, ProjectileID.BulletDeadeye, 15);
+					Proj(Center, Vel, ProjectileID.BulletDeadeye, 15);
 				}
 			}
 			else
@@ -240,7 +241,7 @@ namespace Starvers.NPCSystem.NPCs
 					Vel.Length = 20;
 					Vel.Angle += PI / 5 / 2;
 					Vel.Angle -= PI / 5 * (Timer % (60 * 3) / 3) / (60);
-					NewProj(Center, Vel, ProjectileID.BulletDeadeye, 15);
+					Proj(Center, Vel, ProjectileID.BulletDeadeye, 15);
 				}
 			}
 		}
@@ -257,7 +258,7 @@ namespace Starvers.NPCSystem.NPCs
 					Vel.Length = 22;
 					Vel.Angle -= PI / 5 / 2;
 					Vel.Angle += PI * 2 / 5 * (Timer % (60 * 3) / 20) / (9);
-					NewProj(Center, Vel, ProjectileID.RocketSkeleton, 52);
+					Proj(Center, Vel, ProjectileID.RocketSkeleton, 52);
 				}
 			}
 			else
@@ -268,7 +269,7 @@ namespace Starvers.NPCSystem.NPCs
 					Vel.Length = 22;
 					Vel.Angle += PI / 5 / 2;
 					Vel.Angle -= PI * 2 / 5 * (Timer % (60 * 3) / 20) / (9);
-					NewProj(Center, Vel, ProjectileID.RocketSkeleton, 52);
+					Proj(Center, Vel, ProjectileID.RocketSkeleton, 52);
 				}
 			}
 		}
@@ -300,7 +301,7 @@ namespace Starvers.NPCSystem.NPCs
 				Vel = (Vector)(TargetPlayer.Center - Center);
 				Vel.Length = 23.66f;
 				Vel.Angle += Rand.NextDouble(-Math.PI / 6, Math.PI / 6);
-				NewProj(Center, Vel, ProjectileID.CursedFlameHostile, 12);
+				Proj(Center, Vel, ProjectileID.CursedFlameHostile, 12);
 			}
 		}
 		#endregion

@@ -58,6 +58,14 @@ namespace Starvers.AuraSystem.Realms
 			get;
 			set;
 		}
+		/// <summary>
+		/// 消失后是否重新生成
+		/// </summary>
+		public bool Lock
+		{
+			get;
+			set;
+		}
 
 		public AnalogItem(int id, int stack = 1, int? timeLeft = null) : base(false)
 		{
@@ -87,12 +95,16 @@ namespace Starvers.AuraSystem.Realms
 			}
 			if (!RealItem.active)
 			{
-				if (id == ItemID.FallenStar && Main.dayTime)
+				if (Lock)
+				{
+					itemIndex = Utils.NewItem(Center, id, stack);
+				}
+				else
+				// if (id == ItemID.FallenStar && Main.dayTime)
 				{
 					Kill();
 					return;
 				}
-				itemIndex = Utils.NewItem(Center, id, stack);
 			}
 			else if (!LockStack)
 			{

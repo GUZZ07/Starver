@@ -24,6 +24,7 @@ namespace Starvers.TaskSystem.Branches
 			private LinkedList<int> enemies;
 			private string[] startMsgs;
 			private string[] words;
+			private List<AnalogItem> Items;
 			private short msgInterval;
 			private short msgCurrent;
 			private short count;
@@ -146,6 +147,7 @@ namespace Starvers.TaskSystem.Branches
 				{
 					case 3:
 						{
+							Items = new List<AnalogItem>();
 							targetPosition = FindPos1();
 							TimeTicker = (int)(Vector2.Distance(targetPosition, TargetPlayer.Center) / TargetPlayer.TPlayer.maxRunSpeed);
 							TimeTicker += 60 * 20;
@@ -301,6 +303,7 @@ namespace Starvers.TaskSystem.Branches
 										float length = r * ShardRegionRadium * 16;
 										var item = new AnalogItem(ItemID.FragmentStardust);
 										item.Center = targetPosition + Rand.NextVector2(length);
+										Items.Add(item);
 										Starver.Instance.Aura.AddRealm(item);
 										/*
 										int idx = Utils.NewItem(targetPosition + Rand.NextVector2(length), ItemID.FragmentStardust);
@@ -736,6 +739,16 @@ namespace Starvers.TaskSystem.Branches
 			#region Utils
 			private void ClearStardustShards()
 			{
+				for (int i = 0; i < Items.Count; i++)
+				{
+					var item = Items[i];
+					if (Vector2.Distance(item.Center, targetPosition) < ShardRegionRadium * 16 + 32)
+					{
+						item.Kill();
+					}
+				}
+				Items.Clear();
+#if false
 				Starver.Instance.Aura.OperateRealms(realm =>
 				{
 					if (realm is AnalogItem item)
@@ -746,6 +759,7 @@ namespace Starvers.TaskSystem.Branches
 						}
 					}
 				});
+#endif
 			}
 			private void ClearEnemies()
 			{
