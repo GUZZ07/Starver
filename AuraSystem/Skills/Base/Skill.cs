@@ -10,16 +10,11 @@ namespace Starvers.AuraSystem.Skills.Base
 {
 	public abstract class Skill
 	{
-		private int cd;
 		public const int MaxSlots = 5;
 		public static Random Rand => Starver.Rand;
 		public string Name { get; private set; }
 		public int Index { get; private set; }
-		public int CD
-		{
-			get => cd;
-			protected set => cd = value;
-		}
+		public int CD { get; protected set; }
 		public int MP { get; protected set; }
 		public int Level { get; protected set; }
 		public bool ForceCD { get; protected set; }
@@ -49,8 +44,9 @@ namespace Starvers.AuraSystem.Skills.Base
 			Name = GetType().Name;
 			Index = (int)(SkillIDs)Enum.Parse(typeof(SkillIDs), Name);
 		}
-		protected Skill(SkillIDs idx) : this()
+		protected Skill(SkillIDs idx) 
 		{
+			Name = GetType().Name;
 			Index = (int)idx;
 		}
 		protected void SetText()

@@ -16,17 +16,24 @@ namespace Starvers.NPCSystem.NPCs
 		#region Fields
 		public const int MaxShots = 8;
 		/// <summary>
-		/// 0: 守卫 1: 追击 2: 巡逻 3: 逃跑
+		/// 0: 守卫 1: 追击 2: 巡逻 3: 逃跑 4: 巡逻追击
 		/// </summary>
 		private byte work = 1;
 		private Action shot;
 		private float requireDistance;
 		private Vector2 targetPos;
 		private Vector2 myVector;
+		private int t;
+		private BitsByte flags;
 		#endregion
 		#region Properties
-		public override float DamageIndex { get; set; } = 1;
+		private bool TrackingPlayerIfCloseTo
+		{
+			get => flags[0];
+			set => flags[0] = value;
+		}
 		protected override float CollidingIndex => DamageIndex;
+		public override float DamageIndex { get; set; } = 1;
 		#endregion
 		#region Ctor
 		public ElfHeliEx()
@@ -81,6 +88,9 @@ namespace Starvers.NPCSystem.NPCs
 					break;
 				case 3:
 					AI_Escape();
+					break;
+				case 4:
+					AI_WonderAttack();
 					break;
 			}
 		}
@@ -166,6 +176,21 @@ namespace Starvers.NPCSystem.NPCs
 			else
 			{
 				KillMe();
+			}
+		}
+		private void AI_WonderAttack()
+		{
+			if (Timer++ % t == 0)
+			{
+				FakeVelocity *= -1;
+			}
+			if (Vector2.Distance(Center, TargetPlayer.Center) < requireDistance)
+			{
+				shot();
+				if (TrackingPlayerIfCloseTo)
+				{
+					Attack(TargetPlayer);
+				}
 			}
 		}
 		#endregion
@@ -335,9 +360,19 @@ namespace Starvers.NPCSystem.NPCs
 			Wonder(Center, wondering);
 			requireDistance = attackRadium;
 		}
+		public void WonderAttack(Vector2 where, Vector2 velocity, int cycle, bool tracking)
+		{
+			work = 4;
+			t = cycle;
+			myVector = where;
+			FakeVelocity = (Vector)velocity;
+			Center = where;
+			Timer = (uint)cycle / 2;
+			TrackingPlayerIfCloseTo = tracking;
+		}
 		public void SetShot(int id)
 		{
-			Debug.Assert(0 <= id && id < MaxShots, $"id OutOfRange: {id}");
+			Debug.Assert(0 <= id && id < MaxShots, $"id out of range: {id}");
 			shot = id switch
 			{
 				0 => Shot_0,

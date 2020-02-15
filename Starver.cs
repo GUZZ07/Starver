@@ -498,7 +498,7 @@ namespace Starvers
 					}
 					else
 					{
-						NetMessage.SendData((int)PacketTypes.NpcUpdate, -1, -1, null, RealNPC.whoAmI);
+						RealNPC.SendData();
 					}
 				}
 				snpc?.OnStrike(realdamage, args.KnockBack, player);

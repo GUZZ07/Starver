@@ -471,10 +471,7 @@ namespace Starvers.TaskSystem
 				#region Branch
 				case "branch":
 					{
-						if (player.bldata.AvaiableBLs == BLFlags.None)
-						{
-							player.bldata.AvaiableBLs = BLFlags.YrtAEvah;
-						}
+						player.CheckBranchAvaiable();
 						if (args.Parameters.Count > 1 && int.TryParse(args.Parameters[1], out int id))
 						{
 							if (0 <= id && id < (int)BLID.Max)
@@ -519,6 +516,13 @@ namespace Starvers.TaskSystem
 								player.SendInfoMessage($"    {(int)i}: {branch}({player.bldata[i]} / {branch.Count})");
 							}
 						}
+						break;
+					}
+				#endregion
+				#region Bonus
+				case "bonus":
+					{
+						player.ShowBonus();
 						break;
 					}
 				#endregion

@@ -350,6 +350,29 @@ namespace Starvers
 			TSPlayer.Spawn();
 		}
 		#endregion
+		#region Branches
+		#region CheckBranchAvaiable
+		public void CheckBranchAvaiable()
+		{
+			if (bldata.AvaiableBLs == BLFlags.None)
+			{
+				bldata.AvaiableBLs = BLFlags.YrtAEvah;
+			}
+			else
+			{
+				//if (BLFinished(BLID.YrtAEvah) && !BLAvaiable(BLID.StoryToContinue))
+				{
+					//bldata.AvaiableBLs |= BLFlags.StoryToContinue;
+				}
+			}
+		}
+		#endregion
+		#region BLFinished
+		public bool BLFinished(BLID id)
+		{
+			return Starver.Instance.TSKS.BranchTaskLines[(int)id].Count == bldata[id];
+		}
+		#endregion
 		#region BranchTaskEnd
 		public void BranchTaskEnd(bool success)
 		{
@@ -376,6 +399,7 @@ namespace Starvers
 			return BLdata.AvaiableBLs.HasFlag(flag);
 		}
 		#endregion
+		#endregion
 		#region RandRocket
 		public void RandomRocket(int min, int Max)
 		{
@@ -395,6 +419,44 @@ namespace Starvers
 			while (count-- > 0)
 			{
 				NewProj(Center + Starver.Rand.NextVector2(16 * 60, 16 * 30), Vector2.Zero, rockets.Next(), 0);
+			}
+		}
+		#endregion
+		#region ShowBonus
+		public void ShowBonus()
+		{
+			SendMessage("你当前拥有以下特殊属性:", 255, 128, 255);
+			if (bldata.Bonus.HasFlag(EffectBonus.CD34))
+			{
+				SendInfoMessage("    技能CD缩短为原来的 3 / 4");
+			}
+			if (bldata.Bonus.HasFlag(EffectBonus.MP34))
+			{
+				SendInfoMessage("    技能MP减少为原来的 3 / 4");
+			}
+			if (bldata.Bonus.HasFlag(EffectBonus.DamageDecrease1))
+			{
+				SendInfoMessage("    pve伤害减少5%");
+			}
+			if (bldata.Bonus.HasFlag(EffectBonus.DamageDecrease2))
+			{
+				SendInfoMessage("    pve伤害减少5%");
+			}
+			if (bldata.Bonus.HasFlag(EffectBonus.DamageDecrease3))
+			{
+				SendInfoMessage("    pve伤害减少5%");
+			}
+			if (bldata.Bonus.HasFlag(EffectBonus.DamageMultiply1))
+			{
+				SendInfoMessage("    2%打出2倍伤害(仅pve)");
+			}
+			if (bldata.Bonus.HasFlag(EffectBonus.DamageMultiply2))
+			{
+				SendInfoMessage("    2%打出2倍伤害(仅pve)");
+			}
+			if (bldata.Bonus.HasFlag(EffectBonus.ProbabilisticDodge))
+			{
+				SendInfoMessage("    3%的概率躲开攻击(仅pve)");
 			}
 		}
 		#endregion
@@ -1141,22 +1203,62 @@ namespace Starvers
 		#region Damage
 		public void Damage(int damage)
 		{
-			damage = Math.Min(23000, damage);
+			if (TryDodgeDamage())
+			{
+				return;
+			}
+			damage = GetDamage(damage);
 			TSPlayer.DamagePlayer(damage);
 			//NetMessage.SendPlayerHurt(Index, PlayerDeathReason.LegacyDefault(), damage, Index, false, false, 0);
 		}
 		public void Damage(int damage, PlayerDeathReason reason = null)
 		{
-			damage = Math.Min(23000, damage);
+			if (TryDodgeDamage())
+			{
+				return;
+			}
+			damage = GetDamage(damage);
 			NetMessage.SendPlayerHurt(Index, reason ?? PlayerDeathReason.LegacyDefault(), damage, new Random().Next(-1, 1), false, false, 0);
-			//NetMessage.SendPlayerHurt(Index, PlayerDeathReason.LegacyDefault(), damage, Index, false, false, 0);
 		}
 		public void Damage(int damage, Color effectTextColor)
 		{
-			damage = Math.Min(23000, damage);
+			if (TryDodgeDamage())
+			{
+				return;
+			}
+			damage = GetDamage(damage);
 			TSPlayer.DamagePlayer(damage);
 			SendCombatMSsg(damage.ToString(), effectTextColor);
 			//NetMessage.SendPlayerHurt(Index, PlayerDeathReason.LegacyDefault(), damage, Index, false, false, 0);
+		}
+		private bool TryDodgeDamage()
+		{
+			if (TPlayer.FindBuffIndex(BuffID.ShadowDodge) != -1)
+			{
+				return true;
+			}
+			if (bldata.Bonus.HasFlag(EffectBonus.ProbabilisticDodge))
+			{
+				return Starver.Rand.Next(100) < 3;
+			}
+			return false;
+		}
+		private int GetDamage(int rawdamage)
+		{
+			double damage = Math.Min(23000, rawdamage);
+			if (bldata.Bonus.HasFlag(EffectBonus.DamageDecrease1))
+			{
+				damage *= 0.95;
+			}
+			if (bldata.Bonus.HasFlag(EffectBonus.DamageDecrease2))
+			{
+				damage *= 0.95;
+			}
+			if (bldata.Bonus.HasFlag(EffectBonus.DamageDecrease3))
+			{
+				damage *= 0.95;
+			}
+			return (int)damage;
 		}
 		#endregion
 		#region ShowInfos
@@ -1284,6 +1386,20 @@ namespace Starvers
 		}
 		public void StrikingNPC(NPCStrikeEventArgs args)
 		{
+			if (bldata.Bonus.HasFlag(EffectBonus.DamageMultiply1))
+			{
+				if (Starver.Rand.Next(100) < 2)
+				{
+					args.RealDamage *= 2;
+				}
+			}
+			if (bldata.Bonus.HasFlag(EffectBonus.DamageMultiply2))
+			{
+				if (Starver.Rand.Next(100) < 2)
+				{
+					args.RealDamage *= 2;
+				}
+			}
 			BranchTask?.StrikingNPC(args);
 		}
 		public void StrikedNPC(NPCStrikeEventArgs args)
@@ -1292,6 +1408,14 @@ namespace Starvers
 		}
 		public void ReleasingSkill(ReleaseSkillEventArgs args)
 		{
+			if (bldata.Bonus.HasFlag(EffectBonus.CD34))
+			{
+				args.CD = args.CD * 3 / 4;
+			}
+			if (bldata.Bonus.HasFlag(EffectBonus.MP34))
+			{
+				args.MPCost = args.MPCost * 3 / 4;
+			}
 			BranchTask?.ReleasingSkill(args);
 		}
 		public void ReleasedSkill(ReleaseSkillEventArgs args)
@@ -1627,13 +1751,5 @@ namespace Starvers
 
 		#endregion
 		#endregion
-		public class PlayerData
-		{
-			public int Level { get; set; }
-			public int Exp { get; set; }
-			public int[] Skills { get; set; }
-			public byte[] BLDatas { get; set; }
-			public int MaxMP { get; set; }
-		}
 	}
 }

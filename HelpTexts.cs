@@ -11,7 +11,8 @@ namespace Starvers
 		public static string Task { get; } = @"用法:
     check:  检查任务
     list:   列出任务
-    branch: 支线任务";
+    branch: 支线任务
+    bonus:  显示特殊属性";
 		public static string Aura { get; } = @"用法:
     up:    升级
     toexp: 兑换经验

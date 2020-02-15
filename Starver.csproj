@@ -229,7 +229,10 @@
     <Compile Include="StarverPlayer.BLData.cs" />
     <Compile Include="StarverPlayer.cs" />
     <Compile Include="HelpTexts.cs" />
+    <Compile Include="StarverPlayer.PlayerData.cs" />
     <Compile Include="TaskSystem\BLID.cs" />
+    <Compile Include="TaskSystem\Branches\StoryToContinue.cs" />
+    <Compile Include="TaskSystem\Branches\StoryToContinue.Task.cs" />
     <Compile Include="TaskSystem\Branches\TestLine1.cs" />
     <Compile Include="TaskSystem\Branches\TestLine1.Task.cs" />
     <Compile Include="TaskSystem\Branches\YrtAEvah.cs" />
@@ -237,6 +240,7 @@
     <Compile Include="TaskSystem\BranchLine.cs" />
     <Compile Include="TaskSystem\BLFlags.cs" />
     <Compile Include="TaskSystem\BranchTask.cs" />
+    <Compile Include="TaskSystem\EffectBonus.cs" />
     <Compile Include="TaskSystem\Ext.cs" />
     <Compile Include="TaskSystem\ITask.cs" />
     <Compile Include="TaskSystem\MainLineTask.cs" />

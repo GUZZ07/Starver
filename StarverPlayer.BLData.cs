@@ -16,14 +16,25 @@ namespace Starvers
 			internal unsafe fixed byte buffer[Size];
 			[FieldOffset(16 * 0)]
 			private BLFlags avaiables;
+			[FieldOffset(EffectsOffSet)]
+			private EffectBonus bonus;
 
 			public const int Size = 16 * 4;
+
+			private const int EffectsOffSet = sizeof(BLFlags) + sizeof(BLFlags) * 8 * sizeof(byte);
 
 			public BLFlags AvaiableBLs
 			{
 				get => avaiables;
 				set => avaiables = value;
 			}
+
+			public EffectBonus Bonus
+			{
+				get => bonus;
+				set => bonus = value;
+			}
+
 			[IndexerName("Process")]
 			public unsafe byte this[BLID id]
 			{
@@ -37,7 +48,7 @@ namespace Starvers
 					{
 						throw new ArgumentException("id >= BLID.Max", nameof(id));
 					}
-					return buffer[(int)id + sizeof(int)];
+					return buffer[(int)id + sizeof(BLFlags)];
 				}
 				set
 				{

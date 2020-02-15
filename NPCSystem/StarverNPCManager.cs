@@ -88,6 +88,9 @@ namespace Starvers.NPCSystem
 							case 2:
 								heli.Wonder(args.TPlayer.Center, Starver.Rand.NextVector2(1));
 								break;
+							case 4:
+								heli.WonderAttack(args.TPlayer.Center, new Vector(1, 0), 10, false);
+								break;
 						}
 						if (args.Parameters.Count > 2 && int.TryParse(args.Parameters[2], out int shot))
 						{
