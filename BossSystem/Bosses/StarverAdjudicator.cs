@@ -290,12 +290,12 @@ namespace Starvers.BossSystem.Bosses
 					{
 						continue;
 					}
-					Proj(player.Center + Vel, Vector.FromPolar(Vel.Angle+ PI / 2, 22), ProjectileID.LostSoulHostile, 413, 10f);
+					Proj(player.Center + Vel, Vector.FromPolar(Vel.Angle+ PI / 2, 22), ProjectileID.LostSoulHostile, 213, 10f);
 				}
 			}
 			else
 			{
-				Proj(TargetPlayer.Center + Vel, Vector.FromPolar(Vel.Angle- PI / 2, 18), ProjectileID.LostSoulHostile, 333, 3f);
+				Proj(TargetPlayer.Center + Vel, Vector.FromPolar(Vel.Angle- PI / 2, 18), ProjectileID.LostSoulHostile, 200, 3f);
 			}
 			Vel.Angle+= PI / 20;
 		}

@@ -37,7 +37,7 @@ namespace Starvers.NPCSystem.NPCs
 		}
 		#endregion
 		#region OnDead
-		public override void OnDead()
+		public override void OnKilled()
 		{
 			Brain.AliveFollows -= 1;
 			Starver.NPCs[Index] = null;

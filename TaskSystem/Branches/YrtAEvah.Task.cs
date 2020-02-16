@@ -23,10 +23,10 @@ namespace Starvers.TaskSystem.Branches
 
 			private LinkedList<int> enemies;
 			private string[] startMsgs;
-			private string[] words;
-			private List<AnalogItem> Items;
 			private short msgInterval;
 			private short msgCurrent;
+			private string[] words;
+			private List<AnalogItem> Items;
 			private short count;
 			private short countRequire;
 			private short targetID;
@@ -219,7 +219,7 @@ namespace Starvers.TaskSystem.Branches
 						{
 							if (Main.dayTime)
 							{
-								Fail();
+								End(false);
 							}
 							break;
 						}
@@ -229,11 +229,11 @@ namespace Starvers.TaskSystem.Branches
 							{
 								if (count >= countRequire)
 								{
-									Success();
+									End(true);
 								}
 								else
 								{
-									Fail();
+									End(false);
 								}
 							}
 							else
@@ -272,7 +272,7 @@ namespace Starvers.TaskSystem.Branches
 								if(TimeTicker == 0)
 								{
 									TargetPlayer.SendFailMessage("太慢了, 太慢了");
-									Fail();
+									End(false);
 									return;
 								}
 								if (msgCurrent >= startMsgs.Length && Timer % 90 == 0)
@@ -324,7 +324,7 @@ namespace Starvers.TaskSystem.Branches
 								}
 								else
 								{
-									Success();
+									End(true);
 								}
 							}
 							if (taskProcess < 2 && Timer % 150 == 0)
@@ -421,7 +421,7 @@ namespace Starvers.TaskSystem.Branches
 								}
 								else
 								{
-									Success();
+									End(true);
 								}
 							}
 							if (taskProcess < 2 && Timer % 150 == 0)
@@ -506,7 +506,7 @@ namespace Starvers.TaskSystem.Branches
 									else
 									{
 										ClearEnemies();
-										Success();
+										End(true);
 									}
 								}
 							}
@@ -531,7 +531,7 @@ namespace Starvers.TaskSystem.Branches
 									TargetPlayer.SendCombatMSsg($"猎杀数: {count} / {countRequire}", Color.Maroon);
 									if (count >= countRequire)
 									{
-										Success();
+										End(true);
 									}
 								}
 							}
@@ -562,13 +562,6 @@ namespace Starvers.TaskSystem.Branches
 							break;
 						}
 				}
-			}
-
-			public override void OnDeath()
-			{
-				base.OnDeath();
-				TargetPlayer.SendFailMessage("任务由于死亡而失败");
-				Fail();
 			}
 
 			public override void OnPickAnalogItem(AnalogItem item)
@@ -618,6 +611,19 @@ namespace Starvers.TaskSystem.Branches
 				}
 			}
 
+			protected override void End(bool success)
+			{
+				base.End(success);
+				if (success)
+				{
+					Success();
+				}
+				else
+				{
+					Fail();
+				}
+			}
+
 			private void Fail()
 			{
 				switch (ID)
@@ -638,13 +644,11 @@ namespace Starvers.TaskSystem.Branches
 							break;
 						}
 				}
-				TargetPlayer.BranchTaskEnd(false);
 			}
 
 			private void Success()
 			{
 				RewardPlayer();
-				TargetPlayer.BranchTaskEnd(true);
 			}
 
 			private void RewardLevel(int lvl)

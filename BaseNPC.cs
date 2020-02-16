@@ -31,7 +31,7 @@ namespace Starvers
 		{
 			try
 			{
-				OnDead();
+				OnKilled();
 				RealNPC.checkDead();
 			}
 			catch(Exception e)

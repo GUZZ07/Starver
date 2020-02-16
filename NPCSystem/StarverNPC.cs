@@ -697,7 +697,7 @@ namespace Starvers.NPCSystem
 			if (npc._active)
 			{
 				npc._active = false;
-				npc.OnDead();
+				npc.OnKilled();
 				npc.KillMe();
 			}
 		}

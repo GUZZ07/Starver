@@ -57,7 +57,7 @@ namespace Starvers.NPCSystem.NPCs
 		}
 		#endregion
 		#region OnDead
-		public override void OnDead()
+		public override void OnKilled()
 		{
 			int idx = NewProj(Center, Microsoft.Xna.Framework.Vector2.Zero, ProjectileID.Explosives, 3000);
 			//if (Rand.Next(100) > 2 * StarverConfig.Config.TaskNow)

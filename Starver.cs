@@ -238,6 +238,7 @@ namespace Starvers
 				ServerApi.Hooks.NpcStrike.Register(this, OnStrike);
 				ServerApi.Hooks.NpcSpawn.Register(this, OnNPCSpawn);
 				PlayerHooks.PlayerPostLogin += OnLogin;
+				PlayerHooks.PlayerLogout += OnLogout;
 				GetDataHandlers.PlayerDamage += OnDamage;
 				if (Config.EvilWorld)
 				{
@@ -292,6 +293,7 @@ namespace Starvers
 				//ServerApi.Hooks.NpcKilled.Deregister(this, OnKill);
 				ServerApi.Hooks.NpcSpawn.Deregister(this, OnNPCSpawn);
 				PlayerHooks.PlayerPostLogin -= OnLogin;
+				PlayerHooks.PlayerLogout -= OnLogout;
 				GetDataHandlers.PlayerDamage -= OnDamage;
 				if (Config.EvilWorld)
 				{
@@ -460,6 +462,7 @@ namespace Starvers
 				}
 				*/
 			}
+			snpc?.PreStrike(ref realdamage, args.KnockBack, player);
 			player.Exp += realdamage;
 			RealNPC.life -= realdamage;
 			RealNPC.playerInteraction[player.Index] = true;
@@ -765,6 +768,12 @@ namespace Starvers
 			}
 			//}).Start();
 		}
+		private void OnLogout(PlayerLogoutEventArgs args)
+		{
+			ref StarverPlayer player = ref Players[args.Player.Index];
+			player?.OnLogout();
+			player = null;
+		}
 		#endregion
 		#region OnGreet
 		private void OnGreet(GreetPlayerEventArgs args)
@@ -852,6 +861,7 @@ namespace Starvers
 				return;
 			}
 			UpdateForm(Players[args.Who], true);
+			Players[args.Who].OnLeave();
 			Players[args.Who].Save();
 			Players[args.Who] = null;
 		}

@@ -350,6 +350,16 @@ namespace Starvers
 			TSPlayer.Spawn();
 		}
 		#endregion
+		#region OnLeave
+		public void OnLeave()
+		{
+			BranchTask?.OnLeave();
+		}
+		public void OnLogout()
+		{
+			BranchTask?.OnLogout();
+		}
+		#endregion
 		#region Branches
 		#region CheckBranchAvaiable
 		public void CheckBranchAvaiable()
@@ -360,9 +370,10 @@ namespace Starvers
 			}
 			else
 			{
-				//if (BLFinished(BLID.YrtAEvah) && !BLAvaiable(BLID.StoryToContinue))
+				if (BLFinished(BLID.YrtAEvah) && !BLAvaiable(BLID.StoryToContinue))
 				{
-					//bldata.AvaiableBLs |= BLFlags.StoryToContinue;
+					SendSuccessMessage("你已解锁支线: " + BLID.StoryToContinue);
+					bldata.AvaiableBLs |= BLFlags.StoryToContinue;
 				}
 			}
 		}
@@ -1432,14 +1443,14 @@ namespace Starvers
 		/// 技能ID列表
 		/// </summary>
 		public int[] Skills { get; set; }
-		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+		
 		public bool Temp { get; set; }
-		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+		
 		public BranchTask BranchTask { get; set; }
-		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+		
 		public int AvalonGradation { get; set; }
 		public string Name { get; set; }
-		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+		
 		/// <summary>
 		/// 上一次捕获到释放技能
 		/// </summary>
@@ -1453,9 +1464,9 @@ namespace Starvers
 		/// </summary>
 		public bool Active => TPlayer.active && !TPlayer.dead;
 		public bool Dead => TPlayer.dead;
-		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+		
 		public bool IgnoreCD { get; set; }
-		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+		
 		public bool ForceIgnoreCD { get; set; }
 		public bool IsGuest => UserID == -3;
 		/// <summary>
@@ -1570,6 +1581,18 @@ namespace Starvers
 			{
 				TPlayer.statLife = Math.Min(value, TPlayer.statLifeMax2);
 				SendData(PacketTypes.PlayerHp, string.Empty, Index);
+			}
+		}
+		public int Mana
+		{
+			get
+			{
+				return TPlayer.statMana;
+			}
+			set
+			{
+				TPlayer.statMana = Math.Min(value, TPlayer.statManaMax);
+				SendData(PacketTypes.PlayerMana, string.Empty, Index);
 			}
 		}
 		public ref BLData BLdata => ref bldata;

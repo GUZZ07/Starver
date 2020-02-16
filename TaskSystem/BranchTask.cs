@@ -43,7 +43,8 @@ namespace Starvers.TaskSystem
 
 		public virtual void OnDeath()
 		{
-
+			TargetPlayer.SendFailMessage("任务由于死亡而失败");
+			End(false);
 		}
 
 		public virtual void OnPickAnalogItem(AuraSystem.Realms.AnalogItem item)
@@ -54,6 +55,16 @@ namespace Starvers.TaskSystem
 		public virtual void OnUpdateItemDrop(UpdateItemDropEventArgs args)
 		{
 
+		}
+
+		public virtual void OnLeave()
+		{
+			End(false);
+		}
+
+		public virtual void OnLogout()
+		{
+			End(false);
 		}
 
 		public virtual void OnGetData(GetDataEventArgs args)
@@ -86,6 +97,11 @@ namespace Starvers.TaskSystem
 		public virtual void ReleasedSkill(ReleaseSkillEventArgs args)
 		{
 
+		}
+
+		protected virtual void End(bool success)
+		{
+			TargetPlayer.BranchTaskEnd(success);
 		}
 	}
 }

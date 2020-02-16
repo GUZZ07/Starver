@@ -157,6 +157,7 @@
     <Compile Include="Events\ReleaseSkillEventArgs.cs" />
     <Compile Include="Events\UpdateItemDropEventArgs.cs" />
     <Compile Include="LockedSkill.cs" />
+    <Compile Include="NPCSystem\MultiLifeNPC.cs" />
     <Compile Include="NPCSystem\NPCs\ElfHeliEx.cs" />
     <Compile Include="ProjContainers\IProjSet.cs" />
     <Compile Include="ProjContainers\ProjPair.cs" />
@@ -249,6 +250,9 @@
     <Compile Include="TaskSystem\TaskDifficulty.cs" />
     <Compile Include="TaskSystem\TaskID.cs" />
     <Compile Include="TaskSystem\TaskItem.cs" />
+    <Compile Include="Tiles\Replenisher.cs" />
+    <Compile Include="Tiles\TileSection.cs" />
+    <Compile Include="Tiles\TileSectionData.cs" />
     <Compile Include="Utils.cs" />
     <Compile Include="WeaponSystem\Currency.cs" />
     <Compile Include="WeaponSystem\StarverWeaponManager.cs" />

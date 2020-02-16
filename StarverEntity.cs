@@ -432,7 +432,7 @@ namespace Starvers
 			if (RealNPC.life < 1)
 			{
 				RealNPC.checkDead();
-				OnDead();
+				OnKilled();
 				KillMe();
 			}
 			else
@@ -441,13 +441,17 @@ namespace Starvers
 				SendData();
 			}
 		}
+		public virtual void PreStrike(ref int RealDamage, float KnockBack, StarverPlayer player)
+		{
+
+		}
 		public virtual void OnStrike(int RealDamage, float KnockBack, StarverPlayer player)
 		{
 
 		}
 		#endregion
 		#region OnDead
-		public virtual void OnDead()
+		public virtual void OnKilled()
 		{
 
 		}

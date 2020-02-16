@@ -31,7 +31,8 @@ namespace Starvers.TaskSystem
 		{
 			null,
 			new TestLine1(),
-			new YrtAEvah()
+			new YrtAEvah(),
+			new StoryToContinue()
 		};
 		public ITask CurrentTask => MainLine[Config.TaskNow];
 
@@ -480,6 +481,11 @@ namespace Starvers.TaskSystem
 								{
 									if (player.bldata[(BLID)id] < BranchTaskLines[id].Count)
 									{
+										if(player.BranchTask != null)
+										{
+											player.SendFailMessage("请先完成当前任务");
+											break;
+										}
 										(bool success,string msg) = BranchTaskLines[id].TryStartTask(player, player.bldata[(BLID)id]);
 										if (success)
 										{

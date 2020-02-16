@@ -23,14 +23,21 @@ namespace Starvers.NPCSystem.NPCs
 		private float requireDistance;
 		private Vector2 targetPos;
 		private Vector2 myVector;
+		private float escapeSpeed;
 		private int t;
 		private BitsByte flags;
 		#endregion
 		#region Properties
-		private bool TrackingPlayerIfCloseTo
+		public event Action<ElfHeliEx> Killed;
+		public bool TrackingPlayerIfCloseTo
 		{
 			get => flags[0];
 			set => flags[0] = value;
+		}
+		public bool Escaped
+		{
+			get => flags[1];
+			set => flags[1] = value;
 		}
 		protected override float CollidingIndex => DamageIndex;
 		public override float DamageIndex { get; set; } = 1;
@@ -43,6 +50,7 @@ namespace Starvers.NPCSystem.NPCs
 			Checker = SpawnChecker.SpecialSpawn;
 			CollideDamage = 100;
 			DamagedIndex = 0.05f;
+			escapeSpeed = 9;
 			AIStyle = None;
 			NoGravity = true;
 			requireDistance = 16 * 40;
@@ -64,6 +72,13 @@ namespace Starvers.NPCSystem.NPCs
 				DamagedIndex *= 10;
 			}
 			SetShot(shotType);
+		}
+		#endregion
+		#region Dead
+		public override void OnKilled()
+		{
+			base.OnKilled();
+			Killed?.Invoke(this);
 		}
 		#endregion
 		#region AI
@@ -170,11 +185,11 @@ namespace Starvers.NPCSystem.NPCs
 		{
 			if (Vector2.Distance(targetPos, Center) > 16 * 10)
 			{
-				FakeVelocity = (Vector)(targetPos - Center);
-				FakeVelocity.Length = 19;
+				Center += (targetPos - Center).ToLenOf(escapeSpeed);
 			}
 			else
 			{
+				Escaped = true;
 				KillMe();
 			}
 		}
@@ -344,10 +359,12 @@ namespace Starvers.NPCSystem.NPCs
 			Target = target;
 			requireDistance = 16 * 40;
 		}
-		public void Escape(Vector2 where)
+		public void Escape(Vector2 where, float? speed = null)
 		{
+			FakeVelocity = default;
 			work = 3;
 			targetPos = where;
+			escapeSpeed = speed ?? escapeSpeed;
 		}
 		public void Wonder(Vector2 where, Vector2? wondering = null)
 		{
