@@ -317,6 +317,7 @@ namespace Starvers
 		public bool ZoneRain => Main.raining && TilePoint.Y <= Main.worldSurface;
 		public bool ZoneUnderworldHeight => TilePoint.Y > Main.maxTilesY - 200;
 		public bool ZoneSkyHeight => TilePoint.Y <= Main.worldSurface * 0.349999994039536;
+		public bool ZoneHell => ZoneUnderworldHeight;
 		#endregion
 		#region HeldItem
 		public Item HeldItem => TPlayer.inventory[TPlayer.selectedItem];
@@ -431,6 +432,12 @@ namespace Starvers
 			{
 				NewProj(Center + Starver.Rand.NextVector2(16 * 60, 16 * 30), Vector2.Zero, rockets.Next(), 0);
 			}
+		}
+		#endregion
+		#region InLiquid
+		public bool InLiquid(byte type)
+		{
+			return Main.tile[TilePoint.X, TilePoint.Y].liquid == type;
 		}
 		#endregion
 		#region ShowBonus

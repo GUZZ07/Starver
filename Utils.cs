@@ -420,6 +420,15 @@ namespace Starvers
 			return list[Rand.Next(list.Count)];
 		}
 		#endregion
+		#region InRange
+		/// <summary>
+		/// 判断value是否在闭区间(left, right)内
+		/// </summary>
+		public static bool InRange(this float value, float left, float right)
+		{
+			return left < value && value < right;
+		}
+		#endregion
 		#region SendData
 		public static void SendData(this NPC npc)
 		{

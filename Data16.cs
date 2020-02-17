@@ -101,7 +101,35 @@ namespace Starvers
 		[field: FieldOffset(sizeof(decimal) * 0)]
 		public decimal DecimalValue0;
 		#endregion
-
+		#region FixedBuffers
+		[FieldOffset(0)]
+		private unsafe fixed byte bytes[16];
+		[FieldOffset(0)]
+		private unsafe fixed short shorts[8];
+		[FieldOffset(0)]
+		private unsafe fixed int ints[4];
+		#endregion
+		#region Indexer
+		public unsafe bool this[int index]
+		{
+			get
+			{
+				if (index < 0 || 16 * 8 <= index)
+				{
+					throw new IndexOutOfRangeException($"index: {index}");
+				}
+				return (bytes[index / 8] & 1 << (index % 8) )!= 0;
+			}
+			set
+			{
+				if (index < 0 || 16 * 8 <= index)
+				{
+					throw new IndexOutOfRangeException($"index: {index}");
+				}
+				bytes[index / 8] &= (byte)~((value ? 1 : 0) << (index % 8));
+			}
+		}
+		#endregion
 		#region Equals
 		public static bool operator !=(Data16 left, Data16 right)
 		{

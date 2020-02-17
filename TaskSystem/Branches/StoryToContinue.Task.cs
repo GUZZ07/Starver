@@ -23,6 +23,7 @@ namespace Starvers.TaskSystem.Branches
 			private int countRequire;
 			private List<int> enemies;
 			private List<int> trackingEnemies;
+			private Data16 datas;
 			private Vector2 startPos;
 			private Vector2 targetPos;
 			private Vector2 alsopos;
@@ -84,30 +85,31 @@ namespace Starvers.TaskSystem.Branches
 						}
 					case 3:
 						{
-							name = "    ";
+							name = "配置药水(1)";
+							countRequire = 5;
 							startMsgs = new[]
 							{
 								"为了在最短时间内恢复",
 								"我需要调制一些药水",
 								"我要你帮我收集几样材料",
 								"第一种材料的名称叫做\"    \"",
-								"它只出现在满月的凌晨,当2点以后它就会消失",
-								"而且只有当采集到一朵后, 才会出现第二朵",
-								"每颗植株的出现地点都相距很远",
-								"所以你要快"
+								"它生长在地狱的岩浆之中",
+								"但是由于它的某些性质",
+								"你一次只能携带一株",
+								"替我采集5株回来"
 							};
 							break;
 						}
 					case 4:
 						{
-							name = "    ";
+							name = "配置药水(2)";
 							startMsgs = new[]
 							{
 								"配置这药水所需要的第二种材料叫做\"   \"",
-								"它生长在地狱的岩浆之中",
-								"但是由于它的某些性质",
-								"你一次只能携带一株",
-								"替我采集4株回来"
+								"它只出现在满月的凌晨,当2点以后它就会消失",
+								"而且只有当采集到一朵后, 才会出现第二朵",
+								"每颗植株的出现地点都相距很远",
+								"所以你要快"
 							};
 							break;
 						}
@@ -152,10 +154,12 @@ namespace Starvers.TaskSystem.Branches
 								"从一开始我就是来灭掉你的",
 								"但没想到你居然一次次的打败了我的部下",
 								"我不得不亲自出马对付你",
-								"这次, 你没有机会了",
 								"[c/000fff:你不会以为这种雕虫小技就能困住我吧?]",
 								"[c/008800:你消耗了2/3的血量与全部的MP破除了阵式]",
 								"[c/000fff:我倒要看看, 你有没有自己说的那样厉害]",
+								"你不会以为这就能破了我的阵势吧?",
+								"你不过是把自己困在了一个更大的阵势里",
+								"这次, 你没有机会了"
 							};
 							break;
 						}
@@ -190,6 +194,15 @@ namespace Starvers.TaskSystem.Branches
 								section.Restore(data);
 								section.UpdateToPlayer();
 							};
+							break;
+						}
+					case 2:
+						{
+							throw new NotImplementedException();
+						}
+					case 3:
+						{
+							datas.ShortValue6 = 5 * 60 * 10;
 							break;
 						}
 				}
@@ -307,6 +320,105 @@ namespace Starvers.TaskSystem.Branches
 									else
 									{
 										End(true);
+									}
+								}
+								break;
+							}
+						case 2:
+							{
+								throw new NotImplementedException();
+							}
+						case 3:
+							{
+								if (!datas[3])
+								{
+									if (TargetPlayer.ZoneHell && TargetPlayer.InLiquid(2))
+									{
+										var len = TargetPlayer.Velocity.Length();
+										if (len >= 9)
+										{
+											if (!datas[0])
+											{
+												TargetPlayer.SendMessage("要采集这种材料, 必须静止在岩浆中", 255, 177, 255);
+												datas[0] = true;
+											}
+										}
+										else if (len.InRange(4, 9))
+										{
+											if (datas.ShortValue7 == 0)
+											{
+												if (Timer % 120 == 0)
+												{
+													if (!datas[1])
+													{
+														TargetPlayer.SendMessage("慢点...再慢点", 255, 125, 255);
+														datas[1] = true;
+													}
+												}
+											}
+											else
+											{
+												if (Timer % 120 == 0)
+												{
+													if (!datas[2])
+													{
+														TargetPlayer.SendMessage("不要动, 这会导致采集进度丢失", 0, 255, 0);
+														datas[2] = true;
+													}
+												}
+												datas.ShortValue7--;
+											}
+										}
+										else
+										{
+											if (datas.ShortValue7 == datas.ShortValue6)
+											{
+												datas[3] = true;
+												TargetPlayer.SendInfoMessage("已收集到第一株");
+												TargetPlayer.SendInfoMessage("快把他带回去");
+											}
+											else
+											{
+												datas.ShortValue7 += 5;
+											}
+										}
+										if (Timer % 60 == 0)
+										{
+											double process = datas.ShortValue7;
+											process /= datas.ShortValue6;
+											process *= 100;
+											TargetPlayer.AppendixMsg += $"采集进度: {(int)process}%";
+										}
+									}
+									else
+									{
+										datas[1] = false;
+										datas[2] = false;
+										datas.ShortValue7 = 0;
+									}
+								}
+								else if (Timer % 90 == 0)
+								{
+									var distance = startPos - TargetPlayer.Center;
+									var len = distance.Length();
+									if (len > 10 * 16)
+									{
+										string tip = $"还有{len / 16}块方格距离";
+										Utils.SendCombatMsg(TargetPlayer.Center + distance.ToLenOf(16 * 30), tip, Color.GreenYellow);
+									}
+									else
+									{
+										count++;
+										if (count < countRequire)
+										{
+											TargetPlayer.SendInfoMessage($"{count}/{countRequire} 株材料已采集");
+											TargetPlayer.SendInfoMessage($"还差{countRequire - count}株");
+											datas[3] = false;
+										}
+										else
+										{
+											End(true);
+										}
 									}
 								}
 								break;
