@@ -10,7 +10,6 @@ namespace Starvers.TaskSystem.Branches
 	using NPCSystem.NPCs;
 	using Events;
 	using Tiles;
-	using Starvers.Events;
 
 	public partial class StoryToContinue
 	{
@@ -167,12 +166,12 @@ namespace Starvers.TaskSystem.Branches
 			{
 				base.Start();
 				enemies = new List<int>();
-				trackingEnemies = new List<int>();
 				startPos = TargetPlayer.Center;
 				switch (ID)
 				{
 					case 0:
 						{
+							trackingEnemies = new List<int>();
 							int x = (Main.dungeonX < Main.maxTilesX / 2) switch
 							{
 								false => 0,
@@ -228,7 +227,7 @@ namespace Starvers.TaskSystem.Branches
 									escape = NewEnemy(startPos + new Vector2(0, -16 * 5));
 									escape.RealNPC.boss = true;
 									escape.Defense = -1101;
-									escape.Life = escape.LifeMax = 30000;
+									escape.Life = escape.LifeMax = 15000;
 									escape.Escape(targetPos);
 									process++;
 								}
@@ -338,7 +337,7 @@ namespace Starvers.TaskSystem.Branches
 						{
 							if (Starver.NPCs[args.NPC.whoAmI] == targetHeli)
 							{
-								args.RealDamage = Math.Min(args.RealDamage / 2, 20 + Starver.Rand.Next(-4, 4));
+								args.RealDamage = Math.Min(args.RealDamage / 2, 50 + Starver.Rand.Next(-6, 6));
 								if (args.Crit)
 								{
 									args.RealDamage *= 2;
@@ -551,7 +550,8 @@ namespace Starvers.TaskSystem.Branches
 				int idx = NPCSystem.StarverNPC.NewNPC((Vector)where, (Vector)vel, HeliRoot);
 				var heli = (ElfHeliEx)NPCSystem.StarverNPC.NPCs[idx];
 				heli.IgnoreDistance = true;
-				heli.DamageIndex = 5;
+				heli.Defense /= 2;
+				heli.DamageIndex = 3;
 				enemies.Add(heli.Index);
 				return heli;
 			}
