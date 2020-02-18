@@ -432,6 +432,10 @@ namespace Starvers
 				RawDamage = args.Damage,
 			};
 			player.StrikingNPC(NArgs);
+			if (NArgs.Handled)
+			{
+				return;
+			}
 			realdamage = NArgs.RealDamage;
 
 			if (args.Npc.dontTakeDamage)
@@ -442,7 +446,7 @@ namespace Starvers
 			{
 				realdamage = Math.Max(1, realdamage);
 			}
-			if (Config.EnableAura)
+			if (Config.EnableAura && realdamage > 0)
 			{
 				args.Npc.SendCombatMsg(realdamage.ToString(), Color.Yellow);
 			}

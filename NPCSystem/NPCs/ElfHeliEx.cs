@@ -26,6 +26,7 @@ namespace Starvers.NPCSystem.NPCs
 		private float escapeSpeed;
 		private int t;
 		private BitsByte flags;
+		private Data16 expandDatas;
 		#endregion
 		#region Properties
 		public event Action<ElfHeliEx> Killed;
@@ -39,6 +40,7 @@ namespace Starvers.NPCSystem.NPCs
 			get => flags[1];
 			set => flags[1] = value;
 		}
+		public ref Data16 ExpandDatas => ref expandDatas;
 		protected override float CollidingIndex => DamageIndex;
 		public override float DamageIndex { get; set; } = 1;
 		#endregion

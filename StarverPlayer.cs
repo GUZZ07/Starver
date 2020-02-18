@@ -48,13 +48,15 @@ namespace Starvers
 			set => TSPlayer.GodMode = value;
 		}
 		#endregion
-		#region SetBuff
+		#region Buff
 		public void SetBuff(int type, int time = 3600, bool bypass = false)
 		{
 			TSPlayer.SetBuff(type, time, bypass);
 		}
-		#endregion
-		#region RemoveBuff
+		public bool HasBuff(int type)
+		{
+			return TPlayer.FindBuffIndex(type) != -1;
+		}
 		public void RemoveBuff(int type)
 		{
 			int idx = -1;
@@ -361,6 +363,13 @@ namespace Starvers
 			BranchTask?.OnLogout();
 		}
 		#endregion
+		#region ToggActive
+		public void ToggleActive(bool active)
+		{
+			TPlayer.active = active;
+			StarverPlayer.All.SendData(PacketTypes.PlayerActive, "", Index);
+		}
+		#endregion
 		#region Branches
 		#region CheckBranchAvaiable
 		public void CheckBranchAvaiable()
@@ -437,7 +446,8 @@ namespace Starvers
 		#region InLiquid
 		public bool InLiquid(byte type)
 		{
-			return Main.tile[TilePoint.X, TilePoint.Y].liquid == type;
+			var tile = Main.tile[TilePoint.X, TilePoint.Y];
+			return tile.liquidType() == type && tile.liquid != 0;
 		}
 		#endregion
 		#region ShowBonus
@@ -1079,35 +1089,35 @@ namespace Starvers
 		/// 扇形弹幕
 		/// </summary>
 		/// <param name="Center">圆心</param>
-		/// <param name="Vel">速率</param>
+		/// <param name="speed">速率</param>
 		/// <param name="r">半径</param>
 		/// <param name="interrad">中心半径的方向</param>
 		/// <param name="rad">张角</param>
 		/// <param name="Damage">伤害(带加成)</param>
-		/// <param name="Type"></param>
+		/// <param name="type"></param>
 		/// <param name="num">数量</param>
 		/// <param name="direction">0:不动 1:向内 2:向外</param>
 		/// <param name="ai0"></param>
 		/// <param name="ai1"></param>
-		public void ProjSector(Vector2 Center, float Vel, float r, double interrad, double rad, int Damage, int Type, int num, byte direction = 2, float ai0 = 0, float ai1 = 0)
+		public void ProjSector(Vector2 Center, float speed, float r, double interrad, double rad, int Damage, int type, int num, byte direction = 2, float ai0 = 0, float ai1 = 0)
 		{
 			double start = interrad - rad / 2;
 			double average = rad / num;
 			switch (direction)
 			{
 				case 0:
-					Vel *= 0;
+					speed *= 0;
 					break;
 				case 1:
-					Vel *= -1;
+					speed *= -1;
 					break;
 				case 2:
-					Vel *= 1;
+					speed *= 1;
 					break;
 			}
 			for (int i = 0; i < num; i++)
 			{
-				NewProj(Center + FromPolar(start + i * average, r), FromPolar(start + i * average, Vel), Type, Damage, 4f, ai0, ai1);
+				NewProj(Center + FromPolar(start + i * average, r), FromPolar(start + i * average, speed), type, Damage, 4f, ai0, ai1);
 			}
 		}
 		#endregion
@@ -1423,6 +1433,10 @@ namespace Starvers
 		public void StrikedNPC(NPCStrikeEventArgs args)
 		{
 			BranchTask?.StrikedNPC(args);
+		}
+		public void CreatingProj(GetDataHandlers.NewProjectileEventArgs args)
+		{
+			BranchTask?.CreatingProj(args);
 		}
 		public void ReleasingSkill(ReleaseSkillEventArgs args)
 		{

@@ -349,6 +349,15 @@ namespace Starvers
 		}
 		#endregion
 		#region Rands
+		/// <summary>
+		/// 随机返回1或-1
+		/// </summary>
+		/// <param name="rand"></param>
+		/// <returns></returns>
+		public static int NextDirection(this Random rand)
+		{
+			return rand.Next(2) == 1 ? 1 : -1;
+		}
 		public static float NextFloat(this Random rand)
 		{
 			return (float)rand.NextDouble();
@@ -602,6 +611,7 @@ namespace Starvers
 		{
 			proj.type = 0;
 			proj.active = false;
+			proj.SetDefaults(0);
 			proj.SendData();
 		}
 		#endregion

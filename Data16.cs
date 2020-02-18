@@ -126,7 +126,14 @@ namespace Starvers
 				{
 					throw new IndexOutOfRangeException($"index: {index}");
 				}
-				bytes[index / 8] &= (byte)~((value ? 1 : 0) << (index % 8));
+				if (value)
+				{
+					bytes[index / 8] |= (byte)(1 << (index % 8));
+				}
+				else
+				{
+					bytes[index / 8] &= (byte)~(1 << (index % 8));
+				}
 			}
 		}
 		#endregion

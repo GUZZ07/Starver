@@ -36,7 +36,7 @@ namespace Starvers
 			}
 			catch(Exception e)
 			{
-				TShockAPI.TShock.Log.Info(e.ToString());
+				TShockAPI.TShock.Log.ConsoleInfo(e.ToString());
 			}
 			Starver.NPCs[Index] = NPCSystem.StarverNPC.NPCs[Index] = null;
 			KillMe();

@@ -238,9 +238,14 @@ namespace Starvers.AuraSystem
 		#region OnProj
 		private void OnProj(object sender, GetDataHandlers.NewProjectileEventArgs args)
 		{
+			Starver.Players[args.Owner].CreatingProj(args);
+			if (args.Handled)
+			{
+				return;
+			}
 			if (args.Type == ProjectileID.RocketII || args.Type == ProjectileID.RocketIV || args.Type == ProjectileID.RocketSnowmanII || args.Type == ProjectileID.RocketSnowmanIV)
 			{
-				Main.projectile[args.Index].active = false;
+				Main.projectile[args.Index].KillMeEx();
 				return;
 			}
 			if ((!Main.projectile[args.Index].friendly) && Main.projectile[args.Index].damage <= 300)

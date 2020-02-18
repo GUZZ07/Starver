@@ -74,7 +74,7 @@ namespace Starvers.TaskSystem
 
 		public virtual void Updating(int Timer)
 		{
-
+			
 		}
 		public virtual void Updated(int Timer)
 		{
@@ -95,6 +95,11 @@ namespace Starvers.TaskSystem
 
 		}
 		public virtual void ReleasedSkill(ReleaseSkillEventArgs args)
+		{
+
+		}
+
+		public virtual void CreatingProj(GetDataHandlers.NewProjectileEventArgs args)
 		{
 
 		}

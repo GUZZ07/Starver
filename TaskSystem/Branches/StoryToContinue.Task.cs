@@ -10,11 +10,18 @@ namespace Starvers.TaskSystem.Branches
 	using NPCSystem.NPCs;
 	using Events;
 	using Tiles;
+	using TShockAPI;
 
 	public partial class StoryToContinue
 	{
 		private class Task : BranchTask
 		{
+			private const float task2playerspeed = 5;
+			private const float task2more = 3.625f;
+			/// <summary>
+			/// Main.dungeonX〈 Main.maxTilesX / 2 ? 1 : -1
+			/// </summary>
+			private int direction;
 			private string[] startMsgs;
 			private short msgInterval;
 			private short msgCurrent;
@@ -22,11 +29,11 @@ namespace Starvers.TaskSystem.Branches
 			private int count;
 			private int countRequire;
 			private List<int> enemies;
-			private List<int> trackingEnemies;
+			private List<int> specialEnemies;
 			private Data16 datas;
 			private Vector2 startPos;
 			private Vector2 targetPos;
-			private Vector2 alsopos;
+			private Vector2 vector;
 			private Action ActionsInEnd;
 			private ElfHeliEx targetHeli;
 
@@ -70,7 +77,8 @@ namespace Starvers.TaskSystem.Branches
 						}
 					case 2:
 						{
-							name = "GaeBolg";
+							name = "轩辕爱做的事";
+							countRequire = 200;
 							startMsgs = new[]
 							{
 								"该死的...",
@@ -78,8 +86,14 @@ namespace Starvers.TaskSystem.Branches
 								"看来他们已经摧毁了里面的物品",
 								"上次的事情还没找他们算账",
 								"正好这次一起算了",
-								"给, 拿着它", // GaeBolg
-								"替我好好收拾下他们"
+								"给, 拿着这把", 
+								"什么?",
+								"你说你想要轩辕枪?",
+								"因为射速快?",
+								"那玩意儿不好用, 容易卡壳",
+								"所以你还是用我给你的这把枪吧",
+								"替我好好收拾下他们",
+								"[c/000fff:你需要击落200架直升机]"
 							};
 							break;
 						}
@@ -171,11 +185,12 @@ namespace Starvers.TaskSystem.Branches
 				base.Start();
 				enemies = new List<int>();
 				startPos = TargetPlayer.Center;
+				direction = Main.dungeonX < Main.maxTilesX / 2 ? 1 : -1;
 				switch (ID)
 				{
 					case 0:
 						{
-							trackingEnemies = new List<int>();
+							specialEnemies = new List<int>();
 							int x = (Main.dungeonX < Main.maxTilesX / 2) switch
 							{
 								false => 0,
@@ -198,11 +213,27 @@ namespace Starvers.TaskSystem.Branches
 						}
 					case 2:
 						{
-							throw new NotImplementedException();
+							specialEnemies = new List<int>();
+							targetPos = startPos;
+							vector = new Vector2(0, -5);
+							datas.ByteValue1 = (byte)Starver.Rand.Next(2);
+							datas.ByteValue0 = datas.ByteValue1 switch
+							{
+								0 => 4,
+								1 => 10,
+								_ => throw null
+							};
+							startMsgs[5] += datas.ByteValue1 switch
+							{
+								0 => "霰弹枪",
+								1 => "狙击步枪",
+								_ => throw null
+							};
+							break;
 						}
 					case 3:
 						{
-							datas.ShortValue6 = 5 * 60 * 10;
+							datas.ShortValue6 = 5 * 60 * 60;
 							break;
 						}
 				}
@@ -241,12 +272,12 @@ namespace Starvers.TaskSystem.Branches
 									escape.RealNPC.boss = true;
 									escape.Defense = -1101;
 									escape.Life = escape.LifeMax = 15000;
-									escape.Escape(targetPos);
+									escape.Escape(targetPos, speed: 4);
 									process++;
 								}
 								else if (process == 1)
 								{
-									trackingEnemies.RemoveAll(idx => !Main.npc[idx].active);
+									specialEnemies.RemoveAll(idx => !Main.npc[idx].active);
 									Vector2 total = targetPos - startPos;
 									Vector2 valid = total;
 									Vector2 ofPlayer = TargetPlayer.Center - startPos;
@@ -260,31 +291,27 @@ namespace Starvers.TaskSystem.Branches
 									}
 									if (Timer % 210 == 0)
 									{
-										if (trackingEnemies.Count < 5)
+										if (specialEnemies.Count < 2)
 										{
-											while (trackingEnemies.Count < 5)
-											{
-												SpawnEnemyAttacker();
-											}
-											int rand = Starver.Rand.Next(5);
-											for (int i = 0; i < rand; i++)
+											while (specialEnemies.Count < 4)
 											{
 												SpawnEnemyAttacker();
 											}
 										}
 									}
-								}
-								if (!targetHeli.Active)
-								{
-									if (targetHeli.Escaped || Vector2.Distance(alsopos, TargetPlayer.Center) > 40 * 16)
+									if (!targetHeli.Active)
 									{
-										TargetPlayer.SendFailMessage("目标已逃跑");
-										End(false);
+										if (targetHeli.Escaped || Vector2.Distance(vector, TargetPlayer.Center) > 40 * 16)
+										{
+											TargetPlayer.SendFailMessage("目标已逃跑");
+											End(false);
+											return;
+										}
+										End(true);
+										return;
 									}
-									End(true);
-									return;
+									vector = targetHeli.Center;
 								}
-								alsopos = targetHeli.Center;
 								break;
 							}
 						case 1:
@@ -298,12 +325,12 @@ namespace Starvers.TaskSystem.Branches
 										if (len > 5 * 16)
 										{
 											string tip = $"还有{len / 16}块方格距离";
-											Utils.SendCombatMsg(TargetPlayer.Center + distance.ToLenOf(16 * 30), tip, Color.GreenYellow);
+											Starvers.Utils.SendCombatMsg(TargetPlayer.Center + distance.ToLenOf(16 * 30), tip, Color.GreenYellow);
 										}
 										else
 										{
 											process++;
-											Utils.SendCombatMsg(targetPos, "就在这里", Color.GreenYellow);
+											Starvers.Utils.SendCombatMsg(targetPos, "就在这里", Color.GreenYellow);
 											TargetPlayer.SendMessage("(你取走了这里的物品, 准备带回去)", 0, 0, 255);
 										}
 									}
@@ -315,7 +342,7 @@ namespace Starvers.TaskSystem.Branches
 									if (len > 10 * 16)
 									{
 										string tip = $"还有{len / 16}块方格距离";
-										Utils.SendCombatMsg(TargetPlayer.Center + distance.ToLenOf(16 * 30), tip, Color.GreenYellow);
+										Starvers.Utils.SendCombatMsg(TargetPlayer.Center + distance.ToLenOf(16 * 30), tip, Color.GreenYellow);
 									}
 									else
 									{
@@ -326,13 +353,69 @@ namespace Starvers.TaskSystem.Branches
 							}
 						case 2:
 							{
-								throw new NotImplementedException();
+								if (Timer % 3 == 0)
+								{
+									TargetPlayer.Velocity = vector;
+									TargetPlayer.Center = targetPos;
+								}
+								if (!TargetPlayer.HasBuff(BuffID.Invisibility))
+								{
+									TargetPlayer.SetBuff(BuffID.Invisibility);
+								}
+								if (!TargetPlayer.HasBuff(BuffID.ShadowDodge))
+								{
+									TargetPlayer.SetBuff(BuffID.ShadowDodge);
+								}
+								if (datas.IntValue1 > 0)
+								{
+									datas.IntValue1--;
+								}
+								targetPos += vector;
+								if (process == 0)
+								{
+									if (targetPos.Y <= 250 * 16)
+									{
+										vector.X = -vector.Y;
+										vector.Y = 0;
+										vector.X *= direction;
+										TargetPlayer.SendInfoMessage("已到达指定高度, 准备开始射击");
+										process++;
+									}
+								}
+								else if (process == 1)
+								{
+									specialEnemies.RemoveAll(idx => !Main.npc[idx].active);
+									if (Timer % 180 == 0)
+									{
+										if (specialEnemies.Count < 6)
+										{
+											int rand = Starver.Rand.Next(6, 12) - specialEnemies.Count;
+											for (int i = 0; i < rand; i++)
+											{
+												SpawnEnemyTarget();
+											}
+										}
+									}
+									if (count < countRequire && Math.Min(targetPos.X, Main.maxTilesX * 16 - targetPos.X) < 16 * 30)
+									{
+										TargetPlayer.SendFailMessage("你失败了...");
+										TargetPlayer.SendDeBugMessage($"击杀数: {count}");
+										End(false);
+										return;
+									}
+									if (count == countRequire)
+									{
+										TargetPlayer.SendSuccessMessage("目标已达成");
+										End(true);
+									}
+								}
+								break;
 							}
 						case 3:
 							{
 								if (!datas[3])
 								{
-									if (TargetPlayer.ZoneHell && TargetPlayer.InLiquid(2))
+									if (TargetPlayer.ZoneHell && TargetPlayer.InLiquid(1))
 									{
 										var len = TargetPlayer.Velocity.Length();
 										if (len >= 9)
@@ -355,6 +438,7 @@ namespace Starvers.TaskSystem.Branches
 														datas[1] = true;
 													}
 												}
+												datas.ShortValue7 -= 4;
 											}
 											else
 											{
@@ -366,20 +450,27 @@ namespace Starvers.TaskSystem.Branches
 														datas[2] = true;
 													}
 												}
-												datas.ShortValue7--;
+												datas.ShortValue7 -= 2;
 											}
 										}
 										else
 										{
-											if (datas.ShortValue7 == datas.ShortValue6)
+											if (datas.ShortValue7 >= datas.ShortValue6)
 											{
 												datas[3] = true;
-												TargetPlayer.SendInfoMessage("已收集到第一株");
-												TargetPlayer.SendInfoMessage("快把他带回去");
+												TargetPlayer.SendInfoMessage("已收集到第" + (count + 1) + "株");
+												TargetPlayer.SendInfoMessage("快把它带回去");
 											}
 											else
 											{
 												datas.ShortValue7 += 5;
+												if (Timer % 40 == 0)
+												{
+													double process = 40 * 5;
+													process /= datas.ShortValue6;
+													process *= 100;
+													TargetPlayer.SendCombatMSsg("+" + (int)process + "%", Color.Blue);
+												}
 											}
 										}
 										if (Timer % 60 == 0)
@@ -387,7 +478,7 @@ namespace Starvers.TaskSystem.Branches
 											double process = datas.ShortValue7;
 											process /= datas.ShortValue6;
 											process *= 100;
-											TargetPlayer.AppendixMsg += $"采集进度: {(int)process}%";
+											TargetPlayer.AppendixMsg = $"采集进度: {(int)process}%";
 										}
 									}
 									else
@@ -404,7 +495,7 @@ namespace Starvers.TaskSystem.Branches
 									if (len > 10 * 16)
 									{
 										string tip = $"还有{len / 16}块方格距离";
-										Utils.SendCombatMsg(TargetPlayer.Center + distance.ToLenOf(16 * 30), tip, Color.GreenYellow);
+										Starvers.Utils.SendCombatMsg(TargetPlayer.Center + distance.ToLenOf(16 * 30), tip, Color.GreenYellow);
 									}
 									else
 									{
@@ -425,11 +516,11 @@ namespace Starvers.TaskSystem.Branches
 							}
 						case 7:
 							{
-								if(process == 0)
+								if (process == 0)
 								{
-									TargetPlayer.Life /= 2;
-									TargetPlayer.Mana /= 2;
-									TargetPlayer.mp /= 2;
+									TargetPlayer.Life = TargetPlayer.Life * 2 / 3;
+									TargetPlayer.Mana = TargetPlayer.Mana * 2 / 3;
+									TargetPlayer.mp = TargetPlayer.mp * 2 / 3;
 									process++;
 								}
 								break;
@@ -457,19 +548,98 @@ namespace Starvers.TaskSystem.Branches
 							}
 							break;
 						}
+					case 2:
+						{
+							if (Starver.NPCs[args.NPC.whoAmI] is ElfHeliEx heli && heli.ExpandDatas[0])
+							{
+								args.Handled = true;
+								heli.ExpandDatas.ByteValue1 += (byte)(datas.ByteValue0 * (args.Crit ? 2 : 1));
+								if (heli.ExpandDatas.ByteValue1 > 9)
+								{
+									heli.Life = 0;
+									heli.SendCombatMsg($"击杀数: {++count} / {countRequire}", Color.MediumVioletRed);
+									heli.CheckDead();
+									heli.KillMe();
+								}
+								else
+								{
+									heli.SendCombatMsg($"{9 - heli.ExpandDatas.ByteValue1} / {9}", Color.Yellow);
+								}
+							}
+							break;
+						}
 				}
 			}
 
-			public override void ReleasingSkill(ReleaseSkillEventArgs args)
+			public override void CreatingProj(GetDataHandlers.NewProjectileEventArgs args)
 			{
-				base.ReleasingSkill(args);
+				base.CreatingProj(args);
 				switch(ID)
 				{
 					case 2:
 						{
-							args.SkillID = AuraSystem.SkillIDs.GaeBolg;
-							args.MPCost = 0;
-							args.CD = 60 * 4;
+							args.Handled = true;
+							bool flag =
+								args.Type != ProjectileID.BulletHighVelocity &&
+								args.Type != ProjectileID.MoonlordBullet;
+							if (flag)
+							{
+								Main.projectile[args.Index].KillMeEx();
+								if (datas.IntValue1 == 0) 
+								{
+									if (datas.ByteValue1 == 0) // 霰弹
+									{
+										TargetPlayer.ProjSector
+										(
+											Center: TargetPlayer.Center,
+											speed: args.Velocity.Length(),
+											r: 0,
+											interrad: args.Velocity.Angle(),
+											rad: Math.PI / 3,
+											Damage: 0,
+											type: ProjectileID.MoonlordBullet,
+											num: 9
+										);
+										datas.IntValue1 = 40; // 发射间隔
+									}
+									else if (datas.ByteValue1 == 1) // 狙击
+									{
+										TargetPlayer.NewProj(targetPos, args.Velocity, ProjectileID.ChlorophyteBullet, 1);
+										TargetPlayer.NewProj(targetPos, args.Velocity * 4, ProjectileID.ChlorophyteBullet, 1);
+										datas.IntValue1 = 90;
+									}
+#if false
+									else if(datas.ByteValue0 == 2) // 步枪
+									{
+										TargetPlayer.NewProj(targetPos, args.Velocity, ProjectileID.MeteorShot, 0);
+										if (++datas.IntValue2 == 60)
+										{
+											TargetPlayer.SendInfoMessage("重新装填弹药...");
+											datas.IntValue3 = 60 * 6;
+											datas.IntValue2 = 0;
+										}
+										else
+										{
+											datas.IntValue1 = 4;
+										}
+									}
+									else if (datas.ByteValue0 == 3) // 这是冲锋枪
+									{
+										TargetPlayer.NewProj(targetPos, args.Velocity, ProjectileID.MeteorShot, 0);
+										if (++datas.IntValue2 == 30)
+										{
+											TargetPlayer.SendInfoMessage("重新装填弹药...");
+											datas.IntValue3 = 60 * 2;
+											datas.IntValue2 = 0;
+										}
+										else
+										{
+											datas.IntValue1 = 1;
+										}
+									}
+#endif
+								}
+							}
 							break;
 						}
 				}
@@ -495,8 +665,8 @@ namespace Starvers.TaskSystem.Branches
 				switch (ID)
 				{
 					case 0:
+					case 2:
 					case 3:
-					case 4:
 					case 5:
 					case 6:
 					case 7:
@@ -521,7 +691,7 @@ namespace Starvers.TaskSystem.Branches
 							}
 							return (true, null);
 						}
-					case 2:
+					case 4:
 						{
 							return (false, "这个任务被神秘力量封印了");
 						}
@@ -557,7 +727,7 @@ namespace Starvers.TaskSystem.Branches
 				{
 					case 0:
 						{
-							RewardLevelMultiply(1.1);
+							RewardLevelMultiply(1.2);
 							if (TargetPlayer.ManaMax < 270)
 							{
 								TargetPlayer.ManaMax = 270;
@@ -567,7 +737,7 @@ namespace Starvers.TaskSystem.Branches
 						}
 					case 1:
 						{
-							RewardLevelMultiply(1.1);
+							RewardLevelMultiply(1.2);
 							if (TargetPlayer.ManaMax < 280)
 							{
 								TargetPlayer.ManaMax = 280;
@@ -577,25 +747,27 @@ namespace Starvers.TaskSystem.Branches
 						}
 					case 2:
 						{
-							RewardLevelMultiply(1.1);
-							TargetPlayer.GiveItem(AuraSystem.StarverAuraManager.SkillSlot[2].Item);
-							TargetPlayer.GiveItem(ItemID.CelestialMagnet);
-							TargetPlayer.GiveItem(ItemID.ManaCrystal, 10);
+							RewardLevelMultiply(1.2);
+							TargetPlayer.GiveItem(AuraSystem.StarverAuraManager.SkillSlot[4].Item);
+							TargetPlayer.GiveItem(ItemID.PaladinsShield);
+							TargetPlayer.GiveItem(ItemID.FlyingKnife);
 							break;
 						}
 					case 3:
 						{
-							RewardLevelMultiply(1.1);
+							RewardLevelMultiply(1.2);
 							if (TargetPlayer.ManaMax < 290)
 							{
 								TargetPlayer.ManaMax = 290;
 								TargetPlayer.SendInfoMessage("获得奖励: 魔力上限提升至290");
 							}
+							TargetPlayer.GiveItem(ItemID.MoonStone);
+							TargetPlayer.GiveItem(ItemID.NeptunesShell);
 							break;
 						}
 					case 4:
 						{
-							RewardLevelMultiply(1.1);
+							RewardLevelMultiply(1.2);
 							if (TargetPlayer.ManaMax < 300)
 							{
 								TargetPlayer.ManaMax = 300;
@@ -605,7 +777,7 @@ namespace Starvers.TaskSystem.Branches
 						}
 					case 5:
 						{
-							RewardLevelMultiply(1.1);
+							RewardLevelMultiply(1.2);
 							if (TargetPlayer.ManaMax < 310)
 							{
 								TargetPlayer.ManaMax = 310;
@@ -615,12 +787,13 @@ namespace Starvers.TaskSystem.Branches
 						}
 					case 6:
 						{
-							RewardLevelMultiply(1.1);
+							RewardLevelMultiply(1.2);
 							break;
 						}
 					case 7:
 						{
-							RewardLevelMultiply(1.1);
+							RewardLevel(2000);
+							RewardLevelMultiply(2);
 							if (TargetPlayer.ManaMax < 400)
 							{
 								TargetPlayer.ManaMax = 400;
@@ -647,7 +820,25 @@ namespace Starvers.TaskSystem.Branches
 			private void SpawnEnemyAttacker()
 			{
 				var heli = NewEnemy(TargetPlayer.Center + Starver.Rand.NextVector2(16 * 40, 16 * 40));
-				trackingEnemies?.Add(heli.Index);
+				specialEnemies?.Add(heli.Index);
+			}
+			private void SpawnEnemyTarget()
+			{
+				var rand = Starver.Rand;
+				int dir = rand.NextDirection();
+				float speed = vector.X + dir * (task2more + rand.NextFloat());
+				Vector2 from = new Vector2(-dir * 70 * 16, 6 * 16 * rand.NextDirection() * rand.Next(1, 4));
+				float endX;
+				{
+					float time = (70 * 16 + Math.Abs(from.X)) / Math.Abs(speed - vector.X);
+					float distance = time * speed;
+					endX = from.X + distance;
+				}
+				Vector2 to = new Vector2(endX, from.Y);
+				var heli = NewEnemy(targetPos + from);
+				heli.Escape(targetPos + to, dir * speed);
+				heli.ExpandDatas[0] = true;
+				specialEnemies.Add(heli.Index);
 			}
 			private void SpawnEnemyAmbusher()
 			{
