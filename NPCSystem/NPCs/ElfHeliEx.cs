@@ -16,7 +16,7 @@ namespace Starvers.NPCSystem.NPCs
 		#region Fields
 		public const int MaxShots = 8;
 		/// <summary>
-		/// 0: 守卫 1: 追击 2: 巡逻 3: 逃跑 4: 巡逻追击
+		/// 0: 守卫 1: 追击 2: 巡逻 3: 逃跑 4: 巡逻追击 5: 逃跑(只管X方向)
 		/// </summary>
 		private byte work = 1;
 		private Action shot;
@@ -109,6 +109,9 @@ namespace Starvers.NPCSystem.NPCs
 				case 4:
 					AI_WonderAttack();
 					break;
+				case 5:
+					AI_EscapeX();
+					break;
 			}
 		}
 		private void AI_Attack()
@@ -188,6 +191,62 @@ namespace Starvers.NPCSystem.NPCs
 			if (Vector2.Distance(targetPos, Center) > 16 * 10)
 			{
 				Center += (targetPos - Center).ToLenOf(escapeSpeed);
+			}
+			else
+			{
+				Escaped = true;
+				KillMe();
+			}
+		}
+		private void AI_EscapeX()
+		{
+			if (Math.Abs(targetPos.X - Center.X) > 16 * 10)
+			{
+				Position.X += escapeSpeed * (targetPos.X - Position.X) / Math.Abs(targetPos.X - Position.X);
+				if (Timer % 2 == 0)
+				{
+					var point = Center.ToTileCoordinates();
+					var p2 = point;
+					point.X += targetPos.X - Position.X > 0 ? 1 : -1;
+					bool flag =
+						point.Y > 90 &&
+						Main.tile[point.X, point.Y - 1].active() ||
+						Main.tile[point.X, point.Y + 0].active() ||
+						Main.tile[point.X, point.Y + 1].active() ||
+						Main.tile[point.X, point.Y + 2].active() ||
+						Main.tile[point.X, point.Y + 3].active() ||
+						Main.tile[point.X, point.Y + 4].active() ||
+						Main.tile[point.X, point.Y + 5].active() ||
+						Main.tile[point.X, point.Y + 6].active() ||
+						Main.tile[point.X, point.Y + 7].active() ||
+						Main.tile[point.X, point.Y + 8].active() ||
+						Main.tile[point.X, point.Y + 9].active();
+					if (flag)
+					{
+						while (false)
+						{
+							point.Y -= 1;
+							flag =
+							point.Y > 90 &&
+							Main.tile[point.X, point.Y - 1].active() ||
+							Main.tile[point.X, point.Y + 0].active() ||
+							Main.tile[point.X, point.Y + 1].active() ||
+							Main.tile[point.X, point.Y + 2].active() ||
+							Main.tile[point.X, point.Y + 3].active() ||
+							Main.tile[point.X, point.Y + 4].active() ||
+							Main.tile[point.X, point.Y + 5].active() ||
+							Main.tile[point.X, point.Y + 6].active() ||
+							Main.tile[point.X, point.Y + 7].active() ||
+							Main.tile[point.X, point.Y + 8].active() ||
+							Main.tile[point.X, point.Y + 9].active();
+						}
+						Position.Y -= 5;
+					}
+					else
+					{
+						Position.Y += 4;
+					}
+				}
 			}
 			else
 			{
@@ -366,6 +425,13 @@ namespace Starvers.NPCSystem.NPCs
 			FakeVelocity = default;
 			work = 3;
 			targetPos = where;
+			escapeSpeed = speed ?? escapeSpeed;
+		}
+		public void EscapeX(float where, float? speed = null)
+		{
+			FakeVelocity = default;
+			work = 5;
+			targetPos.X = where;
 			escapeSpeed = speed ?? escapeSpeed;
 		}
 		public void Wonder(Vector2 where, Vector2? wondering = null)

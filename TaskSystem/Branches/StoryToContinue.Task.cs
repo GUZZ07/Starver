@@ -272,7 +272,7 @@ namespace Starvers.TaskSystem.Branches
 									escape.RealNPC.boss = true;
 									escape.Defense = -1101;
 									escape.Life = escape.LifeMax = 15000;
-									escape.Escape(targetPos, speed: 4);
+									escape.EscapeX(targetPos.X, speed: 5);
 									process++;
 								}
 								else if (process == 1)
@@ -820,6 +820,7 @@ namespace Starvers.TaskSystem.Branches
 			private void SpawnEnemyAttacker()
 			{
 				var heli = NewEnemy(TargetPlayer.Center + Starver.Rand.NextVector2(16 * 40, 16 * 40));
+				heli.WonderAttack(heli.Center, new Vector2(Starver.Rand.NextDirection() * Starver.Rand.Next(9, 13), 0), 60 * 5, false);
 				specialEnemies?.Add(heli.Index);
 			}
 			private void SpawnEnemyTarget()
