@@ -59,7 +59,7 @@ namespace Starvers.NPCSystem.NPCs
 		#region OnDead
 		public override void OnKilled()
 		{
-			int idx = NewProj(Center, Microsoft.Xna.Framework.Vector2.Zero, ProjectileID.Explosives, 3000);
+			int idx = NewProj(Center, Microsoft.Xna.Framework.Vector2.Zero, ProjectileID.Explosives, 1000);
 			//if (Rand.Next(100) > 2 * StarverConfig.Config.TaskNow)
 			{
 				Terraria.Main.projectile[idx].active = false;
@@ -85,7 +85,7 @@ namespace Starvers.NPCSystem.NPCs
 		}
 		private static void WhatItIs(StarverPlayer ply, int idx)
 		{
-			ply.Damage(200, PlayerDeathReason.ByProjectile(ply, idx));
+			ply.Damage(200, PlayerDeathReason.ByProjectile(255, idx));
 		}
 		#endregion
 		#region OnSpawn
