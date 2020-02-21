@@ -14,16 +14,18 @@ namespace Starvers.BossSystem.Bosses
 	public class DestroyerEx : StarverBoss
 	{
 		#region Fields
-		private const int BodyDamageStart = 600;
+		private const int BodyDamageStart = 200;
 		/// <summary>
 		/// 身体节数
 		/// </summary>
-		private const int BodyMax = 80;
-		private int[] Bodies = new int[BodyMax];
+		private readonly int BodyMax;
+		private readonly int[] Bodies;
 		#endregion
 		#region Ctor
 		public DestroyerEx() : base(1)
 		{
+			BodyMax = Starver.IsPE ? 20 : 80;
+			Bodies = new int[BodyMax];
 			TaskNeed = 35;
 			RawType = NPCID.TheDestroyer;
 			DefaultLife = 2560000;

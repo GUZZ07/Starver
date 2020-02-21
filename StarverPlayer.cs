@@ -55,9 +55,19 @@ namespace Starvers
 		}
 		public bool HasBuff(int type)
 		{
-			return TPlayer.FindBuffIndex(type) != -1;
+			return FindBuffIndex(type) != -1;
 		}
 		public void RemoveBuff(int type)
+		{
+			int idx = FindBuffIndex(type);
+			if (idx != -1)
+			{
+				TPlayer.buffTime[idx] = 0;
+				TPlayer.buffType[idx] = 0;
+				SendData(PacketTypes.PlayerBuff, "", Index);
+			}
+		}
+		public int FindBuffIndex(int type)
 		{
 			int idx = -1;
 			for (int i = 0; i < TPlayer.buffType.Length; i++)
@@ -68,12 +78,7 @@ namespace Starvers
 					break;
 				}
 			}
-			if (idx != -1)
-			{
-				TPlayer.buffTime[idx] = 0;
-				TPlayer.buffType[idx] = 0;
-				SendData(PacketTypes.PlayerBuff, "", Index);
-			}
+			return idx;
 		}
 		#endregion
 		#region Sends
@@ -1261,8 +1266,9 @@ namespace Starvers
 		}
 		private bool TryDodgeDamage()
 		{
-			if (TPlayer.FindBuffIndex(BuffID.ShadowDodge) != -1)
+			if (HasBuff(BuffID.ShadowDodge))
 			{
+				RemoveBuff(BuffID.ShadowDodge);
 				return true;
 			}
 			if (bldata.Bonus.HasFlag(EffectBonus.ProbabilisticDodge))
