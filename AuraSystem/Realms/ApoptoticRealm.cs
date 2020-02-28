@@ -41,7 +41,7 @@ namespace Starvers.AuraSystem.Realms
 					{
 						damage = Math.Max(1, player.Life / 60);
 						player.Life -= damage;
-						player.SendCombatMSsg(damage.ToString(), Color.Blue);
+						player.SendCombatMsg(damage.ToString(), Color.Blue);
 					}
 				}
 			}

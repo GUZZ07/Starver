@@ -95,7 +95,7 @@ namespace Starvers.TaskSystem.Branches
 			{
 				if (TargetPlayer.HeldItem.type == WeaponRequire && args.KilledNPC)
 				{
-					TargetPlayer.SendCombatMSsg($"击杀量: {++data.KillCount} / {data.RequireCount}", Color.Beige);
+					TargetPlayer.SendCombatMsg($"击杀量: {++data.KillCount} / {data.RequireCount}", Color.Beige);
 					if (data.KillCount >= data.RequireCount)
 					{
 						TargetPlayer.BranchTaskEnd(true);
@@ -106,7 +106,7 @@ namespace Starvers.TaskSystem.Branches
 			{
 				if (TargetPlayer.HeldItem.type == WeaponRequire && args.KilledNPC)
 				{
-					TargetPlayer.SendCombatMSsg($"击杀量: {++data.KillCount} / {data.RequireCount}", Color.Beige);
+					TargetPlayer.SendCombatMsg($"击杀量: {++data.KillCount} / {data.RequireCount}", Color.Beige);
 					if (data.KillCount >= data.RequireCount)
 					{
 						TargetPlayer.BranchTaskEnd(true);
@@ -117,7 +117,7 @@ namespace Starvers.TaskSystem.Branches
 			{
 				if (TargetPlayer.HeldItem.type == WeaponRequire && args.KilledNPC)
 				{
-					TargetPlayer.SendCombatMSsg($"击杀量: {++data.KillCount} / {data.RequireCount}", Color.Beige);
+					TargetPlayer.SendCombatMsg($"击杀量: {++data.KillCount} / {data.RequireCount}", Color.Beige);
 					if (data.KillCount >= data.RequireCount)
 					{
 						TargetPlayer.BranchTaskEnd(true);

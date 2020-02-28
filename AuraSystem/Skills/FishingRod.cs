@@ -27,7 +27,7 @@ namespace Starvers.AuraSystem.Skills
 		public override void Release(StarverPlayer player, Vector2 vel)
 		{
 			int Count = Math.Min((int)(Math.Log(player.Level) * 2 + 1), 20);
-			player.TPlayer.HeldItem.fishingPole = 75;
+			player.HeldItem.fishingPole = 75;
 			player.TPlayer.fishingSkill = 75;
 			int idx;
 			for (int i = 0; i < Count; i++)

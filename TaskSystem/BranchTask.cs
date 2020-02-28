@@ -37,7 +37,7 @@ namespace Starvers.TaskSystem
 		{
 			if(name != null)
 			{
-				TargetPlayer.SendCombatMSsg(name, colorOfName ?? Color.Silver);
+				TargetPlayer.SendCombatMsg(name, colorOfName ?? Color.Silver);
 			}
 		}
 

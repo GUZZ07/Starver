@@ -23,7 +23,10 @@ namespace Starvers.AuraSystem.Skills
 		}
 		public override void Release(StarverPlayer player, Vector2 vel)
 		{
-			AsyncRelease(player);
+			if (!player.IgnoreCD)
+			{
+				AsyncRelease(player);
+			}
 		}
 		private async void AsyncRelease(StarverPlayer player)
 		{

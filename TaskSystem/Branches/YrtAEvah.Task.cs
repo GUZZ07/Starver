@@ -528,7 +528,7 @@ namespace Starvers.TaskSystem.Branches
 								if (args.NPC.type == targetID)
 								{
 									count++;
-									TargetPlayer.SendCombatMSsg($"猎杀数: {count} / {countRequire}", Color.Maroon);
+									TargetPlayer.SendCombatMsg($"猎杀数: {count} / {countRequire}", Color.Maroon);
 									if (count >= countRequire)
 									{
 										End(true);
@@ -555,7 +555,7 @@ namespace Starvers.TaskSystem.Branches
 									count++;
 									if (count - countRequire > 0)
 									{
-										TargetPlayer.SendCombatMSsg($"还剩{countRequire - count}个敌人", Color.Maroon);
+										TargetPlayer.SendCombatMsg($"还剩{countRequire - count}个敌人", Color.Maroon);
 									}
 								}
 							}
@@ -575,7 +575,7 @@ namespace Starvers.TaskSystem.Branches
 							{
 								count++;
 								item.Kill();
-								TargetPlayer.SendCombatMSsg($"{count}颗落星已收集", Color.Green);
+								TargetPlayer.SendCombatMsg($"{count}颗落星已收集", Color.Green);
 								if (count == countRequire)
 								{
 									TargetPlayer.SendMessage($"目标已达成", Color.YellowGreen);
@@ -595,11 +595,11 @@ namespace Starvers.TaskSystem.Branches
 								{
 									count++;
 									item.Kill();
-									TargetPlayer.SendCombatMSsg($"已收集碎片: {count} / {countRequire}", Color.LimeGreen);
+									TargetPlayer.SendCombatMsg($"已收集碎片: {count} / {countRequire}", Color.LimeGreen);
 									if (count >= countRequire)
 									{
 										TargetPlayer.RemoveBuff(BuffID.UFOMount);
-										TargetPlayer.SendCombatMSsg("收集完成", Color.MintCream);
+										TargetPlayer.SendCombatMsg("收集完成", Color.MintCream);
 										TargetPlayer.SendInfoMessage("快把碎片带回去");
 										ClearStardustShards();
 										taskProcess++;

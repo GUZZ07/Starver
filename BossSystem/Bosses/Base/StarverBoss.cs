@@ -177,6 +177,8 @@ namespace Starvers.BossSystem.Bosses.Base
 				}
 			}
 			_active = false;
+			RealNPC.active = false;
+#if false
 			ExpGive = LifeMax;
 			ExpGive *= LifesMax;
 			for (int i = 0; i < Starver.Players.Length; ++i)
@@ -186,6 +188,7 @@ namespace Starvers.BossSystem.Bosses.Base
 					Starver.Players[i]?.UPGrade(ExpGive);
 				}
 			}
+#endif
 			if (Drops != null)
 			{
 				DropItems();
@@ -434,6 +437,7 @@ namespace Starvers.BossSystem.Bosses.Base
 			}
 			while (damage >= Life)
 			{
+				Starver.Players[attacker].Exp += Life;
 				damage -= Life;
 				LifeDown();
 				if (Lifes < 1)
@@ -446,6 +450,7 @@ namespace Starvers.BossSystem.Bosses.Base
 				}
 			}
 			Life -= damage;
+			Starver.Players[attacker].Exp += damage;
 		}
 		#endregion
 		#region ToString
@@ -454,7 +459,7 @@ namespace Starvers.BossSystem.Bosses.Base
 			return string.Format("[Lv.{0}]{1}\nHP:{2}/{3}	Lifes:{4}/{5}\nMode:{6}", Level, Name, Life, LifeMax, Lifes, LifesMax, mode);
 		}
 		#endregion
-		#region lifes--
+		#region Lifes--
 		public virtual void LifeDown()
 		{
 			Lifes--;
@@ -480,7 +485,7 @@ namespace Starvers.BossSystem.Bosses.Base
 			}
 		}
 		#endregion
-		#region checkactive
+		#region CheckActive
 		public virtual bool CheckActive()
 		{
 			if (!_active)
@@ -685,7 +690,7 @@ namespace Starvers.BossSystem.Bosses.Base
 			}
 		}
 		#endregion
-		#region statics
+		#region Statics
 		public static int EndTrialProcess { get; internal set; }
 		public static bool EndTrial { get; internal set; }
 		public static int AliveBoss { get; internal set; }

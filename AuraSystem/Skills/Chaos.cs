@@ -25,9 +25,9 @@ namespace Starvers.AuraSystem.Skills
 		{
 			if(player.mp != player.MaxMP)
 			{
-				int slot = SkillManager.GetSlotByItemID(player.TPlayer.HeldItem.type) - 1;
+				int slot = SkillManager.GetSlotByItemID(player.HeldItem.type) - 1;
 				player.CDs[slot] -= CD;
-				player.SendCombatMSsg($"MP不足, 需要消耗{player.MaxMP}点MP", Color.HotPink);
+				player.SendCombatMsg($"MP不足, 需要消耗{player.MaxMP}点MP", Color.HotPink);
 				return;
 			}
 			player.mp = 0;

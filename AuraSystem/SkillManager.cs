@@ -98,15 +98,15 @@ namespace Starvers.AuraSystem
 
 				if (args.Banned)
 				{
-					player.SendCombatMSsg("该技能已被禁用", Color.Pink);
+					player.SendCombatMsg("该技能已被禁用", Color.Pink);
 				}
 				else if (args.MPCost > player.MP)
 				{
-					player.SendCombatMSsg("MP不足", Color.Pink);
+					player.SendCombatMsg("MP不足", Color.Pink);
 				}
-				else if (player.ForceIgnoreCD == false && (player.IgnoreCD == false || skill.ForceCD) && player.CDs[slot] > 0)
+				else if (!player.ForceIgnoreCD && (!player.IgnoreCD || skill.ForceCD) && player.CDs[slot] > 0)
 				{
-					player.SendCombatMSsg("技能冷却中", Color.Pink);
+					player.SendCombatMsg("技能冷却中", Color.Pink);
 				}
 				else
 				{
@@ -117,9 +117,9 @@ namespace Starvers.AuraSystem
 					}
 					player.MP -= args.MPCost;
 					player.LastSkill = (int)args.SkillID;
+					player.ReleasedSkill(args);
 				}
 
-				player.ReleasedSkill(args);
 			}
 			catch (Exception e)
 			{

@@ -87,7 +87,7 @@ namespace Starvers
 		/// </summary>
 		/// <param name="msg"></param>
 		/// <param name="color"></param>
-		public void SendCombatMSsg(string msg, Color color)
+		public void SendCombatMsg(string msg, Color color)
 		{
 			if (Index == -2)
 			{
@@ -1261,7 +1261,7 @@ namespace Starvers
 			}
 			damage = GetDamage(damage);
 			TSPlayer.DamagePlayer(damage);
-			SendCombatMSsg(damage.ToString(), effectTextColor);
+			SendCombatMsg(damage.ToString(), effectTextColor);
 			//NetMessage.SendPlayerHurt(Index, PlayerDeathReason.LegacyDefault(), damage, Index, false, false, 0);
 		}
 		private bool TryDodgeDamage()
@@ -1394,6 +1394,12 @@ namespace Starvers
 		public void KillMe()
 		{
 			TSPlayer.KillPlayer();
+		}
+		#endregion
+		#region ToString
+		public override string ToString()
+		{
+			return Name;
 		}
 		#endregion
 		#endregion

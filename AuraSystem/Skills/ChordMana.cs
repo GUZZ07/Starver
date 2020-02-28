@@ -15,7 +15,7 @@ namespace Starvers.AuraSystem.Skills
 	{
 		public ChordMana() : base(SkillIDs.ChordMana)
 		{
-			CD = 60 * 20;
+			CD = 60 * 30;
 			MP = 40;
 			Level = 500;
 			Description = @"释放音符的力量

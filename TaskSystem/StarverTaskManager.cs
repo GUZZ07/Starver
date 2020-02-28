@@ -459,7 +459,7 @@ namespace Starvers.TaskSystem
 							}
 							else
 							{
-								player.SendCombatMSsg($"任务开始: {player.BranchTask}", Color.Green);
+								player.SendCombatMsg($"任务开始: {player.BranchTask}", Color.Green);
 								if (Message != null)
 								{
 									player.SendSuccessMessage(Message);

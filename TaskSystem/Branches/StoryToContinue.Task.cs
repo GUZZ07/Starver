@@ -469,7 +469,7 @@ namespace Starvers.TaskSystem.Branches
 													double process = 40 * 5;
 													process /= datas.ShortValue6;
 													process *= 100;
-													TargetPlayer.SendCombatMSsg("+" + (int)process + "%", Color.Blue);
+													TargetPlayer.SendCombatMsg("+" + (int)process + "%", Color.Blue);
 												}
 											}
 										}

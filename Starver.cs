@@ -467,18 +467,19 @@ namespace Starvers
 				*/
 			}
 			snpc?.PreStrike(ref realdamage, args.KnockBack, player);
-			player.Exp += realdamage;
+			int liferemain = RealNPC.life;
 			RealNPC.life -= realdamage;
 			RealNPC.playerInteraction[player.Index] = true;
 			player.TPlayer.OnHit((int)RealNPC.Center.X, (int)RealNPC.Center.Y, RealNPC);
 			if (RealNPC.life < 1)
 			{
+				player.exp += liferemain;
 				if (!(snpc is null))
 				{
 					player.UPGrade(snpc.ExpGive);
 					snpc.CheckDead();
 				}
-				else if(Config.EnableAura)
+				else if (Config.EnableAura)
 				{
 					RealNPC.checkDead();
 				}
@@ -486,6 +487,7 @@ namespace Starvers
 			}
 			else
 			{
+				player.Exp += realdamage;
 				if (Config.EnableAura)
 				{
 					Vector knockback = (Vector)(args.Npc.Center - player.Center);
@@ -1199,13 +1201,82 @@ namespace Starvers
 					}
 					try
 					{
-						player.Level = int.Parse(args.Parameters[1]);
-						player.SendInfoMessage("设置成功");
-						player.SendInfoMessage("当前等级:{0}", player.Level);
+						switch (args.Parameters.Count)
+						{
+							case 1:
+								throw null;
+							case 2:
+								{
+									if (int.TryParse(args.Parameters[1], out int level))
+									{
+										player.Level = level;
+										player.SendInfoMessage("设置成功");
+										player.SendInfoMessage("当前等级:{0}", player.Level);
+									}
+									else
+									{
+										player.SendErrorMessage("无效的等级(只接受10进制整数)");
+									}
+									break;
+								}
+							case 3:
+								{
+									if (int.TryParse(args.Parameters[2], out int level))
+									{
+										if (int.TryParse(args.Parameters[1], out int idx))
+										{
+											if (Players[idx] != null)
+											{
+												Players[idx].Level = level;
+												Players[idx].SendSuccessMessage($"{player.Name}将你的等级更改为{level}");
+												player.SendInfoMessage("设置成功");
+												player.SendInfoMessage("当前等级:{0}", Players[idx].Level);
+											}
+											else
+											{
+												player.SendErrorMessage("无效的玩家");
+											}
+										}
+										else
+										{
+											var find = Players.Where(ply => ply.Name.StartsWith(args.Parameters[1], StringComparison.OrdinalIgnoreCase));
+											if (find.Count() > 1)
+											{
+												player.SendInfoMessage("多个玩家匹配:");
+												player.SendInfoMessage("    " + string.Join(", ", values: find));
+											}
+											else if(find.Count() < 1)
+											{
+												player.SendErrorMessage("无匹配玩家");
+											}
+											else
+											{
+												var target = find.First();
+												target.Level = level;
+												target.SendSuccessMessage($"{player.Name}将你的等级更改为{level}");
+												player.SendInfoMessage("设置成功");
+												player.SendInfoMessage("当前等级:{0}", target.Level);
+											}
+										}
+									}
+									else
+									{
+										player.SendErrorMessage("无效的等级(只接受10进制整数)");
+									}
+									break;
+								}
+							default:
+								player.Level = int.Parse(args.Parameters[1]);
+								player.SendInfoMessage("设置成功");
+								player.SendInfoMessage("当前等级:{0}", player.Level);
+								break;
+						}
 					}
 					catch
 					{
-						player.SendMessage("正确用法:    /aura setlvl <level>", Color.Red);
+						player.SendMessage(@"正确用法
+    更改自身等级:    /starver setlvl <level>
+    更改其他玩家等级:/starver setlvl <玩家名称或序号> 等级", Color.Red);
 					}
 					break;
 				#endregion
