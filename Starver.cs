@@ -980,6 +980,11 @@ namespace Starvers
 								npc.life = npc.lifeMax = StarverAuraManager.NPCLife(npc.lifeMax);
 							}
 							npc.defense = StarverAuraManager.NPCDefense(npc.defense);
+							if(StarverBoss.EndTrial)
+							{
+								npc.defense = 10000;
+								npc.life = npc.lifeMax = 30000;
+							}
 							npc.damage = StarverAuraManager.NPCDamage(npc.damage);
 							goto senddata;
 					}

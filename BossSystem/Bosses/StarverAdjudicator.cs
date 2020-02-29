@@ -254,7 +254,11 @@ namespace Starvers.BossSystem.Bosses
 			{
 				vector.Angle += PI / 120;
 			}
-			Center = vector + TargetPlayer.Center;
+			if (ExVersion)
+			{
+				TargetPlayer.TPlayer.ZoneTowerNebula = true;
+				TargetPlayer.SendData(PacketTypes.Zones, "", Target);
+			}
 			#endregion
 		}
 		#endregion

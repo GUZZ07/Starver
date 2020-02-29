@@ -238,6 +238,11 @@ namespace Starvers.BossSystem.Bosses
 			WhereToGo += (Vector)TargetPlayer.Center;
 			FakeVelocity = WhereToGo - (Vector)Center;
 			FakeVelocity /= 10;
+			if (ExVersion)
+			{
+				TargetPlayer.TPlayer.ZoneTowerVortex = true;
+				TargetPlayer.SendData(PacketTypes.Zones, "", Target);
+			}
 			#endregion
 		}
 		#endregion
