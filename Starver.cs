@@ -1239,7 +1239,7 @@ namespace Starvers
 										}
 										else
 										{
-											var find = Players.Where(ply => ply.Name.StartsWith(args.Parameters[1], StringComparison.OrdinalIgnoreCase));
+											var find = Players.Where(ply => ply != null && ply.Name.StartsWith(args.Parameters[1], StringComparison.OrdinalIgnoreCase));
 											if (find.Count() > 1)
 											{
 												player.SendInfoMessage("多个玩家匹配:");
@@ -1274,9 +1274,9 @@ namespace Starvers
 					}
 					catch
 					{
-						player.SendMessage(@"正确用法
+						player.SendErrorMessage(@"正确用法
     更改自身等级:    /starver setlvl <level>
-    更改其他玩家等级:/starver setlvl <玩家名称或序号> 等级", Color.Red);
+    更改其他玩家等级:/starver setlvl <玩家名称或序号> 等级");
 					}
 					break;
 				#endregion
