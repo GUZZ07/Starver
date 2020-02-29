@@ -1571,7 +1571,10 @@ namespace Starvers
 				}
 				if (Temp || Level < 100)
 				{
-					exp = value;
+					if (value > 0)
+					{
+						exp = value;
+					}
 					return;
 				}
 				long expNow = value;
