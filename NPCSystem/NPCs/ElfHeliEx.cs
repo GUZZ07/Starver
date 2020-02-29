@@ -278,7 +278,7 @@ namespace Starvers.NPCSystem.NPCs
 		{
 			if (Timer % 45 == 0 && Timer % (2 * 60 + 3 * 45) <= 3 * 45)
 			{
-				Vel = (Vector)(Center - TargetPlayer.Center);
+				Vel = (Vector)(TargetPlayer.Center - Center);
 				ProjSector(Center, 18, 16, Vel.Angle, PI * 4 / 9, 53, ProjectileID.BulletDeadeye, 5);
 			}
 		}

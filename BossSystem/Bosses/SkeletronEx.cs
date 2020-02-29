@@ -26,8 +26,8 @@ namespace Starvers.BossSystem.Bosses
 			ComingMessageColor = Color.Gray;
 			TaskNeed = 25;
 			RawType = NPCID.SkeletronHead;
-			DefaultDefense = 80;
-			DefaultLife = 1110000;
+			DefaultDefense = 50;
+			DefaultLife = 110000;
 			DefaultLifes = 70;
 			Drops = new DropItem[]
 			{
@@ -157,13 +157,13 @@ namespace Starvers.BossSystem.Bosses
 		{
 			int alive = AlivePlayers();
 			int idx = NPC.NewNPC((int)Center.X, (int)Center.Y, NPCID.RaggedCaster, Index);
-			Main.npc[idx].life = Main.npc[idx].lifeMax = alive * 400;
-			Main.npc[idx].defense = 78;
+			Main.npc[idx].life = Main.npc[idx].lifeMax = alive * 6000;
+			Main.npc[idx].defense = 1800;
 			Main.npc[idx].velocity = Rand.NextVector2(26.66f);
 			NetMessage.SendData((int)PacketTypes.NpcUpdate, -1, -1, null, idx);
 			idx = NPC.NewNPC((int)Center.X, (int)Center.Y, NPCID.Paladin, Index);
-			Main.npc[idx].life = Main.npc[idx].lifeMax = alive * 400;
-			Main.npc[idx].defense = 78;
+			Main.npc[idx].life = Main.npc[idx].lifeMax = alive * 16000;
+			Main.npc[idx].defense = 7800;
 			Main.npc[idx].velocity = Rand.NextVector2(26.66f);
 			NetMessage.SendData((int)PacketTypes.NpcUpdate, -1, -1, null, idx);
 		}

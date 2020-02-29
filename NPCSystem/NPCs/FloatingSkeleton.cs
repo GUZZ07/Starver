@@ -53,7 +53,7 @@ namespace Starvers.NPCSystem.NPCs
 			AIStyle = 2;
 			DefaultLife = 13000;
 			NoGravity = true;
-			DefaultDefense = 180000;
+			DefaultDefense = 3800;
 			NoTileCollide = true;
 			Checker = SpawnChecker.ZombieLike;
 			Checker.SpawnChance /= 2;

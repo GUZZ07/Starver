@@ -390,11 +390,7 @@ namespace Starvers
 			BaseNPC snpc = NPCs?[RealNPC.whoAmI];
 			StarverBoss TheBoss = null;
 			StarverPlayer player = Players[args.Player.whoAmI];
-			float damageindex = 1;
-			if (Config.EnableAura)
-			{
-				damageindex += player.Level * 0.015f;
-			}
+			float damageindex = (float)player.DamageIndex;
 			float interdamage;
 			interdamage = args.Damage * damageindex;
 			interdamage -= args.Npc.defense / 2;

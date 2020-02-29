@@ -92,6 +92,7 @@ namespace Starvers.NPCSystem.NPCs
 		public override void OnSpawn()
 		{
 			base.OnSpawn();
+			RealNPC.knockBackResist = 0;
 		}
 		#endregion
 		#region RemoveFromNPCs

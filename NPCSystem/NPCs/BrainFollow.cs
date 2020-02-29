@@ -32,7 +32,7 @@ namespace Starvers.NPCSystem.NPCs
 		{
 			NoTileCollide = true;
 			RawType = NPCID.Creeper;
-			DefaultDefense = 31000;
+			DefaultDefense = 3100;
 			DefaultLife = short.MaxValue;
 		}
 		#endregion

@@ -229,13 +229,7 @@ namespace Starvers
 		#region Activeplayers
 		public static int ActivePlayers()
 		{
-			int count = 0;
-			foreach(var player in Main.player)
-			{
-				if (player != null)
-					count++;
-			}
-			return count;
+			return Starver.Players.Count(player => player?.Active == true);
 		}
 		#endregion
 		#region NewProj

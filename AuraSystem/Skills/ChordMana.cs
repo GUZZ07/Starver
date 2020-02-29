@@ -15,9 +15,9 @@ namespace Starvers.AuraSystem.Skills
 	{
 		public ChordMana() : base(SkillIDs.ChordMana)
 		{
-			CD = 60 * 30;
-			MP = 40;
-			Level = 500;
+			CD = 60 * 40;
+			MP = 100;
+			Level = 1000;
 			Description = @"释放音符的力量
 ""和谐的音符给人以享受，而嘈杂的旋律则足以给人带来精神上的重创""
 ""她，他们，始终重复着相同的错误，在闭合的旋律中僵硬地起舞""";

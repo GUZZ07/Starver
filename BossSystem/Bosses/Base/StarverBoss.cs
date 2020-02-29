@@ -311,7 +311,7 @@ namespace Starvers.BossSystem.Bosses.Base
 			Index = NPC.NewNPC((int)where.X, (int)where.Y, RawType);
 			SendData();
 			Array.Clear(playerInteraction, 0, playerInteraction.Length);
-			Defense = DefaultDefense * (int)(100 * Math.Log(Level + Math.E));
+			Defense = (int)(DefaultDefense * Math.Log(Level + Math.E));
 			RealNPC.aiStyle = -1;
 			RealNPC.Center += Rand.NextVector2(54f, 54f);
 			RealNPC.noTileCollide = true;
@@ -328,6 +328,7 @@ namespace Starvers.BossSystem.Bosses.Base
 					LifesMax *= count;
 					break;
 			}
+			Life = LifeMax;
 			Lifes = LifesMax;
 			LastCenter = Center;
 			Timer = 0;
@@ -479,7 +480,7 @@ namespace Starvers.BossSystem.Bosses.Base
 					TSPlayer.All.SendMessage($"{DisplayName}当前生命:{Lifes / 10}/[c/0fff00:{(int)(LifesMax / 10f + 0.999f)}]", Color.Blue);
 				}
 				LastCenter = Center;
-				RealNPC.life = RealNPC.lifeMax;
+				Life = LifeMax;
 				RealNPC.active = true;
 				SendData();
 			}

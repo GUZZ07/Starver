@@ -1468,6 +1468,21 @@ namespace Starvers
 		}
 		#endregion
 		#region Datas
+		public double DamageIndex
+		{
+			get
+			{
+				return level switch
+				{
+					_ when level < 100 => 1 + 0.015 * level,
+					_ when 100 <= level && level < 1000 => 1 + 1.5 + Math.Log(level / 100, 2),
+					// _ when 1000 <= level && level < 10000 => 1 + 1.5 + Math.Pow(level, 0.2) + 3 * Math.Pow(level / 10000, 10) - 4
+					_ when 1000 <= level && level < 10000 => 1.821928094887362 + Math.Pow(level, 0.2) + 3 * Math.Pow(level / 10000, 10),
+					_ when 10000 <= level && level < 100000 => 11.131501539689296 + Math.Pow(Math.Log10(level) - 3.7, Math.Log(level / 1000, 2) + 1),
+					_ => 20
+				};
+			}
+		}
 		/// <summary>
 		/// 技能CD
 		/// </summary>

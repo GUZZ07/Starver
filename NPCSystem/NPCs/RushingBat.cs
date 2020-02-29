@@ -43,7 +43,7 @@ namespace Starvers.NPCSystem.NPCs
 			RawType = NPCID.GiantBat;
 			CollideDamage = 400;
 			DefaultLife = 3000;
-			DefaultDefense = 400000;
+			DefaultDefense = 400;
 		}
 		#endregion
 		#region RealAI

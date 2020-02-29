@@ -28,7 +28,7 @@ namespace Starvers.BossSystem.Bosses
 		{
 			TaskNeed = 34;
 			RawType = NPCID.SkeletronPrime;
-			DefaultLife = 410000;
+			DefaultLife = 110000;
 			DefaultLifes = 90;
 			DefaultDefense = 30;
 			Arms = new NPCSystem.NPCs.PrimeExArm[MaxArms];

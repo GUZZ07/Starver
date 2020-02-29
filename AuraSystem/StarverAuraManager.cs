@@ -31,6 +31,100 @@ namespace Starvers.AuraSystem
 		private Queue<IRealm> TheRealms;
 		private List<Type> RealmTypes;
 		private string[] RealmNames;
+		private static readonly double[] NPCDefenseScales =
+		{
+			1.00,		//  0
+			1.20,		//  1
+			1.30,		//  2
+			1.50,		//  3
+			1.80,		//  4
+			2.00,		//  5
+			2.10,		//  6
+			2.00,		//  7
+			3.40,		//  8
+			3.50,		//  9
+			3.70,		// 10
+			3.70,		// 11
+			4.20,		// 12
+			4.40,		// 13
+			5.30,		// 14
+			5.90,		// 15
+			6.00,		// 16
+			6.30,		// 17
+			6.40,		// 18
+			6.50,		// 19
+			6.60,		// 20
+			7.00,		// 21
+			8.00,		// 22
+			8.25,		// 23
+			8.45,		// 24
+			8.50,		// 25
+			8.80,		// 26
+			8.80,		// 27
+			8.80,		// 28
+			8.80,		// 29
+			8.80,		// 30
+			9.30,		// 31
+			9.35,		// 32
+			9.36,		// 33
+			9.37,		// 34
+			9.38,		// 35
+			9.39,		// 36
+			9.40,		// 37
+			9.44,		// 38
+			9.50,		// 39
+			9.59,		// 40
+			9.62,		// 41
+			9.78,		// 42
+			12.0,		// 43
+		};
+		private static readonly double[] NPCLifeScales =
+		{
+			1.00,		//  0
+			1.20,		//  1
+			1.30,		//  2
+			1.50,		//  3
+			1.80,		//  4
+			2.00,		//  5
+			2.10,		//  6
+			2.00,		//  7
+			3.40,		//  8
+			3.50,		//  9
+			3.70,		// 10
+			3.70,		// 11
+			4.20,		// 12
+			4.40,		// 13
+			5.30,		// 14
+			5.90,		// 15
+			6.00,		// 16
+			6.30,		// 17
+			6.40,		// 18
+			6.50,		// 19
+			6.60,		// 20
+			7.00,		// 21
+			8.00,		// 22
+			8.25,		// 23
+			8.45,		// 24
+			8.50,		// 25
+			8.80,		// 26
+			8.80,		// 27
+			8.80,		// 28
+			8.80,		// 29
+			8.80,		// 30
+			9.30,		// 31
+			9.35,		// 32
+			9.36,		// 33
+			9.37,		// 34
+			9.38,		// 35
+			9.39,		// 36
+			9.40,		// 37
+			9.44,		// 38
+			9.50,		// 39
+			9.59,		// 40
+			9.62,		// 41
+			9.78,		// 42
+			12.0,		// 43
+		};
 		#endregion
 		#region Properties
 		private static StarverConfig Config => StarverConfig.Config;
@@ -559,7 +653,7 @@ namespace Starvers.AuraSystem
 		#region NPCDefense
 		internal static int NPCDefense(int raw)
 		{
-			float scale = Config.TaskNow + 1;
+			double scale = NPCDefenseScales[Config.TaskNow];
 			return Convert.ToInt32(raw * scale);
 		}
 		#endregion
@@ -579,9 +673,9 @@ namespace Starvers.AuraSystem
 		#region NPCLife
 		internal static int NPCLife(int raw, bool isboss = false)
 		{
-			float scale = 1;
-			scale += Config.TaskNow * 2.75f;
-			float now = raw * scale;
+			double scale = 0;
+			scale += NPCLifeScales[Config.TaskNow];
+			double now = raw * scale;
 			if (!isboss)
 			{
 				now = Math.Min(short.MaxValue, now);

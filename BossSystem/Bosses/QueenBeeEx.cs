@@ -22,13 +22,10 @@ namespace Starvers.BossSystem.Bosses
 			TaskNeed = 24;
 			RawType = NPCID.QueenBee;
 			Name = "蜂后";
-			DefaultLife = 965500;
-			DefaultDefense = 65;
+			DefaultLife = 45500;
+			DefaultDefense = 50;
 			DefaultLifes = 60;
-			unsafe
-			{
-				StarverAI[0] = 0;
-			}
+			StarverAI[0] = 0;
 			Drops = new DropItem[]
 			{
 				new DropItem(new int[]{Currency.Ranged,Currency.Melee }, 3, 7, 0.53f)

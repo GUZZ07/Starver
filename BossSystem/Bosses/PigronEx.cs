@@ -29,7 +29,7 @@ namespace Starvers.BossSystem.Bosses
 			TaskNeed = 33;
 			Name = "猪龙";
 			RawType = NPCID.PigronHallow;
-			DefaultDefense = 63;
+			DefaultDefense = 53;
 			DefaultLife = 30000;
 			DefaultLifes = 80;
 			DamagedIndex = 0.00017f;
@@ -195,7 +195,7 @@ namespace Starvers.BossSystem.Bosses
 				return
 				npc.active &&
 				(npc.type == NPCID.PigronCorruption || npc.type == NPCID.PigronCrimson) &&
-				(npc.defense > 30000);
+				(npc.defense > 3000);
 			});
 			if(count >= Summons * 4)
 			{
@@ -204,8 +204,8 @@ namespace Starvers.BossSystem.Bosses
 			}
 			while (Vector.Distance(Vel, vector) > 16 * 2f)
 			{
-				NewNPC(vector, Vector.Zero, NPCID.PigronCorruption, 23300, 40000);
-				NewNPC(Vel, Vector.Zero, NPCID.PigronCrimson, 23300, 40000);
+				NewNPC(vector, Vector.Zero, NPCID.PigronCorruption, 23300, 4000);
+				NewNPC(Vel, Vector.Zero, NPCID.PigronCrimson, 23300, 4000);
 				vector += Unit;
 				Vel -= Unit;
 			}

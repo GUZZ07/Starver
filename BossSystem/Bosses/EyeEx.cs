@@ -37,8 +37,8 @@ namespace Starvers.BossSystem.Bosses
 			TaskNeed = 22;
 			RawType = NPCID.EyeofCthulhu;
 			Name = "克苏鲁之眼";
-			DefaultDefense = 150;
-			DefaultLife = 63000;
+			DefaultDefense = 5000;
+			DefaultLife = 100000;
 			DefaultLifes = 20;
 			vector.X = 16 * 20;
 			Drops = new DropItem[]
