@@ -32,16 +32,23 @@ namespace Starvers.AuraSystem.Skills
 		{
 			await Task.Run(() =>
 			{
-				int damage = 800;
-				Vector Velocity = (Vector)vel * 3;
-				IProjSet Projs = new ProjStack(Max + 5);
-				int[] idxes = player.ProjCircleRet(player.Center, 16 * 3.45f, 0, ProjectileID.DemonScythe, Max, damage);
-				Projs.Push(idxes, Velocity);
-				int idx = player.NewProj(player.Center, Vector.Zero, ProjectileID.MonkStaffT3_AltShot, damage * 3 / 2);
-				Projs.Push(idx, Velocity * 2);
-				Thread.Sleep(1000);
-				Projs.Launch();
-				player.Center += Rand.NextVector2(16 * 100, 16 * 100);
+				try
+				{
+					int damage = 800;
+					Vector Velocity = (Vector)vel * 3;
+					IProjSet Projs = new ProjStack(Max + 5);
+					int[] idxes = player.ProjCircleRet(player.Center, 16 * 3.45f, 0, ProjectileID.DemonScythe, Max, damage);
+					Projs.Push(idxes, Velocity);
+					int idx = player.NewProj(player.Center, Vector.Zero, ProjectileID.MonkStaffT3_AltShot, damage * 3 / 2);
+					Projs.Push(idx, Velocity * 2);
+					Thread.Sleep(1000);
+					Projs.Launch();
+					player.Center += Rand.NextVector2(16 * 100, 16 * 100);
+				}
+				catch
+				{
+
+				}
 			});
 		}
 	}

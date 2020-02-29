@@ -31,45 +31,52 @@ namespace Starvers.AuraSystem.Skills
 		{
 			await Task.Run(() =>
 			{
-				int tag = 9;
-				double angle;
-				Vector2 pos;
-				Vector2 velocity;
-				while (tag >= 0)
+				try
 				{
-					for (int i = 0; i < 3; i++)
+					int tag = 9;
+					double angle;
+					Vector2 pos;
+					Vector2 velocity;
+					while (tag >= 0)
 					{
-						angle = -Math.PI / 2;
-						angle += Rand.NextDouble(-Math.PI / 6, Math.PI / 6);
-						player.NewProj(player.Center, Vector.FromPolar(angle, 13f), ProjectileID.HellfireArrow, 210, 20);
-					}
-					if (tag % 2 == 0)
-					{
-						for (int i = 0; i < 4; i++)
+						for (int i = 0; i < 3; i++)
 						{
-							pos = Rand.NextVector2(16 * 3, 16 * 4);
-							pos.X += 16 * 3 / 2;
-							pos.X *= 5 / 3f;
-							pos.X += 16 * 2;
-							velocity = pos;
-							velocity.Length(15);
-							player.NewProj(player.Center + pos, velocity, ProjectileID.BallofFire, 180, 20);
+							angle = -Math.PI / 2;
+							angle += Rand.NextDouble(-Math.PI / 6, Math.PI / 6);
+							player.NewProj(player.Center, Vector.FromPolar(angle, 13f), ProjectileID.HellfireArrow, 210, 20);
 						}
-						for (int i = 0; i < 4; i++)
+						if (tag % 2 == 0)
 						{
-							pos = Rand.NextVector2(16 * 3, 16 * 4);
-							pos.X -= 16 * 3 / 2;
-							pos.X *= 5 / 3f;
-							pos.X -= 16 * 2;
-							velocity = pos;
-							velocity.Length(15);
-							player.NewProj(player.Center + pos, velocity, ProjectileID.BallofFire, 180, 20);
+							for (int i = 0; i < 4; i++)
+							{
+								pos = Rand.NextVector2(16 * 3, 16 * 4);
+								pos.X += 16 * 3 / 2;
+								pos.X *= 5 / 3f;
+								pos.X += 16 * 2;
+								velocity = pos;
+								velocity.Length(15);
+								player.NewProj(player.Center + pos, velocity, ProjectileID.BallofFire, 180, 20);
+							}
+							for (int i = 0; i < 4; i++)
+							{
+								pos = Rand.NextVector2(16 * 3, 16 * 4);
+								pos.X -= 16 * 3 / 2;
+								pos.X *= 5 / 3f;
+								pos.X -= 16 * 2;
+								velocity = pos;
+								velocity.Length(15);
+								player.NewProj(player.Center + pos, velocity, ProjectileID.BallofFire, 180, 20);
+							}
 						}
+						Thread.Sleep(15);
+						tag--;
 					}
-					Thread.Sleep(15);
-					tag--;
+					player.SetBuff(BuffID.Inferno, 3600);
 				}
-				player.SetBuff(BuffID.Inferno, 3600);
+				catch
+				{
+
+				}
 			});
 		}
 	}

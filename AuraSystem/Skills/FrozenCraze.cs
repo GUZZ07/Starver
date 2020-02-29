@@ -46,19 +46,26 @@ namespace Starvers.AuraSystem.Skills
 		{
 			await Task.Run(() =>
 			{
-				int damage = (int)Math.Log(player.Level);
-				damage *= damage;
-				damage *= 5;
-				Vector2 Pos()
+				try
 				{
-					return player.Center + new Vector2(0, 16 * 2) + Rand.NextVector2(16 * 3.5f, 0);
+					int damage = (int)Math.Log(player.Level);
+					damage *= damage;
+					damage *= 5;
+					Vector2 Pos()
+					{
+						return player.Center + new Vector2(0, 16 * 2) + Rand.NextVector2(16 * 3.5f, 0);
+					}
+					int Tag = 10 * 8;
+					while (Tag > 0)
+					{
+						player.NewProj(Pos(), Rand.NextVector2(0.5f, 0.1f) + new Vector2(0, 0.1f), Projs.Next(), damage, 20f);
+						Thread.Sleep(125);
+						Tag--;
+					}
 				}
-				int Tag = 10 * 8;
-				while(Tag > 0)
+				catch
 				{
-					player.NewProj(Pos(), Rand.NextVector2(0.5f, 0.1f) + new Vector2(0, 0.1f), Projs.Next(), damage, 20f);
-					Thread.Sleep(125);
-					Tag--;
+
 				}
 			});
 		}
