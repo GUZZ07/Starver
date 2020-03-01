@@ -393,7 +393,7 @@ namespace Starvers
 			float damageindex = (float)player.DamageIndex;
 			float interdamage;
 			interdamage = args.Damage * damageindex;
-			interdamage -= args.Npc.defense / 2;
+			interdamage -= args.Npc.ValidDefense() / 2;
 			if(args.Critical)
 			{
 				interdamage *= 2;

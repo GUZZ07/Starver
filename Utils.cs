@@ -17,6 +17,7 @@ using Terraria.Localization;
 using Microsoft.Xna.Framework;
 using System.Runtime.InteropServices;
 using System.Threading;
+using Terraria.ID;
 
 namespace Starvers
 {
@@ -212,7 +213,7 @@ namespace Starvers
 			}
 		}
 		#endregion
-		#region cmd
+		#region Cmd
 		public static StarverPlayer SPlayer(this CommandArgs args)
 		{
 			if(args.Player == TSPlayer.All)
@@ -607,6 +608,32 @@ namespace Starvers
 			proj.active = false;
 			proj.SetDefaults(0);
 			proj.SendData();
+		}
+		public static bool HasBuff(this NPC npc, int type)
+		{
+			int idx = -1;
+			for (int i = 0; i < npc.buffType.Length; i++)
+			{
+				if(npc.buffType[i] == type && npc.buffTime[i] > 0)
+				{
+					idx = i;
+					break;
+				}
+			}
+			return idx != -1;
+		}
+		public static int ValidDefense(this NPC npc)
+		{
+			double defense = npc.defense;
+			if(npc.ichor)
+			{
+				defense /= 2;
+			}
+			if(npc.onFire || npc.onFire2 || npc.onFrostBurn || npc.poisoned || npc.shadowFlame || npc.venom)
+			{
+				defense /= 1.5;
+			}
+			return (int)defense;
 		}
 		#endregion
 	}
