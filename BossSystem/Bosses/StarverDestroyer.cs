@@ -39,13 +39,10 @@ namespace Starvers.BossSystem.Bosses
 			FullName = "Tuofot The Starver Destroyer";
 			RawType = NPCID.DukeFishron;
 			IgnoreDistance = true;
-			DefaultLife = 5200000;
+			DefaultLife = 82000;
 			DefaultLifes = 400;
-			DefaultDefense = 1000;
-			unsafe
-			{
-				StarverAI[0] = 0;
-			}
+			DefaultDefense = 4000;
+			StarverAI[0] = 0;
 		}
 		#endregion
 		#region Spawn

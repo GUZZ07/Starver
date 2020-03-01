@@ -40,10 +40,7 @@ namespace Starvers.BossSystem.Bosses
 		public override void Spawn(Vector2 where, int lvl = CriticalLevel)
 		{
 			base.Spawn(where, lvl);
-			unsafe
-			{
-				StarverAI[0] = PI / 2;
-			}
+			StarverAI[0] = PI / 2;
 			Mode = BossMode.ThrowingBone;
 			//NewArms();
 			//RealNPC.dontTakeDamage = true;

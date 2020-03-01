@@ -51,7 +51,7 @@ namespace Starvers.BossSystem.Bosses
 			Name = "克苏鲁之脑";
 			IgnoreDistance = true;
 			DefaultLife = 262500;
-			DefaultLifes = 60;
+			DefaultLifes = 30;
 			RawType = NPCID.BrainofCthulhu;
 			Drops = new DropItem[] 
 			{
@@ -60,7 +60,7 @@ namespace Starvers.BossSystem.Bosses
 			};
 		}
 		#endregion
-		#region dtor
+		#region Dtor
 		/*
 		~BrainEx()
 		{
@@ -176,7 +176,6 @@ namespace Starvers.BossSystem.Bosses
 					}
 				}
 				TargetPlayer.Velocity += Rand.NextVector2(Rand.Next(0, 36));
-				NetMessage.SendData((int)PacketTypes.PlayerUpdate, -1, -1, null, Target);
 			}
 		}
 		#endregion

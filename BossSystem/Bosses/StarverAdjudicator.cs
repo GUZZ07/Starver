@@ -16,7 +16,13 @@ namespace Starvers.BossSystem.Bosses
 	{
 		#region Field
 		protected Vector GravityVel = new Vector(0, 25);
-		protected unsafe short* InvTypes; //{ ProjectileID.RocketSkeleton, ProjectileID.NebulaLaser, ProjectileID.SaucerScrap, ProjectileID.SaucerMissile };
+		protected short[] InvTypes = 
+		{ 
+			ProjectileID.RocketSkeleton,
+			ProjectileID.NebulaLaser,
+			ProjectileID.SaucerScrap, 
+			ProjectileID.SaucerMissile 
+		};
 		private DropItem[] DropsNormal = new DropItem[]
 		{
 			new DropItem(new int[]{ Currency.Magic }, 15, 30, 0.73f),
@@ -36,27 +42,12 @@ namespace Starvers.BossSystem.Bosses
 			TaskNeed = 29;
 			Name = "The Starver Adjudicator";
 			FullName = "Iesnet The Starver Adjudicator";
-			DefaultLife = 1400000;
+			DefaultLife = 29000;
 			DefaultLifes = 320;
 			DefaultDefense = 990;
 			RawType = NPCID.DukeFishron;
-			unsafe
-			{
-				StarverAI[2] = NPCID.NebulaHeadcrab;
-				StarverAI[3] = NPCID.NebulaBrain;
-				InvTypes = (short*)Marshal.AllocHGlobal(sizeof(short) * 4).ToPointer();
-				*InvTypes = ProjectileID.NebulaLaser;
-				*++InvTypes = ProjectileID.RocketSkeleton;
-				*++InvTypes = ProjectileID.SaucerScrap;
-				*++InvTypes = ProjectileID.SaucerMissile;
-				InvTypes -= 3;
-			}
-		}
-		#endregion
-		#region dtor
-		unsafe ~StarverAdjudicator()
-		{
-			Marshal.FreeHGlobal(new IntPtr(InvTypes));
+			StarverAI[2] = NPCID.NebulaHeadcrab;
+			StarverAI[3] = NPCID.NebulaBrain;
 		}
 		#endregion
 		#region Fail

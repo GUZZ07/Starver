@@ -67,7 +67,7 @@ namespace Starvers.BossSystem.Bosses
 		{
 			TaskNeed = 37;
 			RawType = NPCID.Spazmatism;
-			DefaultLife = 1925000;
+			DefaultLife = 37500;
 			DefaultLifes = 100;
 			DefaultDefense = 587;
 			Drops = new DropItem[]

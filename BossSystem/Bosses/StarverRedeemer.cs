@@ -40,7 +40,7 @@ namespace Starvers.BossSystem.Bosses
 			TaskNeed = 28;
 			Name = "The Starver Redeemer";
 			FullName = "Shtaed The Starver Redeemer";
-			DefaultLife = 3650000;
+			DefaultLife = 36000;
 			DefaultLifes = 200;
 			DefaultDefense = 980;
 			vector.X = 16 * 39;
@@ -119,7 +119,7 @@ namespace Starvers.BossSystem.Bosses
 						#region FlowInvaderShot
 						case BossMode.DeathsFlowInvaderShot:
 							Mode = BossMode.DeathsLaser;
-							inter = ExVersion ? (short)1 : (short)3;
+							inter = ExVersion ? (short)7 : (short)10;
 							break;
 						#endregion
 						#region Laser
@@ -337,7 +337,7 @@ namespace Starvers.BossSystem.Bosses
 		}
 		#endregion
 		#region FlowInvaderShot
-		protected unsafe void FlowInvaderShot()
+		protected void FlowInvaderShot()
 		{
 			if (Timer % inter == 0)
 			{
@@ -360,7 +360,7 @@ namespace Starvers.BossSystem.Bosses
 		}
 		#endregion
 		#region Laser
-		protected unsafe void Laser()
+		protected void Laser()
 		{
 			if (Timer % inter == 0)
 			{
@@ -373,13 +373,13 @@ namespace Starvers.BossSystem.Bosses
 							continue;
 						}
 						Vel = (Vector)Rand.NextVector2(16 * 29f);
-						Proj(player.Center + Vel, -Vel / 20 + Rand.NextVector2(5f, 5f), ProjectileID.DeathLaser, 220, 9f);
+						Proj(player.Center + Vel, -Vel / 16 / 29 * 3 + Rand.NextVector2(5f, 5f), ProjectileID.DeathLaser, 220, 9f);
 					}
 				}
 				else
 				{
 					Vel = (Vector)Rand.NextVector2(16 * 29f);
-					Proj(TargetPlayer.Center + Vel, -Vel / 25 + Rand.NextVector2(5f, 5f), ProjectileID.DeathLaser, 170, 9f);
+					Proj(TargetPlayer.Center + Vel, -Vel / 16 / 29 * 1.75f + Rand.NextVector2(5f, 5f), ProjectileID.DeathLaser, 170, 9f);
 				}
 			}
 		}

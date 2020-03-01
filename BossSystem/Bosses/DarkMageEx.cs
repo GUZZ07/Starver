@@ -38,7 +38,6 @@ namespace Starvers.BossSystem.Bosses
 			LifeperPlayerType = ByLifes;
 			RawType = Starver.IsPE ? NPCID.RuneWizard : NPCID.DD2DarkMageT3;
 			DefaultLifes = 60;
-			DamagedIndex = 0.0004f;
 			DefaultLife = 32500;
 			DefaultDefense = 180;
 			IgnoreDistance = true;

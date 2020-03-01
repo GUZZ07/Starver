@@ -40,7 +40,7 @@ namespace Starvers.BossSystem.Bosses
 		public unsafe StarverWander():base(4)
 		{
 			TaskNeed = 27;
-			DefaultLife = 2000000;
+			DefaultLife = 200000;
 			DefaultLifes = 200;
 			DefaultDefense = 990;
 			RawType = NPCID.DukeFishron;

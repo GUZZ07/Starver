@@ -28,7 +28,6 @@ namespace Starvers.BossSystem.Bosses
 			DefaultDefense = 68;
 			DefaultLife = 30000;
 			DefaultLifes = 70;
-			DamagedIndex = 0.0002f;
 			LifeperPlayerType = ByLifes;
 			Drops = new DropItem[]
 			{
