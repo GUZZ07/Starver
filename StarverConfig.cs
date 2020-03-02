@@ -27,6 +27,7 @@ namespace Starvers
 		public bool EnableAura { get; set; } = true;
 		public bool EnableNPC { get; set; } = true;
 		public bool EnableBoss { get; set; } = true;
+		public bool CanAfterMoon { get; set; }
 		public bool EnableTestMode { get; set; }
 		public bool EvilWorld { get; set; }
 		public bool EnableSelfCollide { get; set; }

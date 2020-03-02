@@ -41,6 +41,7 @@ namespace Starvers.NPCSystem
 		#endregion
 		#endregion
 		#region Fields
+		protected bool afterMoon = true;
 		protected float[] AIUsing;
 		protected int[] Types;
 		protected int AIStyle = None;
@@ -151,6 +152,10 @@ namespace Starvers.NPCSystem
 				Checker.Match(player.GetSpawnChecker()) && 
 				SpawnTimer % Checker.SpawnRate == 0 && 
 				Rand.NextDouble() < Checker.SpawnChance;
+			if(afterMoon && !Starver.Config.CanAfterMoon)
+			{
+				Flag = false;
+			}
 			if(BossSystem.Bosses.Base.StarverBoss.EndTrial)
 			{
 				Flag &= EndTrialEnemy;
