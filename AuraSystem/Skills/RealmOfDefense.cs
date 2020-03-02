@@ -25,7 +25,8 @@ namespace Starvers.AuraSystem.Skills
 			var realm = new ReflectingRealm(player)
 			{
 				DefaultTimeLeft = 60 * 60,
-				Radium = 16 * 30
+				Radium = 16 * 30,
+				Center = player.Center
 			};
 			Starver.Instance.Aura.AddRealm(realm);
 		}

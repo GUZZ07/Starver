@@ -381,8 +381,8 @@ namespace Starvers.TaskSystem.Branches
 								}
 								else
 								{
-									Task_4_SpawnEnemies();
 									taskProcess++;
+									Task_4_SpawnEnemies();
 								}
 							}
 							else if (taskProcess == 2)
