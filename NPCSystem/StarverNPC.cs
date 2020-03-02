@@ -152,10 +152,6 @@ namespace Starvers.NPCSystem
 				Checker.Match(player.GetSpawnChecker()) && 
 				SpawnTimer % Checker.SpawnRate == 0 && 
 				Rand.NextDouble() < Checker.SpawnChance;
-			if(afterMoon && !Starver.Config.CanAfterMoon)
-			{
-				Flag = false;
-			}
 			if(BossSystem.Bosses.Base.StarverBoss.EndTrial)
 			{
 				Flag &= EndTrialEnemy;

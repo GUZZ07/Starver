@@ -54,6 +54,10 @@ namespace Starvers.NPCSystem.NPCs
 			{
 				RemoveFromNPCs();
 			}
+			else if(!Starver.Config.EvilWorld)
+			{
+				KillMe();
+			}
 		}
 		#endregion
 		#region OnDead
