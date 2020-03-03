@@ -469,7 +469,7 @@ namespace Starvers
 			player.TPlayer.OnHit((int)RealNPC.Center.X, (int)RealNPC.Center.Y, RealNPC);
 			if (RealNPC.life < 1)
 			{
-				player.exp += liferemain;
+				player.Exp += liferemain;
 				if (!(snpc is null))
 				{
 					player.UPGrade(snpc.ExpGive);

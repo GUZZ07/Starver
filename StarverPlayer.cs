@@ -764,7 +764,7 @@ namespace Starvers
 			}
 			catch
 			{
-
+				exp = Math.Max(0, exp);
 			}
 		}
 		#endregion
@@ -1566,7 +1566,7 @@ namespace Starvers
 			{
 				if (value < exp)
 				{
-					exp = value;
+					exp = Math.Max(0, value);
 					return;
 				}
 				if (Temp || Level < 100)
@@ -1579,16 +1579,16 @@ namespace Starvers
 				}
 				long expNow = value;
 				long lvl = level;
-				int Need = AuraSystem.StarverAuraManager.UpGradeExp((int)lvl);
+				int Need = UpGradeExp;
 				if (HasPerm(Perms.VIP.LessCost))
 				{
 					Need /= 3;
 				}
-				while (expNow > UpGradeExp)
+				while (expNow > Need)
 				{
 					expNow -= Need;
 					lvl++;
-					Need = AuraSystem.StarverAuraManager.UpGradeExp((int)lvl);
+					Need = UpGradeExp;
 					if (HasPerm(Perms.VIP.LessCost))
 					{
 						Need /= 3;
