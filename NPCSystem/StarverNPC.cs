@@ -99,7 +99,16 @@ namespace Starvers.NPCSystem
 		public virtual bool Spawn(Vector where)
 		{
 			_active = true;
-			Index = NewNPC(where, Vector.Zero, RawType, DefaultLife, DefaultDefense);
+			int life = DefaultLife;
+			int defense = DefaultDefense;
+			life += Starver.Config.TaskNow * 100;
+			defense += Starver.Config.TaskNow * 60;
+			if (Starver.Config.EvilWorld)
+			{
+				life += 4000;
+				defense += 2000;
+			}
+			Index = NewNPC(where, Vector.Zero, RawType, life, defense);
 			return true;
 		}
 		#endregion

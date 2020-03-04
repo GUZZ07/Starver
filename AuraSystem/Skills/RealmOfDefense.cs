@@ -14,10 +14,11 @@ namespace Starvers.AuraSystem.Skills
 		public RealmOfDefense() : base(SkillIDs.RealmOfDefense)
 		{
 			MP = 900;
-			CD = 60 * 60;
+			CD = 60 * 120;
 			Description = @"制造一个能弹开敌对攻击的结界";
 			Author = "1413";
-			Level = 1000;
+			Level = 3000;
+			ForceCD = true;
 			SetText();
 		}
 		public override void Release(StarverPlayer player, Vector2 vel)

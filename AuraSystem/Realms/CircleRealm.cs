@@ -27,7 +27,7 @@ namespace Starvers.AuraSystem.Realms
 			return IsCrossed(entity.Hitbox, (Center, Radium));
 		}
 
-		protected CircleRealm(bool useTimeLeft) : base(useTimeLeft)
+		protected CircleRealm(bool killedByTimeleft) : base(killedByTimeleft)
 		{
 
 		}

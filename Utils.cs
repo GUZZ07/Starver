@@ -529,9 +529,9 @@ namespace Starvers
 		#region UpdateNPC
 		public static void UpdateNPCState()
 		{
-			foreach (var npc in Terraria.Main.npc)
+			foreach (var npc in Main.npc)
 			{
-				if (!npc.active)
+				if (!npc.active || npc.aiStyle != -1)
 				{
 					continue;
 				}
@@ -544,7 +544,7 @@ namespace Starvers
 		{
 			foreach (var proj in Terraria.Main.projectile)
 			{
-				if (!proj.active)
+				if (!proj.active || proj.aiStyle != -1)
 				{
 					continue;
 				}
@@ -556,10 +556,10 @@ namespace Starvers
 		public unsafe static void RestoreNPCState(Vector2* NPCVelocity, int* NPCAI)
 		{
 			int t = -1;
-			foreach (var npc in Terraria.Main.npc)
+			foreach (var npc in Main.npc)
 			{
 				t++;
-				if (!npc.active)
+				if (!npc.active || npc.aiStyle != -1)
 				{
 					continue;
 				}
@@ -573,10 +573,10 @@ namespace Starvers
 		public unsafe static void RestoreProjState(Vector2* ProjVelocity, int* ProjAI)
 		{
 			int t = -1;
-			foreach (var proj in Terraria.Main.projectile)
+			foreach (var proj in Main.projectile)
 			{
 				t++;
-				if (!proj.active)
+				if (!proj.active || proj.aiStyle != -1)
 				{
 					continue;
 				}
@@ -586,6 +586,16 @@ namespace Starvers
 			}
 		}
 		#endregion
+		#endregion
+		#region TSPlayer
+		public static int GetUserID(this TSPlayer player)
+		{
+			return player.User.ID;
+		}
+		public static string GetUserName(this TSPlayer player)
+		{
+			return player.User.Name;
+		}
 		#endregion
 		#region else
 		public static void Exception(string message)

@@ -21,7 +21,7 @@ namespace Starvers.NPCSystem.NPCs
 			NoTileCollide = true;
 			RawType = NPCID.PrimeLaser;
 			DefaultDefense = 2000;
-			DefaultLife = 30000;
+			DefaultLife = 3000;
 		}
 		#endregion
 		#region Properties

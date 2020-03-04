@@ -32,8 +32,8 @@ namespace Starvers.NPCSystem.NPCs
 			AfraidSun = true;
 			Checker = SpawnChecker.ZombieLike;
 			RawType = NPCID.Zombie;
-			DefaultLife = 12000;
-			DefaultDefense = 3000;
+			DefaultLife = 2750;
+			DefaultDefense = 5000;
 			Checker.Task = 21;
 			AIStyle = 3;
 			Types = ZombieTypes;

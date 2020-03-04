@@ -51,7 +51,7 @@ namespace Starvers.NPCSystem.NPCs
 			AfraidSun = true;
 			SpaceOption |= SpawnSpaceOptins.InScreen;
 			RawType = NPCID.DarkCaster;
-			DefaultLife = 15000;
+			DefaultLife = 7000;
 			DefaultDefense = 3000;
 			Checker = SpawnChecker.RareNight;
 			Checker.Task = TaskID.SkeletronEx;

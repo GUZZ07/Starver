@@ -575,7 +575,19 @@ namespace Starvers
 		private static void OnUpdate(EventArgs args)
 		{
 			Timer++;
-			#region clearNPC
+			for (int i = 0; i < NPCID.Count; i++)
+			{
+				Main.npcLifeBytes[i] = 4;
+			}
+			foreach (var npc in Main.npc)
+			{
+				npc.netAlways = true;
+				if (npc.life == npc.lifeMax)
+				{
+					npc.life -= 1;
+				}
+			}
+			#region ClearNPC
 			if(TShock.Config.DisableHardmode && Timer % 60 == 0)
 			{
 				foreach (var npc in Main.npc)
@@ -709,27 +721,22 @@ namespace Starvers
 			try
 			{
 				//Thread.Sleep(2000);
-				if (Players[args.Player.Index]?.Name == args.Player.Name)
-				{
-					return;
-				}
 				Players[args.Player.Index] = null;
 				if (Config.SaveMode == SaveModes.MySQL)
 				{
 					int ID;
 					//由于TrPE的TS里是TSPlayer.Account,所以只能这么做
-					dynamic ply = args.Player;
 					if (!IsPE)
 					{
-						ID = ply.User.ID;
+						ID = args.Player.GetUserID();
 					}
 					else
 					{
-						ID = ply.Account.ID;
+						ID = ((dynamic)args.Player).Account.ID;
 					}
 					try
 					{
-						Players[args.Player.Index] = StarverPlayer.Read(ID);
+						Players[args.Player.Index] = StarverPlayer.Read(ID, args.Player.Index);
 						Players[args.Player.Index].Index = args.Player.Index;
 					}
 					catch (Exception e)
@@ -744,13 +751,13 @@ namespace Starvers
 				else
 				{
 					string Name;
-					dynamic ply = args.Player;
 					if (!IsPE)
 					{
-						Name = ply.User.Name;
+						Name = args.Player.GetUserName();
 					}
 					else
 					{
+						dynamic ply = args.Player;
 						Name = ply.Account.Name;
 					}
 					Players[args.Player.Index] = StarverPlayer.Read(args.Player.Index, Name);
@@ -780,6 +787,7 @@ namespace Starvers
 		#region OnGreet
 		private void OnGreet(GreetPlayerEventArgs args)
 		{
+#if false
 			if (Players[args.Who]?.Name == TShock.Players[args.Who].Name)
 			{
 				return;
@@ -853,6 +861,7 @@ namespace Starvers
 					Console.WriteLine(ex.ToString());
 				}
 			}
+#endif
 		}
 		#endregion
 		#region OnLeave
@@ -974,16 +983,28 @@ namespace Starvers
 							npc.defense *= 60;
 							npc.damage *= 10;
 							goto senddata;
-						default:
-							if (Main.hardMode) // 防止肉前空气怪
-							{
-								npc.life = npc.lifeMax = StarverAuraManager.NPCLife(npc.lifeMax);
-							}
-							npc.defense = StarverAuraManager.NPCDefense(npc.defense);
-							if(StarverBoss.EndTrial)
+						case NPCID.LunarTowerNebula:
+						case NPCID.LunarTowerSolar:
+						case NPCID.LunarTowerStardust:
+						case NPCID.LunarTowerVortex:
+							npc.defense = 2000;
+							npc.lifeMax = 100001;
+							npc.life = 100000;
+							if (StarverBoss.EndTrial)
 							{
 								npc.defense = 10000;
-								npc.life = npc.lifeMax = 30000;
+								npc.lifeMax *= 2;
+								npc.life *= 2;
+							}
+							goto senddata;
+						default:
+							npc.life = npc.lifeMax = StarverAuraManager.NPCLife(npc.lifeMax);
+							npc.life -= 1;
+							npc.defense = StarverAuraManager.NPCDefense(npc.defense);
+							if (StarverBoss.EndTrial)
+							{
+								npc.defense = 2000;
+								npc.life = npc.lifeMax = 80000;
 							}
 							npc.damage = StarverAuraManager.NPCDamage(npc.damage);
 							goto senddata;
@@ -991,6 +1012,7 @@ namespace Starvers
 					scale *= 10;
 					npc.defense = (int)(npc.defense * scale);
 					npc.life = npc.lifeMax = (int)(scale * npc.lifeMax);
+					npc.life -= 1;
 					npc.damage = (int)(npc.damage * (1 + scale) * Config.TaskNow < 15 ? 0.1f : 0.6f);
 				senddata:
 					NetMessage.SendData((int)PacketTypes.NpcUpdate, -1, -1, null, npc.whoAmI);
@@ -1316,7 +1338,7 @@ namespace Starvers
 				try
 				{
 					var ID = StarverPlayer.GetUserIDByName(args.Parameters[0]);
-					StarverPlayer player = StarverPlayer.Read((int)ID);
+					StarverPlayer player = StarverPlayer.Read((int)ID, -3);
 					player.ShowInfos(args.Player);
 				}
 				catch

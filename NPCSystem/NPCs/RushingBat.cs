@@ -42,7 +42,7 @@ namespace Starvers.NPCSystem.NPCs
 			Checker = SpawnChecker.UnderGroundLike;
 			RawType = NPCID.GiantBat;
 			CollideDamage = 400;
-			DefaultLife = 3000;
+			DefaultLife = 1000;
 			DefaultDefense = 400;
 		}
 		#endregion

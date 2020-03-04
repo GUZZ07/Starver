@@ -775,9 +775,9 @@ namespace Starvers
 		/// </summary>
 		/// <param name="UserID">玩家ID</param>
 		/// <returns></returns>
-		public static StarverPlayer Read(int UserID)
+		public static StarverPlayer Read(int UserID, int idx)
 		{
-			StarverPlayer player = new StarverPlayer(UserID);
+			StarverPlayer player = new StarverPlayer(UserID, idx);
 			if (SaveMode == SaveModes.MySQL)
 			{
 				using MySqlDataReader result = db.QueryReader("SELECT * FROM Starver WHERE UserID=@0;", UserID);
@@ -892,7 +892,7 @@ namespace Starvers
 		{
 			if (SaveMode == SaveModes.MySQL)
 			{
-				StarverPlayer tempplayer = Read(UserID);
+				StarverPlayer tempplayer = Read(UserID, Index);
 				level = tempplayer.level;
 				Skills = tempplayer.Skills;
 				Exp = tempplayer.Exp;
@@ -1361,7 +1361,7 @@ namespace Starvers
 						using MySqlDataReader reader = db.QueryReader("select * from starver where UserID=@0", ID.Value);
 						if (reader.Read())
 						{
-							player = new StarverPlayer(ID.Value, true);
+							player = new StarverPlayer(ID.Value, -3);
 							player.ReadFromReader(reader);
 							return true;
 						}
@@ -1497,7 +1497,7 @@ namespace Starvers
 		public BranchTask BranchTask { get; set; }
 		
 		public int AvalonGradation { get; set; }
-		public string Name { get; set; }
+		public string Name { get; private set; }
 		
 		/// <summary>
 		/// 上一次捕获到释放技能
@@ -1708,40 +1708,11 @@ namespace Starvers
 			Skills = new int[Skill.MaxSlots];
 			CDs = new int[Skill.MaxSlots];
 		}
-		private StarverPlayer(int userID, bool temp = false) : this(temp)
+		private StarverPlayer(int userID, int idx) : this(idx == -3)
 		{
 			UserID = userID;
 			Name = GetUserNameByID(UserID);
-			if (temp)
-				return;
-			if (!Starver.IsPE)
-			{
-				dynamic ply;
-				for (int i = 0; i < Starver.Players.Length; i++)
-				{
-					ply = TShock.Players[i];
-					if (TShock.Players[i] == null || TShock.Players[i].Active == false || ply.User.ID != userID)
-					{
-						continue;
-					}
-					Index = i;
-					break;
-				}
-			}
-			else
-			{
-				dynamic ply;
-				for (int i = 0; i < Starver.Players.Length; i++)
-				{
-					ply = TShock.Players[i];
-					if (TShock.Players[i] == null || TShock.Players[i].Active == false || ply.Account.ID != userID)
-					{
-						continue;
-					}
-					Index = i;
-					break;
-				}
-			}
+			Index = idx;
 		}
 		#endregion
 		#region NewMoon

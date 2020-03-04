@@ -529,7 +529,7 @@ namespace Starvers
 			int idx = NPC.NewNPC((int)pos.X, (int)pos.Y, type, start);
 			Main.npc[idx].velocity = vel;
 			Main.npc[idx].lifeMax = lifeMax;
-			Main.npc[idx].life = lifeMax;
+			Main.npc[idx].life = lifeMax - 1;
 			Main.npc[idx].defense = defense;
 			SendData(idx);
 			return idx;
@@ -539,7 +539,7 @@ namespace Starvers
 			int idx = NPC.NewNPC((int)pos.X, (int)pos.Y, type);
 			Main.npc[idx].velocity = vel;
 			Main.npc[idx].lifeMax = lifeMax;
-			Main.npc[idx].life = lifeMax;
+			Main.npc[idx].life = lifeMax - 1;
 			Main.npc[idx].defense = defense;
 			NetMessage.SendData((int)PacketTypes.NpcUpdate, -1, -1, null, idx);
 			return idx;

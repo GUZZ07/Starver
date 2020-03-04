@@ -188,6 +188,7 @@ namespace Starvers.AuraSystem
 				typeof(ReflectingRealm<EllipseReflector>),
 				typeof(BlindingRealm<EllipseConditioner>),
 				typeof(ReflectingRealm<CircleReflector>),
+				typeof(PointPlayer)
 			};
 			{
 				RealmNames = new string[RealmTypes.Count];
@@ -247,7 +248,7 @@ namespace Starvers.AuraSystem
 		private void LoadCommands()
 		{
 			AuraCommand = new Command(Perms.Aura.Normal, Command, "au", "aura");
-			TestCommand = new Command(Perms.Test, CommandForTest, "realm");
+			TestCommand = new Command(Perms.Test, RealmCommand, "realm");
 
 			Commands.ChatCommands.Add(AuraCommand);
 			Commands.ChatCommands.Add(TestCommand);
@@ -358,7 +359,7 @@ namespace Starvers.AuraSystem
 		#endregion
 		#endregion
 		#region Command
-		private void CommandForTest(CommandArgs args)
+		private void RealmCommand(CommandArgs args)
 		{
 			int value;
 			try
@@ -424,6 +425,14 @@ namespace Starvers.AuraSystem
 								Realm.DefaultTimeLeft = timeLeft;
 							}
 							realm = Realm;
+							break;
+						}
+					case 7:
+						{
+							PointPlayer point = new PointPlayer(args.Player.Index, ProjectileID.MagicMissile);
+							point.Center = args.TPlayer.Center;
+							point.Speed = 10;
+							realm = point;
 							break;
 						}
 					default:
@@ -654,7 +663,12 @@ namespace Starvers.AuraSystem
 		internal static int NPCDefense(int raw)
 		{
 			double scale = NPCDefenseScales[Config.TaskNow];
-			return Convert.ToInt32(raw * scale);
+			int result = Convert.ToInt32(raw * scale);
+			if (Config.EvilWorld)
+			{
+				result += 1000;
+			}
+			return result;
 		}
 		#endregion
 		#region NPCDamage
@@ -676,9 +690,9 @@ namespace Starvers.AuraSystem
 			double scale = 0;
 			scale += NPCLifeScales[Config.TaskNow];
 			double now = raw * scale;
-			if (!isboss)
+			if (Config.EvilWorld)
 			{
-				now = Math.Min(short.MaxValue, now);
+				now += 8000;
 			}
 			raw = Convert.ToInt32(now);
 			return raw;

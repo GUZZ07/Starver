@@ -44,14 +44,12 @@ namespace Starvers.NPCSystem.NPCs
 		public FloatingSkeleton()
 		{
 			AfraidSun = true;
-			Height = 0;
-			Width = 0;
 			OverrideRawDrop = true;
 			RawType = NPCID.Skeleton;
 			Types = SkeletonTypes;
 			Drops = RealDrops;
 			AIStyle = 2;
-			DefaultLife = 13000;
+			DefaultLife = 3000;
 			NoGravity = true;
 			DefaultDefense = 3800;
 			NoTileCollide = true;
@@ -76,9 +74,9 @@ namespace Starvers.NPCSystem.NPCs
 						Vel = (Vector)(TargetPlayer.Center - Center);
 						Vel.Length = 19;
 					}
-					catch(NullReferenceException)
+					catch (NullReferenceException)
 					{
-						if(AlivePlayers() == 0)
+						if (AlivePlayers() == 0)
 						{
 							KillMe();
 							return;
@@ -92,6 +90,11 @@ namespace Starvers.NPCSystem.NPCs
 						Vel = (Vector)Rand.NextVector2(19);
 					}
 					Proj(Center, Vel, ProjectileID.SkeletonBone, 100, 20);
+				}
+				Terraria.Main.npcLifeBytes[RealNPC.type] = 4;
+				if (LifeMax == Life)
+				{
+					Life -= 1;
 				}
 			}
 		}
