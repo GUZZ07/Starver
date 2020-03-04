@@ -33,7 +33,7 @@ namespace Starvers.NPCSystem.NPCs
 			Checker = SpawnChecker.ZombieLike;
 			RawType = NPCID.Zombie;
 			DefaultLife = 2750;
-			DefaultDefense = 5000;
+			DefaultDefense = 600;
 			Checker.Task = 21;
 			AIStyle = 3;
 			Types = ZombieTypes;

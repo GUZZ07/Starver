@@ -19,7 +19,7 @@ namespace Starvers.NPCSystem.NPCs
 			AfraidSun = true;
 			RawType = NPCID.PossessedArmor;
 			DefaultLife = 5000;
-			DefaultDefense = 6200;
+			DefaultDefense = 1200;
 			Checker = SpawnChecker.ZombieLike;
 			Checker.SpawnChance /= 3;
 			Checker.Task = 25;

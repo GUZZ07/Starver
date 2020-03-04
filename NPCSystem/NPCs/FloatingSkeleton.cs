@@ -16,13 +16,13 @@ namespace Starvers.NPCSystem.NPCs
 			NPCID.Skeleton,
 			NPCID.SkeletonAlien,
 			NPCID.SkeletonAstonaut,
-			NPCID.PantlessSkeleton,
-			NPCID.BigHeadacheSkeleton,
-			NPCID.BigMisassembledSkeleton,
-			NPCID.SmallSkeleton,
-			NPCID.SmallPantlessSkeleton,
-			NPCID.SmallHeadacheSkeleton,
-			NPCID.SmallHeadacheSkeleton
+			//NPCID.PantlessSkeleton,
+			//NPCID.BigHeadacheSkeleton,
+			//NPCID.BigMisassembledSkeleton,
+			//NPCID.SmallSkeleton,
+			//NPCID.SmallPantlessSkeleton,
+			//NPCID.SmallHeadacheSkeleton,
+			//NPCID.SmallHeadacheSkeleton
 		};
 		private static DropItem[] RealDrops =
 		{
@@ -51,7 +51,7 @@ namespace Starvers.NPCSystem.NPCs
 			AIStyle = 2;
 			DefaultLife = 3000;
 			NoGravity = true;
-			DefaultDefense = 3800;
+			DefaultDefense = 800;
 			NoTileCollide = true;
 			Checker = SpawnChecker.ZombieLike;
 			Checker.SpawnChance /= 2;
@@ -90,11 +90,6 @@ namespace Starvers.NPCSystem.NPCs
 						Vel = (Vector)Rand.NextVector2(19);
 					}
 					Proj(Center, Vel, ProjectileID.SkeletonBone, 100, 20);
-				}
-				Terraria.Main.npcLifeBytes[RealNPC.type] = 4;
-				if (LifeMax == Life)
-				{
-					Life -= 1;
 				}
 			}
 		}
