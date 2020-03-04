@@ -674,14 +674,20 @@ namespace Starvers.AuraSystem
 		#region NPCDamage
 		public static int NPCDamage(int raw)
 		{
+			int damage;
 			if (Config.TaskNow < 18)
 			{
-				return (int)(raw * Config.TaskNow / 5f + 1);
+				damage = (int)(raw * Config.TaskNow / 5f + 1);
 			}
 			else
 			{
-				return (int)(raw * Config.TaskNow / 3f + 1);
+				damage = (int)(raw * Config.TaskNow / 3f + 1);
 			}
+			if (Config.EvilWorld)
+			{
+				damage += 100;
+			}
+			return damage;
 		}
 		#endregion
 		#region NPCLife

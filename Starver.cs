@@ -992,6 +992,7 @@ namespace Starvers
 							npc.life = 100000;
 							if (StarverBoss.EndTrial)
 							{
+								npc.damage = 500;
 								npc.defense = 10000;
 								npc.lifeMax *= 2;
 								npc.life *= 2;
@@ -1001,12 +1002,14 @@ namespace Starvers
 							npc.life = npc.lifeMax = StarverAuraManager.NPCLife(npc.lifeMax);
 							npc.life -= 1;
 							npc.defense = StarverAuraManager.NPCDefense(npc.defense);
+							npc.damage = StarverAuraManager.NPCDamage(npc.damage);
 							if (StarverBoss.EndTrial)
 							{
+								npc.damage += 200;
 								npc.defense = 2000;
-								npc.life = npc.lifeMax = 80000;
+								npc.life = npc.lifeMax = Math.Min(80000, npc.lifeMax);
+								npc.life -= 1;
 							}
-							npc.damage = StarverAuraManager.NPCDamage(npc.damage);
 							goto senddata;
 					}
 					scale *= 10;
