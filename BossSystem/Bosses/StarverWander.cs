@@ -96,7 +96,7 @@ namespace Starvers.BossSystem.Bosses
 		}
 		#endregion
 		#region RealAI
-		public unsafe override void RealAI()
+		public override void RealAI()
 		{
 			#region Modes
 			switch (Mode)
@@ -226,7 +226,7 @@ namespace Starvers.BossSystem.Bosses
 					#endregion
 			}
 			#endregion
-			#region normal
+			#region Common
 			if (StarverAI[0] > 0)
 			{
 				WhereToGo = new Vector(-16 * 30, 0);
@@ -240,8 +240,14 @@ namespace Starvers.BossSystem.Bosses
 			FakeVelocity /= 10;
 			if (ExVersion)
 			{
+				RealNPC.ai[0] = 9f;
+				RealNPC.ai[1] = 0f;
+				RealNPC.ai[2] = 0f;
 				TargetPlayer.TPlayer.ZoneTowerVortex = true;
-				TargetPlayer.SendData(PacketTypes.Zones, "", Target);
+				if (Timer % 60 == 0)
+				{
+					TargetPlayer.SendData(PacketTypes.Zones, "", Target);
+				}
 			}
 			#endregion
 		}

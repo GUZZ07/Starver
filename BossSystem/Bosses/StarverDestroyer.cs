@@ -194,8 +194,14 @@ namespace Starvers.BossSystem.Bosses
 			}
 			if (ExVersion)
 			{
+				RealNPC.ai[0] = 9f;
+				RealNPC.ai[1] = 0f;
+				RealNPC.ai[2] = 0f;
 				TargetPlayer.TPlayer.ZoneTowerSolar = true;
-				TargetPlayer.SendData(PacketTypes.Zones, "", Target);
+				if (Timer % 60 == 0)
+				{
+					TargetPlayer.SendData(PacketTypes.Zones, "", Target);
+				}
 			}
 		}
 		#endregion

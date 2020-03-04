@@ -109,6 +109,8 @@ namespace Starvers.NPCSystem
 				defense += 2000;
 			}
 			Index = NewNPC(where, Vector.Zero, RawType, life, defense);
+			RealNPC.GivenName = Name;
+			StarverPlayer.All.SendData(PacketTypes.UpdateNPCName, "", Index);
 			return true;
 		}
 		#endregion

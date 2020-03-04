@@ -344,6 +344,8 @@ namespace Starvers.BossSystem.Bosses.Base
 			{
 				TSPlayer.All.SendMessage(Language.GetTextValue("Announcement.HasAwoken", DisplayName), Color.MediumPurple);
 			}
+			RealNPC.GivenName = DisplayName;
+			StarverPlayer.All.SendData(PacketTypes.UpdateNPCName, "", Index);
 			modetime = 0;
 			LastCenter = Center;
 			for (int i = 0; i < StarverAI.Length; i++)
@@ -418,6 +420,8 @@ namespace Starvers.BossSystem.Bosses.Base
 				StarverAI[i] = 0;
 			}
 			mode = BossMode.WaitForMode;
+			RealNPC.GivenName = DisplayName;
+			StarverPlayer.All.SendData(PacketTypes.UpdateNPCName, "", Index);
 		}
 		#endregion
 		#region ReceiveDamage
@@ -538,6 +542,8 @@ namespace Starvers.BossSystem.Bosses.Base
 			RealNPC.type = RawType;
 			RealNPC.SetDefaults(RawType);
 			RealNPC.aiStyle = None;
+			RealNPC.GivenName = DisplayName;
+			StarverPlayer.All.SendData(PacketTypes.UpdateNPCName, "", Index);
 		}
 		#endregion
 		#region AI

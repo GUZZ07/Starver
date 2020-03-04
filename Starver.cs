@@ -965,12 +965,14 @@ namespace Starvers
 						case NPCID.MoonLordHead:
 							scale += 8.25f;
 							npc.defense /= 10;
-							if(npc.type != NPCID.MoonLordCore)
+							if (npc.type != NPCID.MoonLordCore)
 							{
+								npc.lifeMax *= 10;
 								npc.life *= 10;
 							}
 							else
 							{
+								npc.lifeMax *= 2;
 								npc.life *= 2;
 							}
 							break;
@@ -1010,6 +1012,8 @@ namespace Starvers
 								npc.life = npc.lifeMax = Math.Min(80000, npc.lifeMax);
 								npc.life -= 1;
 							}
+							npc.GivenName = "[Lv." + NPCLevel + "]" + npc.GivenOrTypeName;
+							StarverPlayer.All.SendData(PacketTypes.UpdateNPCName, "", npc.whoAmI);
 							goto senddata;
 					}
 					scale *= 10;
