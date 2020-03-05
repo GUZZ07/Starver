@@ -226,7 +226,7 @@ namespace Starvers
 			}
 			{
 				ServerApi.Hooks.GameUpdate.Register(this, OnUpdate);
-				ServerApi.Hooks.NetGreetPlayer.Register(this, OnGreet, 0);
+				ServerApi.Hooks.ServerJoin.Register(this, OnJoin, 0);
 				ServerApi.Hooks.ServerLeave.Register(this, OnLeave);
 				ServerApi.Hooks.NetGetData.Register(this, OnGetData);
 				ServerApi.Hooks.NetSendData.Register(this, OnSendData);
@@ -286,7 +286,7 @@ namespace Starvers
 				ServerApi.Hooks.GameUpdate.Deregister(this, OnUpdate);
 				ServerApi.Hooks.NetGetData.Deregister(this, OnGetData);
 				ServerApi.Hooks.NetSendData.Deregister(this, OnSendData);
-				ServerApi.Hooks.NetGreetPlayer.Deregister(this, OnGreet);
+				ServerApi.Hooks.ServerJoin.Deregister(this, OnJoin);
 				ServerApi.Hooks.ServerLeave.Deregister(this, OnLeave);
 				ServerApi.Hooks.ServerChat.Deregister(this, OnChat);
 				ServerApi.Hooks.NpcStrike.Deregister(this, OnStrike);
@@ -785,8 +785,14 @@ namespace Starvers
 		}
 		#endregion
 		#region OnGreet
-		private void OnGreet(GreetPlayerEventArgs args)
+		private void OnJoin(JoinEventArgs args)
 		{
+			if (!TShock.Players[args.Who].IsLoggedIn)
+			{
+				Players[args.Who] = StarverPlayer.Guest;
+				Players[args.Who].Index = args.Who;
+				Players[args.Who].Name = TShock.Players[args.Who].Name;
+			}
 #if false
 			if (Players[args.Who]?.Name == TShock.Players[args.Who].Name)
 			{

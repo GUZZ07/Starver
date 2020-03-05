@@ -358,8 +358,9 @@ namespace Starvers.TaskSystem
 				#endregion
 				#region FFF
 				case "fff":
-					if (player.HasPerm(Perms.Task.FFF))
+					if (args.Player.HasPermission(Perms.Task.FFF))
 					{
+						StarverPlayer.All.SendMessage(player.Name + "强制完成了当前任务", Color.Blue);
 						Finish(false, true);
 					}
 					else
@@ -382,7 +383,7 @@ namespace Starvers.TaskSystem
 				#endregion
 				#region ListAll
 				case "listall":
-					if (!player.HasPerm(Perms.Task.ListAll))
+					if (!args.Player.HasPermission(Perms.Task.ListAll))
 					{
 						goto default;
 					}
@@ -397,7 +398,7 @@ namespace Starvers.TaskSystem
 				#endregion
 				#region Set
 				case "set":
-					if (!player.HasPerm(Perms.Task.Set))
+					if (!args.Player.HasPermission(Perms.Task.Set))
 					{
 						goto default;
 					}
@@ -431,7 +432,7 @@ namespace Starvers.TaskSystem
 				#region Bt
 				case "bt":
 					{
-						if (!player.HasPerm(Perms.Task.BranchT))
+						if (!args.Player.HasPermission(Perms.Task.BranchT))
 						{
 							goto default;
 						}

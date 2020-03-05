@@ -1192,7 +1192,7 @@ namespace Starvers
 		/// <param name="name">技能名称(可以只取前几位字母)</param>
 		/// <param name="slot">槽位</param>
 		/// <param name="ServerDoThis">是否无视等级设置</param>
-		public unsafe void SetSkill(string name, int slot, bool ServerDoThis = false)
+		public void SetSkill(string name, int slot, bool ServerDoThis = false)
 		{
 			slot -= 1;
 			if (slot < 0 || slot > AuraSystem.SkillManager.Skills.Length)
@@ -1201,10 +1201,9 @@ namespace Starvers
 			}
 			else
 			{
-				name = name.ToLower();
 				foreach (var skill in AuraSystem.SkillManager.Skills)
 				{
-					if (skill.Name.ToLower().IndexOf(name) == 0)
+					if (skill.Name.StartsWith(name, StringComparison.OrdinalIgnoreCase))
 					{
 						if (ServerDoThis == false && !skill.CanSet(this))
 						{
@@ -1497,7 +1496,7 @@ namespace Starvers
 		public BranchTask BranchTask { get; set; }
 		
 		public int AvalonGradation { get; set; }
-		public string Name { get; private set; }
+		public string Name { get; set; }
 		
 		/// <summary>
 		/// 上一次捕获到释放技能

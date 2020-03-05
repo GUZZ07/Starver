@@ -80,20 +80,20 @@ namespace Starvers.WeaponSystem
 				}
 				catch
 				{
-					string str = args.Parameters[0].ToLower();
-					if ("melee".IndexOf(str) == 0)
+					string str = args.Parameters[0];
+					if ("melee".StartsWith(str, StringComparison.OrdinalIgnoreCase))
 					{
 						weapons = WeaponList[CareerType.Melee];
 					}
-					else if ("ranged".IndexOf(str) == 0)
+					else if ("ranged".StartsWith(str, StringComparison.OrdinalIgnoreCase))
 					{
 						weapons = WeaponList[CareerType.Ranged];
 					}
-					else if ("magic".IndexOf(str) == 0)
+					else if ("magic".StartsWith(str, StringComparison.OrdinalIgnoreCase))
 					{
 						weapons = WeaponList[CareerType.Magic];
 					}
-					else if ("minion".IndexOf(str) == 0)
+					else if ("minion".StartsWith(str, StringComparison.OrdinalIgnoreCase))
 					{
 						weapons = WeaponList[CareerType.Minion];
 					}
@@ -122,23 +122,30 @@ namespace Starvers.WeaponSystem
 					else
 					{
 						Weapon weapon = null;
-						string read = args.Parameters[1].ToLower();
-						try
+						string read = args.Parameters[1];
+						if (int.TryParse(read, out int idx) && idx < weapons.Length)
 						{
-							weapon = weapons[int.Parse(read)];
+							weapon = weapons[idx];
 						}
-						catch
+						else
 						{
 							foreach (var wp in weapons)
 							{
-								if (wp.Name.ToLower().IndexOf(read) == 0)
+								if (wp.Name.StartsWith(read, StringComparison.OrdinalIgnoreCase))
 								{
 									weapon = wp;
 									break;
 								}
 							}
 						}
-						weapon.UPGrade(args.SPlayer());
+						if (weapon != null)
+						{
+							weapon.UPGrade(args.SPlayer());
+						}
+						else
+						{
+							args.Player.SendErrorMessage("找不到该武器");
+						}
 					}
 					return;
 				}

@@ -451,7 +451,7 @@ namespace Starvers.AuraSystem
 			StarverPlayer player = args.SPlayer();
 			switch (p.ToLower())
 			{
-				#region up
+				#region Up
 				case "up":
 					int exp = player.Exp;
 					int lvl = player.Level;
@@ -482,7 +482,7 @@ namespace Starvers.AuraSystem
 				#endregion
 				#region ForceUp
 				case "forceup":
-					if (!player.HasPerm(Perms.Aura.ForceUp))
+					if (!args.Player.HasPermission(Perms.Aura.ForceUp))
 					{
 						goto default;
 					}
@@ -500,7 +500,7 @@ namespace Starvers.AuraSystem
 					player.Save();
 					break;
 				#endregion
-				#region toexp
+				#region Toexp
 				case "toexp":
 					Item item = player.TPlayer.inventory[0];
 					int bagexp;
@@ -524,7 +524,7 @@ namespace Starvers.AuraSystem
 				#endregion
 				#region Setlvl
 				case "setlvl":
-					if (!player.HasPerm(Perms.Aura.SetLvl))
+					if (!args.Player.HasPermission(Perms.Aura.SetLvl))
 					{
 						goto default;
 					}
@@ -540,7 +540,7 @@ namespace Starvers.AuraSystem
 					}
 					break;
 				#endregion
-				#region list
+				#region List
 				case "list":
 					{
 						int page = 1;
@@ -564,7 +564,7 @@ namespace Starvers.AuraSystem
 					}
 					break;
 				#endregion
-				#region buy
+				#region Buy
 				case "buy":
 					try
 					{
@@ -589,8 +589,7 @@ namespace Starvers.AuraSystem
 				#region Set
 				case "set":
 					{
-						int slot;
-						if (args.Parameters.Count < 3 || !int.TryParse(args.Parameters[1], out slot))
+						if (args.Parameters.Count < 3 || !int.TryParse(args.Parameters[1], out int slot))
 						{
 							player.SendInfoMessage("格式错误");
 							player.SendInfoMessage("正确用法:	set <slot> <skilltype>");
@@ -604,7 +603,7 @@ namespace Starvers.AuraSystem
 				#endregion
 				#region CDLess
 				case "cd":
-					if (!player.HasPerm(Perms.Aura.IgnoreCD))
+					if (!args.Player.HasPermission(Perms.Aura.IgnoreCD))
 					{
 						goto default;
 					}
@@ -612,8 +611,8 @@ namespace Starvers.AuraSystem
 					player.SendInfoMessage($"ForceIgnoreCD: {player.ForceIgnoreCD}");
 					break;
 				#endregion
-				#region help
-				case "help":
+				#region Help
+				case "Help":
 					try
 					{
 						int id = int.Parse(args.Parameters[1]);
@@ -624,10 +623,10 @@ namespace Starvers.AuraSystem
 					{
 						if (args.Parameters.Count >= 2)
 						{
-							string sklname = args.Parameters[1].ToLower();
+							string sklname = args.Parameters[1];
 							foreach (var skl in SkillManager.Skills)
 							{
-								if (skl.Name.ToLower().IndexOf(sklname) == 0)
+								if (skl.Name.StartsWith(sklname, StringComparison.OrdinalIgnoreCase))
 								{
 									args.Player.SendMessage(skl.Name, Color.Aqua);
 									args.Player.SendMessage(skl.Text, Color.Aqua);
@@ -642,7 +641,7 @@ namespace Starvers.AuraSystem
 					}
 					break;
 				#endregion
-				#region default
+				#region Default
 				default:
 					player.SendInfoMessage(HelpTexts.Aura);
 					if (player.HasPerm(Perms.Aura.ForceUp))
