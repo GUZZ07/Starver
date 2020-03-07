@@ -40,13 +40,16 @@ namespace Starvers.BossSystem.Bosses.Clover
 			#region RealAI
 			public override void RealAI()
 			{
-				if(!Manager.Active)
+				if (!Manager.Active)
 				{
 					KillMe();
 					return;
 				}
 				vector.Length = Radium;
 				base.RealAI();
+				RealNPC.ai[0] = 12f;
+				RealNPC.ai[1] = 0f;
+				RealNPC.ai[2] = 0f;
 			}
 			#endregion
 		}

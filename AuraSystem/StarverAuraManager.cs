@@ -663,9 +663,9 @@ namespace Starvers.AuraSystem
 		{
 			double scale = NPCDefenseScales[Config.TaskNow];
 			int result = Convert.ToInt32(raw * scale);
-			if (Config.EvilWorld)
+			if (Config.EvilWorld && NPC.downedMoonlord)
 			{
-				result += 1000;
+				result += 200;
 			}
 			return result;
 		}
@@ -682,7 +682,7 @@ namespace Starvers.AuraSystem
 			{
 				damage = (int)(raw * Config.TaskNow / 3f + 1);
 			}
-			if (Config.EvilWorld)
+			if (Config.EvilWorld && NPC.downedMoonlord) 
 			{
 				damage += 100;
 			}
@@ -695,7 +695,7 @@ namespace Starvers.AuraSystem
 			double scale = 0;
 			scale += NPCLifeScales[Config.TaskNow];
 			double now = raw * scale;
-			if (Config.EvilWorld)
+			if (Config.EvilWorld && NPC.downedMoonlord)
 			{
 				now += 8000;
 			}

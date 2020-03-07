@@ -41,7 +41,7 @@ namespace Starvers.BossSystem.Bosses
 			IgnoreDistance = true;
 			DefaultLife = 82000;
 			DefaultLifes = 400;
-			DefaultDefense = 4000;
+			DefaultDefense = 1000;
 			StarverAI[0] = 0;
 		}
 		#endregion
@@ -61,7 +61,7 @@ namespace Starvers.BossSystem.Bosses
 		public override void OnFail()
 		{
 			base.OnFail();
-			if(ExVersion && EndTrial)
+			if (ExVersion && EndTrial && GetType() == typeof(StarverDestroyer))
 			{
 				EndTrial = false;
 				EndTrialProcess = 0;
@@ -81,7 +81,7 @@ namespace Starvers.BossSystem.Bosses
 		protected override void BeDown()
 		{
 			base.BeDown();
-			if(ExVersion && EndTrial)
+			if (ExVersion && EndTrial && GetType() == typeof(StarverDestroyer))
 			{
 				StarverPlayer.All.SendMessage("连我都拦不住你们了...", Color.HotPink);
 				StarverPlayer.All.SendMessage("告诉你们一个很不好的消息...", Color.HotPink);
@@ -194,7 +194,7 @@ namespace Starvers.BossSystem.Bosses
 			}
 			if (ExVersion)
 			{
-				RealNPC.ai[0] = 9f;
+				RealNPC.ai[0] = 11f;
 				RealNPC.ai[1] = 0f;
 				RealNPC.ai[2] = 0f;
 				TargetPlayer.TPlayer.ZoneTowerSolar = true;

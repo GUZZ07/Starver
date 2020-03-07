@@ -37,12 +37,12 @@ namespace Starvers.BossSystem.Bosses
 		};
 		#endregion
 		#region Ctor
-		public unsafe StarverWander():base(4)
+		public StarverWander():base(4)
 		{
 			TaskNeed = 27;
-			DefaultLife = 200000;
+			DefaultLife = 2000;
 			DefaultLifes = 200;
-			DefaultDefense = 990;
+			DefaultDefense = 0;
 			RawType = NPCID.DukeFishron;
 			Name = "The Starver Wander";
 			FullName = "Gnawyzarc The Starver Wander";
@@ -55,7 +55,7 @@ namespace Starvers.BossSystem.Bosses
 		protected override void BeDown()
 		{
 			base.BeDown();
-			if (ExVersion && EndTrial)
+			if (ExVersion && EndTrial && GetType() == typeof(StarverWander))
 			{
 				EndTrialProcess++;
 				StarverPlayer.All.SendMessage("...", Color.HotPink);
@@ -67,7 +67,7 @@ namespace Starvers.BossSystem.Bosses
 		public override void OnFail()
 		{
 			base.OnFail();
-			if(ExVersion && EndTrial)
+			if(ExVersion && EndTrial && GetType() == typeof(StarverWander))
 			{
 				StarverPlayer.All.SendMessage("你们还是太弱了...", Color.Pink);
 				if (Lifes > LifesMax / 2)
@@ -240,7 +240,7 @@ namespace Starvers.BossSystem.Bosses
 			FakeVelocity /= 10;
 			if (ExVersion)
 			{
-				RealNPC.ai[0] = 9f;
+				RealNPC.ai[0] = 11f;
 				RealNPC.ai[1] = 0f;
 				RealNPC.ai[2] = 0f;
 				TargetPlayer.TPlayer.ZoneTowerVortex = true;
@@ -296,7 +296,7 @@ namespace Starvers.BossSystem.Bosses
 		#region Shoot4
 		protected void Shoot4()
 		{
-			Proj(Center, Rand.NextVector2(22), Ammo, 232 * wait, 3f);
+			Proj(Center, Rand.NextVector2(22), Ammo, 232, 3f);
 			if (ExVersion)
 			{
 				Proj(Center, Rand.NextVector2(22), Ammo, 350, 3f);
@@ -305,14 +305,14 @@ namespace Starvers.BossSystem.Bosses
 		}
 		#endregion
 		#region Shoot3
-		protected unsafe void Shoot3()
+		protected void Shoot3()
 		{
 			ProjLine(TargetPlayer.Center - new Vector2(16 * 33 * StarverAI[1], 16 * 20), TargetPlayer.Center - new Vector2(16 * 33 * StarverAI[1], -16 * 20), StarverAI[1] * vector, 25, 202, Ammo);
 			StarverAI[1] *= -1;
 		}
 		#endregion
 		#region Shoot2
-		protected unsafe void Shoot2()
+		protected void Shoot2()
 		{
 			UnitY = (TargetPlayer.Center - Center).Vertical();
 			UnitY.Length(16 * 14);
@@ -325,7 +325,7 @@ namespace Starvers.BossSystem.Bosses
 		}
 		#endregion
 		#region Shoot1
-		protected unsafe void Shoot1()
+		protected void Shoot1()
 		{
 			StarverAI[1] += PI / 40;
 			if (StarverAI[1] > PI)

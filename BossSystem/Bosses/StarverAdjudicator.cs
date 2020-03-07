@@ -16,12 +16,12 @@ namespace Starvers.BossSystem.Bosses
 	{
 		#region Field
 		protected Vector GravityVel = new Vector(0, 25);
-		protected short[] InvTypes = 
-		{ 
+		protected short[] InvTypes =
+		{
 			ProjectileID.RocketSkeleton,
 			ProjectileID.NebulaLaser,
-			ProjectileID.SaucerScrap, 
-			ProjectileID.SaucerMissile 
+			ProjectileID.SaucerScrap,
+			ProjectileID.SaucerMissile
 		};
 		private DropItem[] DropsNormal = new DropItem[]
 		{
@@ -43,7 +43,7 @@ namespace Starvers.BossSystem.Bosses
 			Name = "The Starver Adjudicator";
 			FullName = "Iesnet The Starver Adjudicator";
 			DefaultLife = 29000;
-			DefaultLifes = 320;
+			DefaultLifes = 120;
 			DefaultDefense = 990;
 			RawType = NPCID.DukeFishron;
 			StarverAI[2] = NPCID.NebulaHeadcrab;
@@ -54,7 +54,7 @@ namespace Starvers.BossSystem.Bosses
 		public override void OnFail()
 		{
 			base.OnFail();
-			if(ExVersion && EndTrial)
+			if (ExVersion && EndTrial && GetType() == typeof(StarverAdjudicator))
 			{
 				StarverPlayer.All.SendMessage("再去中核世界经历几百次轮回吧", Color.Pink);
 				EndTrial = false;
@@ -66,7 +66,7 @@ namespace Starvers.BossSystem.Bosses
 		protected override void BeDown()
 		{
 			base.BeDown();
-			if(ExVersion && EndTrial)
+			if (ExVersion && EndTrial && GetType() == typeof(StarverAdjudicator))
 			{
 				StarverPlayer.All.SendMessage("你们不过是侥幸罢了...", Color.HotPink);
 				EndTrialProcess++;
@@ -80,26 +80,24 @@ namespace Starvers.BossSystem.Bosses
 			vector.X = 16 * 30;
 			Mode = BossMode.WitherBolt;
 			Vel.Y = 0;
-			unsafe
+			Defense = 0;
+			if (ExVersion)
 			{
-				if (ExVersion)
-				{
-					StarverAI[0] = 30;
-					Vel.X = 16 * 10;
-					Drops = DropsEx;
-				}
-				else
-				{
-					StarverAI[0] = 50;
-					Vel.X = 16 * 16;
-					Drops = DropsNormal;
-				}
+				StarverAI[0] = 30;
+				Vel.X = 16 * 10;
+				Drops = DropsEx;
+			}
+			else
+			{
+				StarverAI[0] = 50;
+				Vel.X = 16 * 16;
+				Drops = DropsNormal;
 			}
 		}
 		protected void Spawn(Vector2 where, int lvl, double AngleStart, float radium = -1)
 		{
 			Spawn(where, lvl);
-			if(radium > 0)
+			if (radium > 0)
 			{
 				vector.X = radium;
 			}
@@ -175,7 +173,7 @@ namespace Starvers.BossSystem.Bosses
 				#endregion
 				#region LostSoul
 				case BossMode.WitherLostSoul:
-					if(modetime > 60 * 10)
+					if (modetime > 60 * 10)
 					{
 						ResetMode();
 						break;
@@ -185,7 +183,7 @@ namespace Starvers.BossSystem.Bosses
 				#endregion
 				#region Invincible
 				case BossMode.WitherInvincible:
-					if(modetime > 60 * 13)
+					if (modetime > 60 * 13)
 					{
 						ResetMode();
 						break;
@@ -198,7 +196,7 @@ namespace Starvers.BossSystem.Bosses
 				#endregion
 				#region Laser
 				case BossMode.WitherSaucerLaser:
-					if(modetime > 60 * 10)
+					if (modetime > 60 * 10)
 					{
 						ResetMode();
 						Vel.Y = 0;
@@ -213,7 +211,7 @@ namespace Starvers.BossSystem.Bosses
 				#endregion
 				#region SummonFollows
 				case BossMode.SummonFollows:
-					if(modetime > 60 * 6)
+					if (modetime > 60 * 6)
 					{
 						ResetMode();
 						break;
@@ -244,10 +242,11 @@ namespace Starvers.BossSystem.Bosses
 			if (Mode != BossMode.WitherInvincible)
 			{
 				vector.Angle += PI / 120;
+				Center = TargetPlayer.Center + vector;
 			}
 			if (ExVersion)
 			{
-				RealNPC.ai[0] = 9f;
+				RealNPC.ai[0] = 11f;
 				RealNPC.ai[1] = 0f;
 				RealNPC.ai[2] = 0f;
 				TargetPlayer.TPlayer.ZoneTowerNebula = true;
@@ -261,7 +260,7 @@ namespace Starvers.BossSystem.Bosses
 		#endregion
 		#region AIs
 		#region Bolt
-		protected unsafe void WitherBolt()
+		protected void WitherBolt()
 		{
 			if (ExVersion)
 			{
@@ -271,12 +270,12 @@ namespace Starvers.BossSystem.Bosses
 					{
 						continue;
 					}
-					ProjSector(player.Center + vector, 15, 2, vector.Angle+ PI, PI * 3 / 4, 492, ProjectileID.NebulaBolt, 18);
+					ProjSector(player.Center + vector, 15, 2, vector.Angle + PI, PI * 3 / 4, 492, ProjectileID.NebulaBolt, 18);
 				}
 			}
 			else
 			{
-				ProjSector(Center, 13, 2, vector.Angle+ PI, PI /2, 321, ProjectileID.NebulaBolt, 12);
+				ProjSector(Center, 13, 2, vector.Angle + PI, PI / 2, 321, ProjectileID.NebulaBolt, 12);
 			}
 		}
 		#endregion
@@ -291,39 +290,40 @@ namespace Starvers.BossSystem.Bosses
 					{
 						continue;
 					}
-					Proj(player.Center + Vel, Vector.FromPolar(Vel.Angle+ PI / 2, 22), ProjectileID.LostSoulHostile, 213, 10f);
+					Proj(player.Center + Vel, Vector.FromPolar(Vel.Angle + PI / 2, 22), ProjectileID.LostSoulHostile, 213, 10f);
 				}
 			}
 			else
 			{
-				Proj(TargetPlayer.Center + Vel, Vector.FromPolar(Vel.Angle- PI / 2, 18), ProjectileID.LostSoulHostile, 200, 3f);
+				Proj(TargetPlayer.Center + Vel, Vector.FromPolar(Vel.Angle - PI / 2, 18), ProjectileID.LostSoulHostile, 200, 3f);
 			}
-			Vel.Angle+= PI / 20;
+			Vel.Angle += PI / 20;
 		}
 		#endregion
 		#region Invincible
-		protected unsafe void WitherInvincible()
+		protected void WitherInvincible()
 		{
-			Proj(TargetPlayer.Center + new Vector(0, -16 * 30) + Rand.NextVector2(16 * 40, 0), GravityVel, InvTypes[Rand.Next(4)], 560, 20f);
+			Proj(TargetPlayer.Center + new Vector(0, -16 * 30) + Rand.NextVector2(16 * 40, 0), GravityVel, InvTypes.Next(), 560, 20f);
 		}
 		#endregion
 		#region Laser
 		protected void WitherLaser()
 		{
 			Vel = Vector.FromPolar(Rand.NextAngle() / 12 + PI * 5 / 12, 19);
+			Vector2 Y = new Vector2(0, 16 * 35);
 			foreach (var player in Starver.Players)
 			{
 				if (player == null || !player.Active)
 				{
 					continue;
 				}
-				Proj(player.Center - GravityVel * 20, Vel, ProjectileID.SaucerLaser, 160, 2f);
-				Proj(player.Center + GravityVel * 20, Vel.Deflect(PI), ProjectileID.SaucerLaser, 171, 2f);
+				Proj(player.Center - Y, Vel, ProjectileID.SaucerLaser, 160, 2f);
+				Proj(player.Center + Y, Vel.Deflect(PI), ProjectileID.SaucerLaser, 171, 2f);
 			}
 		}
 		#endregion
 		#region Sphere
-		protected unsafe void WitherSphere()
+		protected void WitherSphere()
 		{
 			if (ExVersion)
 			{
@@ -333,12 +333,12 @@ namespace Starvers.BossSystem.Bosses
 					{
 						continue;
 					}
-					ProjCircle(player.Center + vector, 2, 30, ProjectileID.NebulaSphere, 18, 480,2);
+					ProjCircle(player.Center + vector, 2, 30, ProjectileID.NebulaSphere, 18, 320, 2);
 				}
 			}
 			else
 			{
-				ProjCircle(Center, 2, 22, ProjectileID.NebulaSphere, 10, 330,2);
+				ProjCircle(Center, 2, 22, ProjectileID.NebulaSphere, 10, 260, 2);
 			}
 		}
 		#endregion

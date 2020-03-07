@@ -48,14 +48,17 @@ namespace Starvers.BossSystem.Bosses.Clover
 			public override void RealAI()
 			{
 				#region Common
-				if(!Manager.Active)
+				if (!Manager.Active)
 				{
 					KillMe();
 					return;
 				}
-				Center = TargetPlayer.Center + ForRounding;
+				RealNPC.ai[0] = 12f;
+				RealNPC.ai[1] = 0f;
+				RealNPC.ai[2] = 0f;
 				ForRounding.Angle += PI / 120;
 				ForRounding.Length = Radium;
+				Center = TargetPlayer.Center + ForRounding;
 				TargetPlayer.TPlayer.ZoneTowerSolar = true;
 				TargetPlayer.SendData(PacketTypes.Zones, "", Target);
 				#endregion

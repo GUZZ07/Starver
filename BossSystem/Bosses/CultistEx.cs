@@ -47,8 +47,10 @@ namespace Starvers.BossSystem.Bosses
 			base.Spawn(where, lvl);
 			Mode = BossMode.CultistFireBall;
 			SpawnCount = 0;
-			RealNPC.aiStyle = 84;
-			RealNPC.dontTakeDamage = true;
+			RealNPC.ai[0] = 2f;
+			RealNPC.ai[1] = 120f;
+			RealNPC.aiStyle = -1;
+			RealNPC.dontTakeDamage = false;
 			TrackingTarget = true;
 		}
 		#endregion
@@ -63,10 +65,11 @@ namespace Starvers.BossSystem.Bosses
 		}
 		#endregion
 		#region RealAI
-		public unsafe override void RealAI()
+		public override void RealAI()
 		{
 			#region Common
 			#region StartAnimation
+#if false
 			if (SpawnCount < 60 * 15)
 			{
 				RealNPC.Center = TargetPlayer.Center;
@@ -79,9 +82,10 @@ namespace Starvers.BossSystem.Bosses
 				RealNPC.dontTakeDamage = false;
 				RealNPC.aiStyle = -1;
 			}
+#endif
 			#endregion
 			#region TrackingPlyer
-			if (TrackingTarget && Timer % 60 == 0) 
+			if (TrackingTarget && Timer % 60 == 0)
 			{
 				WhereToGo = (Vector)(TargetPlayer.Center);
 				WhereToGo.Y -= 16 * 15;
@@ -118,14 +122,14 @@ namespace Starvers.BossSystem.Bosses
 				#endregion
 				#region Lightning
 				case BossMode.CultistLightning:
-					if(StarverAI[0] > PI * 2)
+					if (StarverAI[0] > PI * 2)
 					{
 						StarverAI[0] = 0;
-						ProjCircle(TargetPlayer.Center, 16 * 30, 0, ProjectileID.CultistBossLightningOrb, 8, 253, 0, Index);
+						ProjCircle(TargetPlayer.Center, 16 * 30, 0, ProjectileID.CultistBossLightningOrb, 8, 53, 0, Index);
 						ResetMode();
 						break;
 					}
-					if(Timer % 60 == 0)
+					if (Timer % 60 == 0)
 					{
 						Lightning();
 					}
@@ -133,7 +137,7 @@ namespace Starvers.BossSystem.Bosses
 				#endregion
 				#region ShadowFireBall
 				case BossMode.CultistShadowFireball:
-					if(StarverAI[0] > 7)
+					if (StarverAI[0] > 7)
 					{
 						ShadowBalls.Launch();
 						StarverAI[0] = 0;
@@ -146,7 +150,7 @@ namespace Starvers.BossSystem.Bosses
 						{
 							FillShadowFireBall();
 						}
-						if(StarverAI[0] > 2)
+						if (StarverAI[0] > 2)
 						{
 							ShadowBalls.Launch(30);
 						}
@@ -155,12 +159,12 @@ namespace Starvers.BossSystem.Bosses
 				#endregion
 				#region Mist
 				case BossMode.Mist:
-					if(modetime > 60 * 5)
+					if (modetime > 60 * 5)
 					{
 						ResetMode();
 						break;
 					}
-					if(Timer % 56 == 0)
+					if (Timer % 56 == 0)
 					{
 						Mist();
 					}
@@ -168,7 +172,7 @@ namespace Starvers.BossSystem.Bosses
 				#endregion
 				#region SummonFollows
 				case BossMode.SummonFollows:
-					if(modetime > 60 * 5)
+					if (modetime > 60 * 5)
 					{
 						SummonFollows();
 						ResetMode();
@@ -196,37 +200,36 @@ namespace Starvers.BossSystem.Bosses
 		}
 		#endregion
 		#region Mist
-		private unsafe void Mist()
+		private void Mist()
 		{
-			StarverAI[2] = (float)(TargetPlayer.Center-Center).Angle();
-			ProjSector(Center, 16, 16 * 3, StarverAI[2], PI * 2 / 3, 258, ProjectileID.CultistBossIceMist, 7, 2, -6e3f, 1);
+			StarverAI[2] = (float)(TargetPlayer.Center - Center).Angle();
+			ProjSector(Center, 16, 16 * 3, StarverAI[2], PI * 2 / 3, 158, ProjectileID.CultistBossIceMist, 3, 2, -6e3f, 1);
 		}
 		#endregion
 		#region Lightning
-		private unsafe void Lightning()
+		private void Lightning()
 		{
 			StarverAI[0] += PI / 5;
 			vector = FromPolar(StarverAI[0], 16 * 20);
-			Main.projectile[Proj(TargetPlayer.Center + vector, Vector2.Zero, ProjectileID.CultistBossLightningOrb, 263)].ai[0] = Index;
+			int idx = Proj(TargetPlayer.Center + vector, Vector2.Zero, ProjectileID.CultistBossLightningOrb, 110);
+			Main.projectile[idx].ai[0] = Index;
+			Main.projectile[idx].timeLeft = 60;
 		}
 		#endregion
 		#region FireBalls
 		#region PushFireBall
 		private void PushFireBall()
 		{
-			int[] result = ProjCircleWithReturn(Center, 1, 6, ProjectileID.CultistBossFireBall, 10, 243, 2);
+			int[] result = ProjCircleWithReturn(Center, 1, 6, ProjectileID.CultistBossFireBall, 6, 243, 2);
 			vector = (Vector)(TargetPlayer.Center - Center);
 			vector.Length = 18;
-			foreach(var idx in result)
-			{
-				FireBalls.Push(idx, vector);
-			}
+			FireBalls.Push(result, vector);
 		}
 		#endregion
 		#region FillShadowFireBall
 		private void FillShadowFireBall()
 		{
-			int[] Indexes = ProjCircleWithReturn(Center, 16 * 10, Rand.NextVector2(4), ProjectileID.CultistBossFireBallClone, 30, 143);
+			int[] Indexes = ProjCircleWithReturn(Center, 16 * 10, Rand.NextVector2(4), ProjectileID.CultistBossFireBallClone, 10, 143);
 			for (int i = 0; i < Indexes.Length; i++)
 			{
 				ShadowBalls.Push(Indexes[i], FromPolar(PI * 2 * i / Indexes.Length, 23));
@@ -238,7 +241,7 @@ namespace Starvers.BossSystem.Bosses
 		private void SelectMode()
 		{
 			modetime = 0;
-			switch(lastMode)
+			switch (lastMode)
 			{
 				#region FireBall
 				case BossMode.CultistFireBall:

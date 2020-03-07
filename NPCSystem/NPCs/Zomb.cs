@@ -56,7 +56,9 @@ namespace Starvers.NPCSystem.NPCs
 			}
 			else if(!Starver.Config.EvilWorld)
 			{
-				KillMe();
+				_active = false;
+				RealNPC.active = false;
+				RemoveFromNPCs();
 			}
 		}
 		#endregion

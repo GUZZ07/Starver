@@ -34,15 +34,15 @@ namespace Starvers.BossSystem.Bosses
 		};
 		#endregion
 		#region Ctor
-		public StarverRedeemer():base(4)
+		public StarverRedeemer() : base(4)
 		{
 			CheckType = false;
 			TaskNeed = 28;
 			Name = "The Starver Redeemer";
 			FullName = "Shtaed The Starver Redeemer";
-			DefaultLife = 36000;
+			DefaultLife = 3000;
 			DefaultLifes = 200;
-			DefaultDefense = 980;
+			DefaultDefense = 0;
 			vector.X = 16 * 39;
 			vector.Y = 0;
 			RawType = NPCID.DukeFishron;
@@ -52,7 +52,7 @@ namespace Starvers.BossSystem.Bosses
 		public override void OnFail()
 		{
 			base.OnFail();
-			if(ExVersion && EndTrial)
+			if (ExVersion && EndTrial && GetType() == typeof(StarverRedeemer))
 			{
 				StarverPlayer.All.SendMessage("都给我消停一下", Color.Pink);
 				StarverPlayer.All.SendMessage("好好待着别动", Color.Pink);
@@ -65,7 +65,7 @@ namespace Starvers.BossSystem.Bosses
 		protected override void BeDown()
 		{
 			base.BeDown();
-			if(EndTrial && ExVersion)
+			if (EndTrial && ExVersion && GetType() == typeof(StarverRedeemer))
 			{
 				StarverPlayer.All.SendMessage("好吧,你们赢了", Color.HotPink);
 				StarverPlayer.All.SendMessage("不过还有几个最难对付的在后边等着你们呢", Color.HotPink);
@@ -97,7 +97,7 @@ namespace Starvers.BossSystem.Bosses
 		}
 		#endregion
 		#region RealAI
-		public unsafe override void RealAI()
+		public override void RealAI()
 		{
 			switch (Mode)
 			{
@@ -188,7 +188,7 @@ namespace Starvers.BossSystem.Bosses
 			}
 			if (ExVersion)
 			{
-				RealNPC.ai[0] = 9f;
+				RealNPC.ai[0] = 11f;
 				RealNPC.ai[1] = 0f;
 				RealNPC.ai[2] = 0f;
 				TargetPlayer.TPlayer.ZoneTowerStardust = true;

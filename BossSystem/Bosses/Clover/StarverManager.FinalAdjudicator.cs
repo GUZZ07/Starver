@@ -38,14 +38,17 @@ namespace Starvers.BossSystem.Bosses.Clover
 			}
 			#endregion
 			#region RealAI
-			public unsafe override void RealAI()
+			public override void RealAI()
 			{
 				#region Common
-				if(!Manager.Active)
+				if (!Manager.Active)
 				{
 					KillMe();
 					return;
 				}
+				RealNPC.ai[0] = 12f;
+				RealNPC.ai[1] = 0f;
+				RealNPC.ai[2] = 0f;
 				vector.Angle += PI / 120;
 				vector.Length = StarverManager.Radium;
 				Center = vector + TargetPlayer.Center;
