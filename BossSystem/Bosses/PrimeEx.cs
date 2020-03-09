@@ -157,10 +157,10 @@ namespace Starvers.BossSystem.Bosses
 			{
 				Vector* Circle = stackalloc Vector[10];
 				vector = (Vector)(TargetPlayer.Center - Center);
-				StarverAI[0] = (float)vector.Angle;
+				floats[0] = (float)vector.Angle;
 				for (int t = 0; t < 10; t++)
 				{
-					Circle[t] = (Vector)Center + FromPolar(StarverAI[0] - PI / 2 + t * PI / 10, 16 * 17);
+					Circle[t] = (Vector)Center + FromPolar(floats[0] - PI / 2 + t * PI / 10, 16 * 17);
 					vector = (Vector)TargetPlayer.Center - Circle[t];
 					vector.Length = 20;
 					Proj(Circle[t], vector, ProjectileID.RocketSkeleton, 201);
@@ -185,7 +185,7 @@ namespace Starvers.BossSystem.Bosses
 		#region UPdateVel
 		private unsafe void UpdateVel()
 		{
-			StarverAI[1] += 4 * PI / 45;
+			floats[1] += 4 * PI / 45;
 			if (!ArmsActive)
 			{
 				WhereToGo = (Vector)TargetPlayer.Center - FakeRound;
@@ -195,7 +195,7 @@ namespace Starvers.BossSystem.Bosses
 			}
 			else
 			{
-				WhereToGo = (Vector)TargetPlayer.Center + FromPolar(StarverAI[1], 16 * 60);
+				WhereToGo = (Vector)TargetPlayer.Center + FromPolar(floats[1], 16 * 60);
 				A = WhereToGo - (Vector)Center;
 				A.Length = 14f;
 				FakeVelocity += A;
@@ -269,7 +269,7 @@ namespace Starvers.BossSystem.Bosses
 		{
 			get
 			{
-				vector = FromPolar(StarverAI[1], 16 * 120);
+				vector = FromPolar(floats[1], 16 * 120);
 				vector.Y -= 16 * 70; //圆心下移
 				if(vector.Y < 0)
 				{

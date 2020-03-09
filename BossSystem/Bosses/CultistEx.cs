@@ -103,9 +103,9 @@ namespace Starvers.BossSystem.Bosses
 				#endregion
 				#region FireBall
 				case BossMode.CultistFireBall:
-					if (StarverAI[0] > 4)
+					if (floats[0] > 4)
 					{
-						StarverAI[0] = 0;
+						floats[0] = 0;
 						ResetMode();
 						break;
 					}
@@ -116,15 +116,15 @@ namespace Starvers.BossSystem.Bosses
 					if (Timer % 43 == 32)
 					{
 						FireBalls.Launch();
-						StarverAI[0]++;
+						floats[0]++;
 					}
 					break;
 				#endregion
 				#region Lightning
 				case BossMode.CultistLightning:
-					if (StarverAI[0] > PI * 2)
+					if (floats[0] > PI * 2)
 					{
-						StarverAI[0] = 0;
+						floats[0] = 0;
 						ProjCircle(TargetPlayer.Center, 16 * 30, 0, ProjectileID.CultistBossLightningOrb, 8, 53, 0, Index);
 						ResetMode();
 						break;
@@ -137,20 +137,20 @@ namespace Starvers.BossSystem.Bosses
 				#endregion
 				#region ShadowFireBall
 				case BossMode.CultistShadowFireball:
-					if (StarverAI[0] > 7)
+					if (floats[0] > 7)
 					{
 						ShadowBalls.Launch();
-						StarverAI[0] = 0;
+						floats[0] = 0;
 						ResetMode();
 						break;
 					}
 					if (Timer % 55 == 0)
 					{
-						if (StarverAI[0]++ < 4)
+						if (floats[0]++ < 4)
 						{
 							FillShadowFireBall();
 						}
-						if (StarverAI[0] > 2)
+						if (floats[0] > 2)
 						{
 							ShadowBalls.Launch(30);
 						}
@@ -202,15 +202,15 @@ namespace Starvers.BossSystem.Bosses
 		#region Mist
 		private void Mist()
 		{
-			StarverAI[2] = (float)(TargetPlayer.Center - Center).Angle();
-			ProjSector(Center, 16, 16 * 3, StarverAI[2], PI * 2 / 3, 158, ProjectileID.CultistBossIceMist, 3, 2, -6e3f, 1);
+			floats[2] = (float)(TargetPlayer.Center - Center).Angle();
+			ProjSector(Center, 16, 16 * 3, floats[2], PI * 2 / 3, 158, ProjectileID.CultistBossIceMist, 3, 2, -6e3f, 1);
 		}
 		#endregion
 		#region Lightning
 		private void Lightning()
 		{
-			StarverAI[0] += PI / 5;
-			vector = FromPolar(StarverAI[0], 16 * 20);
+			floats[0] += PI / 5;
+			vector = FromPolar(floats[0], 16 * 20);
 			int idx = Proj(TargetPlayer.Center + vector, Vector2.Zero, ProjectileID.CultistBossLightningOrb, 110);
 			Main.projectile[idx].ai[0] = Index;
 			Main.projectile[idx].timeLeft = 60;

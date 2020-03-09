@@ -18,7 +18,7 @@ namespace Starvers.BossSystem.Bosses
 		#region Fields
 		private byte GazingState;
 		private int ModesLoopCount;
-		private const int StartCollideDamage = 210;
+		private const int StartCollideDamage = 310;
 		#endregion
 		#region Properties
 		private Vector Unit
@@ -69,6 +69,24 @@ namespace Starvers.BossSystem.Bosses
 		#region RealAI
 		public override void RealAI()
 		{
+			#region GazingSpecial
+			if (GazingState == 0 && Lifes <= LifesMax / 2)
+			{
+				modetime = 0;
+				Mode = BossMode.Gazing;
+				TargetPlayer.SendMessage("Gazing you...", 255, 0, 255);
+				GazingState |= 0b00000001;
+				Array.Clear(floats, 0, floats.Length);
+			}
+			else if (GazingState == 0b00000001 && Lifes <= LifesMax / 4)
+			{
+				modetime = 0;
+				Mode = BossMode.Gazing;
+				TargetPlayer.SendMessage("Gazing you...", 255, 0, 188);
+				GazingState |= 0b00000011;
+				Array.Clear(floats, 0, floats.Length);
+			}
+			#endregion
 			#region Modes
 			switch (Mode)
 			{
@@ -80,32 +98,17 @@ namespace Starvers.BossSystem.Bosses
 				#endregion
 				#region Rush
 				case BossMode.Rush:
-					if (modetime > 60 * 5)
-					{
-						Mode = BossMode.WaitForMode;
-						double rad = (Center - TargetPlayer.Center).Angle();
-						vector = Vector.FromPolar(rad, 16 * 30f);
-						Center = TargetPlayer.Center + vector;
-						FakeVelocity = default;
-						break;
-					}
-					if (Timer % 3 == 0)
-					{
-						if (Vector2.Distance(Center, TargetPlayer.Center) > 16 * 44)
-						{
-							Rush();
-						}
-					}
+					Rush();
 					break;
 				#endregion
 				#region Sharknado
 				case BossMode.Sharknado:
-					if(modetime > 60 * 6)
+					if (modetime > 60 * 6)
 					{
-						StarverAI[1] = 0;
+						floats[1] = 0;
 						RushBegin();
 					}
-					if(Timer % 45 == 0)
+					if (Timer % 45 == 0)
 					{
 						Sharknode();
 					}
@@ -113,12 +116,12 @@ namespace Starvers.BossSystem.Bosses
 				#endregion
 				#region SummonFollows
 				case BossMode.SummonFollows:
-					if(StarverAI[1] > 5)
+					if (floats[1] > 5)
 					{
-						StarverAI[1] = 0;
+						floats[1] = 0;
 						RushBegin();
 					}
-					if(Timer % 60 == 0)
+					if (Timer % 60 == 0)
 					{
 						SummonEyeFollows();
 					}
@@ -126,7 +129,7 @@ namespace Starvers.BossSystem.Bosses
 				#endregion
 				#region Trident
 				case BossMode.RedDevilTrident:
-					if(modetime > 60 * 8)
+					if (modetime > 60 * 8)
 					{
 						RushBegin();
 					}
@@ -155,15 +158,15 @@ namespace Starvers.BossSystem.Bosses
 				#endregion
 				#region Explosive
 				case BossMode.Explosive:
-					if(StarverAI[1] > 9)
+					if (floats[1] > 9)
 					{
-						StarverAI[1] = 0;
+						floats[1] = 0;
 						RushBegin();
 					}
 					if (Timer % 60 == 0)
 					{
 						Explosive();
-						++StarverAI[1];
+						++floats[1];
 					}
 					break;
 					#endregion
@@ -191,11 +194,12 @@ namespace Starvers.BossSystem.Bosses
 				{
 					Thread.Sleep(700);
 					int idx;
+					double angle = Rand.NextAngle();
 					for (int i = 0; i < 6; i++)
 					{
 						if (0 <= Target && Target < Starver.Players.Length && (TargetPlayer?.Active ?? false))
 						{
-							idx = Proj(vector + FromPolar(PI / 3 * i, 16 * 20), Vector.Zero, ProjectileID.Explosives, 100);
+							idx = Proj(vector + FromPolar(angle + PI / 3 * i, 16 * 20), Vector.Zero, ProjectileID.Explosives, 100);
 							Main.projectile[idx].aiStyle = -1;
 							Main.projectile[idx].owner = Target;
 						}
@@ -213,10 +217,10 @@ namespace Starvers.BossSystem.Bosses
 		{
 			if (Main.npc.Count(npc => npc.active && npc.type == NPCID.WanderingEye && npc.lifeMax > 6000) >= 3 * 6)
 			{
-				StarverAI[1] = 6;
+				floats[1] = 6;
 				return;
 			}
-			++StarverAI[1];
+			++floats[1];
 			NewNPC((Vector)Center, FromPolar(PI / 2, 9), NPCID.WanderingEye, 6235, 3000);
 			NewNPC((Vector)Center, FromPolar(PI / 2 + PI / 6, 9), NPCID.WanderingEye, 6235, 3000);
 			NewNPC((Vector)Center, FromPolar(PI / 2 - PI / 6, 9), NPCID.WanderingEye, 6235, 3000);
@@ -225,12 +229,12 @@ namespace Starvers.BossSystem.Bosses
 		#region Sharknado
 		private void Sharknode()
 		{
-			StarverAI[1] += PI / 14;
+			floats[1] += PI / 14;
 			vector = -(Vector)RelativePos;
 			vector.Length = 16;
 			Vel = vector;
-			Vel.Angle += StarverAI[1];
-			vector.Angle -= StarverAI[1];
+			Vel.Angle += floats[1];
+			vector.Angle -= floats[1];
 			Proj(Center, vector, ProjectileID.SharknadoBolt, 83);
 			Proj(Center, Vel, ProjectileID.SharknadoBolt, 80);
 		}
@@ -248,22 +252,6 @@ namespace Starvers.BossSystem.Bosses
 		#region SelectMode
 		private void SelectMode()
 		{
-			#region GazingSpecial
-			if (GazingState == 0 && Lifes <= LifesMax / 2)
-			{
-				Mode = BossMode.Gazing;
-				TargetPlayer.SendMessage("Gazing you...", 255,0,255);
-				GazingState |= 0b00000001;
-				return;
-			}
-			else if (GazingState == 0b00000001 && Lifes <= LifesMax / 4)
-			{
-				Mode = BossMode.Gazing;
-				TargetPlayer.SendMessage("Gazing you...", 255,0,188);
-				GazingState |= 0b00000011;
-				return;
-			}
-			#endregion
 			switch (lastMode)
 			{
 				#region Sharknado

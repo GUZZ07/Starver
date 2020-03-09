@@ -188,9 +188,9 @@ namespace Starvers.BossSystem.Bosses
 				#endregion
 				#region BetsyFireBall
 				case BossMode.SpazmatismBetsyFireBall:
-					if(StarverAI[1] > 4)
+					if(floats[1] > 4)
 					{
-						StarverAI[1] = 0;
+						floats[1] = 0;
 						RushStart();
 						break;
 					}
@@ -238,11 +238,11 @@ namespace Starvers.BossSystem.Bosses
 		#region BetsyFireBall
 		private unsafe void BetsyFireBall()
 		{
-			if (StarverAI[0] >= 10)
+			if (floats[0] >= 10)
 			{
 				Projs.Launch(3);
 			}
-			if(StarverAI[0] < 15)
+			if(floats[0] < 15)
 			{
 				Vel = (Vector)Rand.NextVector2(16 * 30);
 				vector = -Vel;
@@ -257,13 +257,13 @@ namespace Starvers.BossSystem.Bosses
 				proj.aiStyle = -1;
 				Projs.Push(proj.whoAmI, Vel);
 			}
-			else if(StarverAI[0] > 30)
+			else if(floats[0] > 30)
 			{
 				Projs.Reset();
-				StarverAI[0] = -1;
-				StarverAI[1]++;
+				floats[0] = -1;
+				floats[1]++;
 			}
-			StarverAI[0] += 1;
+			floats[0] += 1;
 		}
 		#endregion
 		#region FlameNormal
@@ -280,7 +280,7 @@ namespace Starvers.BossSystem.Bosses
 		private unsafe new void Rush()
 		{
 			WhereToGo = FromPolar((TargetPlayer.Center - Center).Angle(), 16 * 10) + (Vector)TargetPlayer.Center;
-			if (StarverAI[0] < 16)
+			if (floats[0] < 16)
 			{
 				if (Timer % 10 == 0)
 				{
@@ -288,10 +288,10 @@ namespace Starvers.BossSystem.Bosses
 					Vel = (WhereToGo - (Vector)Main.projectile[idx].Center);
 					Vel.Length = 44;
 					Fires.Push(idx, Vel);
-					StarverAI[0]++;
+					floats[0]++;
 				}
 			}
-			else if (StarverAI[0] < 50)
+			else if (floats[0] < 50)
 			{
 				if (Timer % 10 == 0)
 				{
@@ -299,14 +299,14 @@ namespace Starvers.BossSystem.Bosses
 					Vel = (WhereToGo - (Vector)Main.projectile[idx].Center);
 					Vel.Length = 44;
 					Fires.Push(idx, Vel);
-					StarverAI[0]++;
+					floats[0]++;
 				}
 				if (Timer % 16 == 0)
 				{
 					Fires.Launch(1);
 				}
 			}
-			else if (StarverAI[0] < 90)
+			else if (floats[0] < 90)
 			{
 				for (LoopCount = 0; LoopCount < 2; LoopCount++)
 				{
@@ -315,11 +315,11 @@ namespace Starvers.BossSystem.Bosses
 					Vel.Length = 44;
 					Fires.Push(idx, Vel);
 				}
-				StarverAI[0]++;
+				floats[0]++;
 			}
-			else if (StarverAI[0] < 100)
+			else if (floats[0] < 100)
 			{
-				StarverAI[0] = 100;
+				floats[0] = 100;
 				FakeVelocity = WhereToGo - (Vector)Center;
 				FakeVelocity.Length = 30;
 				Fires.Launch();
@@ -327,14 +327,14 @@ namespace Starvers.BossSystem.Bosses
 			}
 			else
 			{
-				if (StarverAI[0]++ < 100 + 60 * 2)
+				if (floats[0]++ < 100 + 60 * 2)
 				{
 					AutoSetWhereToGo = true;
 					//AutoSetFakeVelocity = true;
 					FakeVelocity.Length = -1;
 					Direct *= -1;
-					StarverAI[0] = 0;
-					StarverAI[2] = 0;
+					floats[0] = 0;
+					floats[2] = 0;
 					Mode = BossMode.WaitForMode;
 				}
 			}

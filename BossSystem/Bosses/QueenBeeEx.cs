@@ -25,7 +25,7 @@ namespace Starvers.BossSystem.Bosses
 			DefaultLife = 45500;
 			DefaultDefense = 50;
 			DefaultLifes = 60;
-			StarverAI[0] = 0;
+			floats[0] = 0;
 			Drops = new DropItem[]
 			{
 				new DropItem(new int[]{Currency.Ranged,Currency.Melee }, 3, 7, 0.53f)
@@ -39,7 +39,7 @@ namespace Starvers.BossSystem.Bosses
 			Mode = BossMode.SummonFollows;
 			unsafe
 			{
-				StarverAI[0] = 1;
+				floats[0] = 1;
 			}
 		}
 		#endregion
@@ -78,15 +78,15 @@ namespace Starvers.BossSystem.Bosses
 				#endregion
 				#region StingerRound
 				case BossMode.QueenBeeStingerRound:
-					if(StarverAI[1] > 6)
+					if(floats[1] > 6)
 					{
-						StarverAI[1] = 0;
+						floats[1] = 0;
 						ResetMode();
 						break;
 					}
 					if (Timer % 73 == 0)
 					{
-						switch(StarverAI[0])
+						switch(floats[0])
 						{
 							case 1f:
 								ProjCircle(Center, 2, 15, ProjectileID.Stinger, 20, 112, 2);
@@ -95,8 +95,8 @@ namespace Starvers.BossSystem.Bosses
 								ProjCircle(Center, 15 * 73, 15, ProjectileID.Stinger, 26, 106, 1);
 								break;
 						}
-						StarverAI[1] += 0.5f;
-						StarverAI[0] *= -1;
+						floats[1] += 0.5f;
+						floats[0] *= -1;
 					}
 					break;
 				#endregion

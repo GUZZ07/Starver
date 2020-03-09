@@ -46,8 +46,8 @@ namespace Starvers.BossSystem.Bosses
 			DefaultLifes = 120;
 			DefaultDefense = 990;
 			RawType = NPCID.DukeFishron;
-			StarverAI[2] = NPCID.NebulaHeadcrab;
-			StarverAI[3] = NPCID.NebulaBrain;
+			floats[2] = NPCID.NebulaHeadcrab;
+			floats[3] = NPCID.NebulaBrain;
 		}
 		#endregion
 		#region Fail
@@ -83,13 +83,13 @@ namespace Starvers.BossSystem.Bosses
 			Defense = 0;
 			if (ExVersion)
 			{
-				StarverAI[0] = 30;
+				floats[0] = 30;
 				Vel.X = 16 * 10;
 				Drops = DropsEx;
 			}
 			else
 			{
-				StarverAI[0] = 50;
+				floats[0] = 50;
 				Vel.X = 16 * 16;
 				Drops = DropsNormal;
 			}
@@ -126,7 +126,7 @@ namespace Starvers.BossSystem.Bosses
 							Mode = BossMode.WitherSphere;
 							unsafe
 							{
-								StarverAI[0] = ExVersion ? 60 : 110;
+								floats[0] = ExVersion ? 60 : 110;
 							}
 							break;
 						#endregion
@@ -165,7 +165,7 @@ namespace Starvers.BossSystem.Bosses
 						ResetMode();
 						break;
 					}
-					if (Timer % StarverAI[0] == 0)
+					if (Timer % floats[0] == 0)
 					{
 						WitherBolt();
 					}
@@ -227,10 +227,10 @@ namespace Starvers.BossSystem.Bosses
 					if (modetime > 60 * 9)
 					{
 						ResetMode();
-						StarverAI[0] = ExVersion ? 35 : 50;
+						floats[0] = ExVersion ? 35 : 50;
 						break;
 					}
-					if (Timer % StarverAI[0] == 0)
+					if (Timer % floats[0] == 0)
 					{
 						WitherSphere();
 					}

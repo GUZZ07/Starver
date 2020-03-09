@@ -98,14 +98,14 @@ namespace Starvers.BossSystem.Bosses.Clover
 					case BossMode.FlamingScythe:
 						unsafe
 						{
-							if (StarverAI[0] > 8)
+							if (floats[0] > 8)
 							{
-								StarverAI[0] = 0;
+								floats[0] = 0;
 								ResetMode();
 							}
 							if (Timer % 90 == 0)
 							{
-								FlamingScythe((int)StarverAI[0]++);
+								FlamingScythe((int)floats[0]++);
 							}
 						}
 						break;

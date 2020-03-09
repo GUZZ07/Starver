@@ -72,7 +72,7 @@ namespace Starvers.BossSystem.Bosses.Clover
 								Mode = BossMode.WitherSphere;
 								unsafe
 								{
-									StarverAI[0] = 60;
+									floats[0] = 60;
 								}
 								break;
 							#endregion
@@ -96,7 +96,7 @@ namespace Starvers.BossSystem.Bosses.Clover
 							ResetMode();
 							break;
 						}
-						if (Timer % StarverAI[0] == 0)
+						if (Timer % floats[0] == 0)
 						{
 							WitherBolt();
 						}
@@ -145,10 +145,10 @@ namespace Starvers.BossSystem.Bosses.Clover
 						if (modetime > 60 * 9)
 						{
 							ResetMode();
-							StarverAI[0] = 35;
+							floats[0] = 35;
 							break;
 						}
-						if (Timer % StarverAI[0] == 0)
+						if (Timer % floats[0] == 0)
 						{
 							WitherSphere();
 						}

@@ -51,7 +51,7 @@ namespace Starvers.BossSystem.Bosses
 #endif
 			unsafe
 			{
-				StarverAI[0] = 0;
+				floats[0] = 0;
 			}
 		}
 		#endregion
@@ -69,9 +69,8 @@ namespace Starvers.BossSystem.Bosses
 			UpdateVelocity();
 #if DEBUG
 			if(Timer % 120 == 0)
-				unsafe
 			{
-				StarverPlayer.All.SendDeBugMessage($"StarverAI[0]:{StarverAI[0]}");
+				StarverPlayer.All.SendDeBugMessage($"floats[0]:{floats[0]}");
 			}
 #endif
 			CheckBody();
@@ -212,21 +211,21 @@ namespace Starvers.BossSystem.Bosses
 		#region UpdateVelocity
 		private unsafe void UpdateVelocity()
 		{
-			if (StarverAI[0] > PI * 5)
+			if (floats[0] > PI * 5)
 			{
 				if (Mode != BossMode.WormStorm)
 				{
 					Mode = BossMode.WormStorm;
 				}
-				if (StarverAI[0] > PI * 7)
+				if (floats[0] > PI * 7)
 				{
 					if (Vector2.Distance(Center, WhereToGo) < 16 * 3)
 					{
-						StarverAI[0] = PI * 10;
+						floats[0] = PI * 10;
 					}
-					if (StarverAI[0] > PI * 9)
+					if (floats[0] > PI * 9)
 					{
-						StarverAI[0] = 0;
+						floats[0] = 0;
 						Mode = BossMode.WormLaser;
 						//SummonFollows();
 					}
@@ -238,14 +237,14 @@ namespace Starvers.BossSystem.Bosses
 				}
 				else
 				{
-					StarverAI[0] = PI * 7.5f;
+					floats[0] = PI * 7.5f;
 					WhereToGo = (Vector)Center.Symmetry(TargetPlayer.Center);
 				}
 			}
 			else
 			{
-				StarverAI[0] += 2 * PI / 90;
-				WhereToGo = FromPolar(StarverAI[0], 16 * 50);
+				floats[0] += 2 * PI / 90;
+				WhereToGo = FromPolar(floats[0], 16 * 50);
 				FakeVelocity = (Vector)TargetPlayer.Center + WhereToGo - (Vector)Center;
 				FakeVelocity.Length /= 10;
 			}

@@ -37,12 +37,14 @@ namespace Starvers.BossSystem.Bosses.Base
 		protected int DefaultLifes;
 		protected int DefaultLife;
 		protected int DefaultDefense = 10;
-		protected float[] StarverAI;
+		protected float[] floats;
 		protected uint modetime;
 		protected byte LifeperPlayerType = ByLife;
 		protected Vector vector = new Vector(10, 10);
 		protected Vector WhereToGo;
 		protected BossMode lastMode;
+		private Vector2 RushVel;
+		private double rushRotation;
 		private string DataPath;
 		private string TypeName;
 		private int[] Walls;
@@ -140,7 +142,7 @@ namespace Starvers.BossSystem.Bosses.Base
 				Downed = reader.ReadBoolean();
 			}
 			NumOfAIs = ainum;
-			StarverAI = new float[NumOfAIs];
+			floats = new float[NumOfAIs];
 			Level = CriticalLevel;
 			DefaultLife = 40000;
 			DefaultDefense = 60;
@@ -231,12 +233,12 @@ namespace Starvers.BossSystem.Bosses.Base
 		protected void SummonFollows()
 		{
 			int alive = AlivePlayers();
-			int idx = NPC.NewNPC((int)Center.X, (int)Center.Y, (int)StarverAI[2], Index);
+			int idx = NPC.NewNPC((int)Center.X, (int)Center.Y, (int)floats[2], Index);
 			Main.npc[idx].life = Main.npc[idx].lifeMax = alive * 400;
 			Main.npc[idx].defense = 78;
 			Main.npc[idx].velocity = Rand.NextVector2(26.66f);
 			NetMessage.SendData((int)PacketTypes.NpcUpdate, -1, -1, null, idx);
-			idx = NPC.NewNPC((int)Center.X, (int)Center.Y, (int)StarverAI[3], Index);
+			idx = NPC.NewNPC((int)Center.X, (int)Center.Y, (int)floats[3], Index);
 			Main.npc[idx].life = Main.npc[idx].lifeMax = alive * 400;
 			Main.npc[idx].defense = 78;
 			Main.npc[idx].velocity = Rand.NextVector2(26.66f);
@@ -263,7 +265,7 @@ namespace Starvers.BossSystem.Bosses.Base
 			mode = BossMode.WaitForMode;
 		}
 		#endregion
-		#region Rush Begin
+		#region Rush
 		protected void RushBegin(bool NoRush = false)
 		{
 			modetime = 0;
@@ -271,16 +273,76 @@ namespace Starvers.BossSystem.Bosses.Base
 			mode = BossMode.Rush;
 			if (!NoRush)
 			{
-				Center = TargetPlayer.Center + Rand.NextVector2(16 * 38f);
-				Rush();
+				RushVel = CalcRushVelocity();
+				// FakeVelocity = (Vector)RushVel;
 			}
 		}
-		#endregion
-		#region Rush
 		protected void Rush()
 		{
-			FakeVelocity = (Vector)(TargetPlayer.Center - Center);
-			FakeVelocity.Length = 26 * DamageIndex;
+			const int extra = 5;
+			const int rTime = 25;
+			const int T = rTime + extra;
+			if (modetime > T * 8)
+			{
+				mode = BossMode.WaitForMode;
+				FakeVelocity = default;
+				return;
+			}
+			if (modetime % T < rTime)
+			{
+				FakeVelocity = (Vector)RushVel;
+			}
+			else if (modetime % T == rTime)
+			{
+				RushVel = CalcRushVelocity();
+				double rotation = RealNPC.rotation;
+				if (RealNPC.direction == -1)
+				{
+					rotation += Math.PI;
+				}
+				FakeVelocity = Vector.FromPolar(rotation, 1f);
+				rushRotation = (RushVel.Angle() - rotation) / extra;
+			}
+			else
+			{
+				FakeVelocity.Angle += rushRotation;
+			}
+		}
+		// 利用余弦定理解三角形, D为boss到目标玩家的向量,
+		// U为玩家速度向量, T为计算出的所需时间
+		// v为自身速率
+		private Vector2 CalcRushVelocity()
+		{
+			const double speed = 64;
+			Vector2 D = TargetPlayer.Center - Center;
+			Vector2 U = TargetPlayer.Velocity;
+			// 取模长
+			double u = U.Length();
+			// 如果玩家速率极小(等同于移动), 则直接追逐玩家的位置;
+			// 如果速率比玩家速率慢, 说明追不上, 干脆追玩家当前的位置
+			if (u < 0.5 || U.Length() > speed)
+			{
+				return D.ToLenOf((float)speed);
+			}
+			double v = speed;
+			// 求玩家U到V的余弦值
+			double cosTheta = Vector2.Dot(U, D) / U.Length() / D.Length();
+			cosTheta = Math.Abs(cosTheta);
+			double d = D.Length();
+			// 计算U^2 - V^2
+			double u2_v2 = u * u - v * v;
+			// 公式法解方程 (-b - 根号delta)/2a, 2a为2(U^2 - V^2)
+			double delta = Math.Sqrt(cosTheta * cosTheta * u * u * d * d - (u2_v2) * d * d);
+			double T = (cosTheta * u * d - delta) / u2_v2;
+
+			double angleOffset = Math.Acos(d / v / T - cosTheta * u / v);
+			Vector2 result = Vector.FromPolar(D.Angle() + angleOffset, (float)speed);
+			// 检查方向
+			if (Vector2.Dot(result, D) < 0)
+			{
+				result = Vector.FromPolar(D.Angle() - angleOffset, (float)speed);
+			}
+			return result;
 		}
 		#endregion
 		#region Trident
@@ -348,9 +410,9 @@ namespace Starvers.BossSystem.Bosses.Base
 			StarverPlayer.All.SendData(PacketTypes.UpdateNPCName, "", Index);
 			modetime = 0;
 			LastCenter = Center;
-			for (int i = 0; i < StarverAI.Length; i++)
+			for (int i = 0; i < floats.Length; i++)
 			{
-				StarverAI[i] = 0;
+				floats[i] = 0;
 			}
 			mode = BossMode.WaitForMode;
 		}
@@ -415,9 +477,9 @@ namespace Starvers.BossSystem.Bosses.Base
 			}
 			modetime = 0;
 			LastCenter = Center;
-			for (int i = 0; i < StarverAI.Length; i++)
+			for (int i = 0; i < floats.Length; i++)
 			{
-				StarverAI[i] = 0;
+				floats[i] = 0;
 			}
 			mode = BossMode.WaitForMode;
 			RealNPC.GivenName = DisplayName;

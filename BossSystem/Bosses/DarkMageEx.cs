@@ -64,7 +64,7 @@ namespace Starvers.BossSystem.Bosses
 					{
 						ResetMode();
 						rtime = 0;
-						StarverAI[0] = 0;
+						floats[0] = 0;
 						break;
 					}
 					if (Timer % 60 == 0)
@@ -138,20 +138,20 @@ namespace Starvers.BossSystem.Bosses
 		{
 			if (Starver.IsPE)
 			{
-				Vel = FromPolar(StarverAI[0], 170);
+				Vel = FromPolar(floats[0], 170);
 				vector = Vel;
 				Vel.Length = 4;
 				Proj(TargetPlayer.Center + vector, -Vel, ProjectileID.CultistRitual, 129);
 				rtime++;
-				StarverAI[0] += PI / 18;
+				floats[0] += PI / 18;
 				return;
 			}
-			Vel = FromPolar(StarverAI[0], 170);
+			Vel = FromPolar(floats[0], 170);
 			vector = Vel;
 			Vel.Length = 4;
 			Proj(TargetPlayer.Center + vector, -Vel, ProjectileID.DD2DarkMageRaise, 129);
 			rtime++;
-			StarverAI[0] += PI / 18;
+			floats[0] += PI / 18;
 		}
 		#endregion
 		#region DrakinShot

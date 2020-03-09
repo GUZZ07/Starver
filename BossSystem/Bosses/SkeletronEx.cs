@@ -40,7 +40,7 @@ namespace Starvers.BossSystem.Bosses
 		public override void Spawn(Vector2 where, int lvl = CriticalLevel)
 		{
 			base.Spawn(where, lvl);
-			StarverAI[0] = PI / 2;
+			floats[0] = PI / 2;
 			Mode = BossMode.ThrowingBone;
 			//NewArms();
 			//RealNPC.dontTakeDamage = true;
@@ -53,8 +53,8 @@ namespace Starvers.BossSystem.Bosses
 			RealNPC.aiStyle = None;
 			unsafe
 			{
-				StarverAI[0] = PI / 2;
-				WhereToGo = FromPolar(StarverAI[0], 16 * 25);
+				floats[0] = PI / 2;
+				WhereToGo = FromPolar(floats[0], 16 * 25);
 				FakeVelocity += (Vector)(TargetPlayer.Center + WhereToGo - Center).ToLenOf(1);
 			}
 			//NewArms();
@@ -135,17 +135,17 @@ namespace Starvers.BossSystem.Bosses
 		#region BoneLine
 		private unsafe void BoneLine()
 		{
-			if(StarverAI[1] < 44)
+			if(floats[1] < 44)
 			{
 				Proj(vector, Vector2.Zero, ProjectileID.SkeletonBone, 117, 10f);
 				vector -= Vel;
-				StarverAI[1]++;
+				floats[1]++;
 			}
 			else
 			{
 				vector = (Vector)(TargetPlayer.Center + Rand.NextVector2(16 * 10));
 				Vel = (Vector)(vector - TargetPlayer.Center).ToLenOf(16 * 3);
-				StarverAI[1] = 0;
+				floats[1] = 0;
 			}
 		}
 		#endregion
@@ -186,7 +186,7 @@ namespace Starvers.BossSystem.Bosses
 				#region SummonFollows
 				case BossMode.SummonFollows:
 					Mode = BossMode.LineBone;
-					StarverAI[1] = 44;
+					floats[1] = 44;
 					break;
 				#endregion
 				#region LineBone
@@ -210,8 +210,8 @@ namespace Starvers.BossSystem.Bosses
 			{
 				while (Vector2.Distance(TargetPlayer.Center + WhereToGo, Center) < 16 * 4)
 				{
-					StarverAI[0] += 2 * PI / 3;
-					WhereToGo = FromPolar(StarverAI[0], 16 * 25);
+					floats[0] += 2 * PI / 3;
+					WhereToGo = FromPolar(floats[0], 16 * 25);
 
 					FakeVelocity /= 2;
 				}

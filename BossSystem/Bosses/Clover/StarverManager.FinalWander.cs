@@ -79,7 +79,7 @@ namespace Starvers.BossSystem.Bosses.Clover
 						if (modetime > 60 * 7.5)
 						{
 							ResetMode();
-							StarverAI[1] = 0;
+							floats[1] = 0;
 							break;
 						}
 						if (Timer % (5 / 2) == 0)
@@ -93,7 +93,7 @@ namespace Starvers.BossSystem.Bosses.Clover
 						if (modetime > 60 * 10)
 						{
 							ResetMode();
-							StarverAI[1] = 0;
+							floats[1] = 0;
 							break;
 						}
 						if (Timer % (60 / 2) == 0)
@@ -107,7 +107,7 @@ namespace Starvers.BossSystem.Bosses.Clover
 						if (modetime > 60 * 10)
 						{
 							ResetMode();
-							StarverAI[1] = 0;
+							floats[1] = 0;
 							break;
 						}
 						if (Timer % (55 / 2) == 0)
@@ -128,9 +128,9 @@ namespace Starvers.BossSystem.Bosses.Clover
 					#endregion
 					#region VortexSphere
 					case BossMode.CraVortexSphere:
-						if (StarverAI[1] > 20)
+						if (floats[1] > 20)
 						{
-							StarverAI[1] = 0;
+							floats[1] = 0;
 							ResetMode();
 							break;
 						}
@@ -158,10 +158,10 @@ namespace Starvers.BossSystem.Bosses.Clover
 						if (modetime > 60 * 9)
 						{
 							ResetMode();
-							StarverAI[1] = 0;
+							floats[1] = 0;
 							break;
 						}
-						StarverAI[1] += PI / 9;
+						floats[1] += PI / 9;
 						if (Timer % 60 == 0)
 						{
 							foreach (var player in Starver.Players)
@@ -172,7 +172,7 @@ namespace Starvers.BossSystem.Bosses.Clover
 								}
 								for (int i = 0; i < 8; i++)
 								{
-									Proj(player.Center + FromPolar(StarverAI[1] + PI * i / 4, 16 * 20), FromPolar(StarverAI[1] + PI * i / 4 + PI * 3 / 4, 20), ProjectileID.CultistBossIceMist, 266, 5f, -3e3f, 1);
+									Proj(player.Center + FromPolar(floats[1] + PI * i / 4, 16 * 20), FromPolar(floats[1] + PI * i / 4 + PI * 3 / 4, 20), ProjectileID.CultistBossIceMist, 266, 5f, -3e3f, 1);
 								}
 							}
 						}
@@ -180,13 +180,13 @@ namespace Starvers.BossSystem.Bosses.Clover
 					#endregion
 					#region FireBall
 					case BossMode.CraFireBall:
-						if (StarverAI[1] > 6)
+						if (floats[1] > 6)
 						{
-							StarverAI[1] = 0;
+							floats[1] = 0;
 							ResetMode();
 							break;
 						}
-						if (Timer % (int)(60 + 15 * StarverAI[1]) == 0)
+						if (Timer % (int)(60 + 15 * floats[1]) == 0)
 						{
 							FireBall();
 						}
@@ -200,22 +200,22 @@ namespace Starvers.BossSystem.Bosses.Clover
 			#region Shoot1
 			private unsafe new void Shoot1()
 			{
-				StarverAI[1] += PI / 40;
+				floats[1] += PI / 40;
 				vector.Angle = (TargetPlayer.Center - Center).Angle();
 				UnitX = vector;
-				if (StarverAI[1] > PI)
+				if (floats[1] > PI)
 				{
-					StarverAI[1] -= PI;
+					floats[1] -= PI;
 				}
-				else if (StarverAI[1] > PI / 2)
+				else if (floats[1] > PI / 2)
 				{
-					vector.Angle += PI - StarverAI[1];
-					UnitX.AngleAdd(-(PI - StarverAI[1]));
+					vector.Angle += PI - floats[1];
+					UnitX.AngleAdd(-(PI - floats[1]));
 				}
 				else
 				{
-					vector.Angle += StarverAI[1];
-					UnitX.AngleAdd(-StarverAI[1]);
+					vector.Angle += floats[1];
+					UnitX.AngleAdd(-floats[1]);
 				}
 				Vel = vector;
 				Vel.Y *= -1;

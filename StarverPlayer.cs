@@ -712,7 +712,7 @@ namespace Starvers
 			Main.npc[MoonIndex].type = NPCID.MoonLordCore;
 			Main.npc[MoonIndex].aiStyle = -1;
 			Main.npc[MoonIndex].Center = Center;
-			NetMessage.SendData((int)PacketTypes.NpcUpdate, -1, -1, null, MoonIndex);
+			SendData(PacketTypes.NpcUpdate, "", MoonIndex);
 		}
 		public void UpdateMoonClear()
 		{
@@ -726,11 +726,11 @@ namespace Starvers
 				Main.npc[MoonIndex].aiStyle == -1)
 			{
 				Main.npc[MoonIndex].active = false;
+				Main.npc[MoonIndex].type = 0;
+				Main.npc[MoonIndex].aiStyle = -1;
+				// Main.npc[MoonIndex].Center = Center;
+				NetMessage.SendData((int)PacketTypes.NpcUpdate, -1, -1, null, MoonIndex);
 			}
-			Main.npc[MoonIndex].type = 0;
-			Main.npc[MoonIndex].aiStyle = -1;
-			Main.npc[MoonIndex].Center = Center;
-			NetMessage.SendData((int)PacketTypes.NpcUpdate, -1, -1, null, MoonIndex);
 		}
 		#endregion
 		#region UPGrade

@@ -92,7 +92,7 @@ namespace Starvers
 		{
 			{
 				{
-					var field = typeof(Main).GetFields().Where(fld => fld.Name == "curRelease").First();
+					var field = typeof(Main).GetFields().First(fld => fld.Name == "curRelease");
 					try
 					{
 						curRelease = (int)field.GetValue(null);
@@ -582,10 +582,6 @@ namespace Starvers
 			foreach (var npc in Main.npc)
 			{
 				npc.netAlways = true;
-				if (npc.life == npc.lifeMax)
-				{
-					npc.life -= 1;
-				}
 			}
 			#region ClearNPC
 			if(TShock.Config.DisableHardmode && Timer % 60 == 0)
@@ -971,16 +967,6 @@ namespace Starvers
 						case NPCID.MoonLordHead:
 							scale += 8.25f;
 							npc.defense /= 10;
-							if (npc.type != NPCID.MoonLordCore)
-							{
-								npc.lifeMax *= 10;
-								npc.life *= 10;
-							}
-							else
-							{
-								npc.lifeMax *= 2;
-								npc.life *= 2;
-							}
 							break;
 						case NPCID.SolarCrawltipedeTail:
 						case NPCID.SolarCrawltipedeHead:

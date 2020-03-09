@@ -42,7 +42,7 @@ namespace Starvers.BossSystem.Bosses
 			DefaultLife = 82000;
 			DefaultLifes = 400;
 			DefaultDefense = 1000;
-			StarverAI[0] = 0;
+			floats[0] = 0;
 		}
 		#endregion
 		#region Spawn
@@ -109,22 +109,7 @@ namespace Starvers.BossSystem.Bosses
 				#endregion
 				#region Rush
 				case BossMode.Rush:
-					if (modetime > 60 * 5)
-					{
-						Mode = BossMode.WaitForMode;
-						double rad = (Center - TargetPlayer.Center).Angle();
-						vector = Vector.FromPolar(rad, 16 * 30f);
-						Center = TargetPlayer.Center +  vector ;
-						FakeVelocity = default;
-						break;
-					}
-					if (Timer % 3 == 0)
-					{
-						if (Vector2.Distance(Center, TargetPlayer.Center) > 16 * 44)
-						{
-							NewRush();
-						}
-					}
+					Rush();
 					break;
 				#endregion
 				#region DemonSickle
@@ -155,14 +140,14 @@ namespace Starvers.BossSystem.Bosses
 				case BossMode.FlamingScythe:
 					unsafe
 					{
-						if (StarverAI[0] > 8)
+						if (floats[0] > 8)
 						{
-							StarverAI[0] = 0;
+							floats[0] = 0;
 							RushBegin();
 						}
 						if (Timer % 90 == 0)
 						{
-							FlamingScythe((int)StarverAI[0]++);
+							FlamingScythe((int)floats[0]++);
 						}
 					}
 					break;
@@ -206,13 +191,6 @@ namespace Starvers.BossSystem.Bosses
 		}
 		#endregion
 		#region AIs
-		#region Rush
-		protected virtual void NewRush()
-		{
-			Rush();
-			FakeVelocity *= 3;
-		}
-		#endregion
 		#region SummonFollows
 		protected new void SummonFollows()
 		{
