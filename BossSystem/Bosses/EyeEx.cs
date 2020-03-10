@@ -180,6 +180,13 @@ namespace Starvers.BossSystem.Bosses
 				FakeVelocity += Vel;
 				FakeVelocity.Length = Math.Min(24, FakeVelocity.Length);
 			}
+			if (Lifes < LifesMax / 2)
+			{
+				RealNPC.ai[0] = 1f;
+				RealNPC.ai[1] = 0f;
+				RealNPC.ai[2] = 0f;
+				RealNPC.ai[3] = 0f;
+			}
 			#endregion
 		}
 		#endregion

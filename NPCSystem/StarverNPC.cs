@@ -42,6 +42,7 @@ namespace Starvers.NPCSystem
 		#endregion
 		#region Fields
 		protected bool afterMoon = true;
+		protected bool dontNeedTarget;
 		protected float[] AIUsing;
 		protected int[] Types;
 		protected int AIStyle = None;
@@ -212,7 +213,7 @@ namespace Starvers.NPCSystem
 			{
 				if (RealNPC.aiStyle == None)
 				{
-					if (Target < 0 || Target >= Starver.Players.Length || TargetPlayer == null || !TargetPlayer.Active)
+					if (!dontNeedTarget && (Target < 0 || Target >= Starver.Players.Length || TargetPlayer == null || !TargetPlayer.Active))
 					{
 						TargetClosest();
 						if (Target == None || Target >= Starver.Players.Length || (Vector2.Distance(TargetPlayer.Center, Center) > 16 * 500 && !IgnoreDistance))
@@ -239,7 +240,7 @@ namespace Starvers.NPCSystem
 			{
 				StarverPlayer.All.SendDeBugMessage($"{Name} Invalid Target: {Target}");
 				TargetClosest();
-				if (Target == None || Target >= Starver.Players.Length || (Vector2.Distance(TargetPlayer.Center, Center) > 16 * 500 && !IgnoreDistance))
+				if (!dontNeedTarget && (Target == None || Target >= Starver.Players.Length || (Vector2.Distance(TargetPlayer.Center, Center) > 16 * 500 && !IgnoreDistance)))
 				{
 					StarverPlayer.All.SendDeBugMessage($"{Name} killed by Invalid Target: {Target}");
 					KillMe();
