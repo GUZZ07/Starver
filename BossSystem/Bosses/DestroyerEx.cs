@@ -209,7 +209,7 @@ namespace Starvers.BossSystem.Bosses
 		}
 		#endregion
 		#region UpdateVelocity
-		private unsafe void UpdateVelocity()
+		private void UpdateVelocity()
 		{
 			if (floats[0] > PI * 5)
 			{
@@ -264,7 +264,7 @@ namespace Starvers.BossSystem.Bosses
 #endif
 				Bodies[i] = ai0 = NewNPC((Vector)Center, Vector.Zero, NPCID.TheDestroyerBody, 0, ai1, 0, ai3);
 				Terraria.Main.npc[ai0].Center = Terraria.Main.npc[ai1].Center + vector;
-				Terraria.Main.npc[ai0].defense = 6000;
+				Terraria.Main.npc[ai0].defense = 600;
 				Terraria.Main.npc[ai0].damage = (int)(BodyDamageStart * DamageIndex);
 				Terraria.Main.npc[ai1].ai[0] = ai0;
 				ai1 = ai0;

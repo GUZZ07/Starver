@@ -119,11 +119,11 @@ namespace Starvers.BossSystem.Bosses
 		private new void SummonFollows()
 		{
 			vector = new Vector(0,17);
-			NewNPC((Vector)Center, vector, NPCID.Demon, 30000, 34500);
+			NewNPC((Vector)Center, vector, NPCID.Demon, 30000, 500);
 			vector.Angle += PI / 11;
-			NewNPC((Vector)Center, vector, NPCID.Demon, 30000, 34500);
+			NewNPC((Vector)Center, vector, NPCID.Demon, 30000, 500);
 			vector.Angle -= 2 * PI / 11;
-			NewNPC((Vector)Center, vector, NPCID.Demon, 30000, 34500);
+			NewNPC((Vector)Center, vector, NPCID.Demon, 30000, 500);
 		}
 		#endregion
 		#region Laser

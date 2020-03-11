@@ -79,7 +79,7 @@ namespace Starvers.BossSystem.Bosses
 				UpdateVel();
 			}
 			ArmsActive = CheckArms();
-			RealNPC.dontTakeDamage = ArmsActive;
+			RealNPC.dontTakeDamage = false;
 			#endregion
 			#region Modes
 			switch (Mode)
