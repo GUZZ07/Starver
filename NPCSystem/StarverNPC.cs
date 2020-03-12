@@ -127,6 +127,7 @@ namespace Starvers.NPCSystem
 			}
 			#endregion
 			TransformTo(RawType);
+			StarverPlayer.All.SendData(PacketTypes.UpdateNPCName, "", Index);
 			SendData();
 #if DEBUG
 			StarverPlayer.All.SendDeBugMessage($"{Name}({this.Index}) has Spawned");
@@ -137,18 +138,15 @@ namespace Starvers.NPCSystem
 		protected void TransformTo(int type)
 		{
 			RawType = type;
+			var (dl, ai, notc, def, nogra, dmg) = (RealNPC.life, RealNPC.aiStyle, RealNPC.noTileCollide, RealNPC.defense, RealNPC.noGravity, RealNPC.damage);
 			RealNPC.SetDefaults(RawType);
-			RealNPC.life = DefaultLife;
-			RealNPC.lifeMax = DefaultLife;
-			RealNPC.aiStyle = AIStyle;
-			RealNPC.noTileCollide = NoTileCollide;
-			RealNPC.defense = (int)(DefaultDefense * DefenseIndex);
-			RealNPC.noGravity = NoGravity;
-			if (CollideDamage > 0)
-			{
-				RealNPC.damage = CollideDamage;
-			}
-			RealNPC.damage = (int)(RealNPC.damage * CollidingIndex);
+			RealNPC.life = dl;
+			RealNPC.lifeMax = dl;
+			RealNPC.aiStyle = ai;
+			RealNPC.noTileCollide = notc;
+			RealNPC.defense = def;
+			RealNPC.noGravity = nogra;
+			RealNPC.damage = dmg;
 		}
 		#endregion
 		#region CheckSpawn
