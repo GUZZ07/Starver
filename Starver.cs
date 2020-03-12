@@ -1005,7 +1005,6 @@ namespace Starvers
 								npc.life -= 1;
 							}
 							npc.GivenName = "[Lv." + NPCLevel + "]" + npc.GivenOrTypeName;
-							StarverPlayer.All.SendData(PacketTypes.UpdateNPCName, "", npc.whoAmI);
 							goto senddata;
 					}
 					scale *= 10;
