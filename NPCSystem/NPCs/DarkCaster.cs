@@ -35,6 +35,7 @@ namespace Starvers.NPCSystem.NPCs
 		/// </summary>
 		protected int InternalAIStyle;
 		protected const int MaxInternalAIStyle = 5;
+		protected int damageReceive;
 		protected static SpawnChecker DungeonChecker = SpawnChecker.DungeonLike;
 		/// <summary>
 		/// 保留弹幕位置用
@@ -66,9 +67,19 @@ namespace Starvers.NPCSystem.NPCs
 		{
 			base.OnSpawn();
 			InternalAIStyle = Rand.Next(MaxInternalAIStyle);
-			if(InternalAIStyle == 4)
+			if (InternalAIStyle == 4)
 			{
 				ProjSet = new ProjStack();
+			}
+		}
+		#endregion
+		#region Killed
+		public override void OnKilled()
+		{
+			base.OnKilled();
+			if (InternalAIStyle == 4)
+			{
+				ProjSet.Launch();
 			}
 		}
 		#endregion
@@ -171,7 +182,12 @@ namespace Starvers.NPCSystem.NPCs
 		public override void OnStrike(int RealDamage, float KnockBack, StarverPlayer player)
 		{
 			base.OnStrike(RealDamage, KnockBack, player);
-			Warp();
+			damageReceive += RealDamage;
+			if (damageReceive >= LifeMax / 4)
+			{
+				damageReceive = 0;
+				Warp();
+			}
 			SendData();
 		}
 		#endregion

@@ -43,6 +43,7 @@ namespace Starvers.NPCSystem.NPCs
 		}
 		public FloatingSkeleton()
 		{
+			dontNeedTarget = true;
 			AfraidSun = true;
 			OverrideRawDrop = true;
 			RawType = NPCID.Skeleton;

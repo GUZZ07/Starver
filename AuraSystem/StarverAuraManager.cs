@@ -112,18 +112,18 @@ namespace Starvers.AuraSystem
 			8.80,		// 29
 			8.80,		// 30
 			9.30,		// 31
-			9.35,		// 32
-			9.36,		// 33
-			9.37,		// 34
-			9.38,		// 35
-			9.39,		// 36
-			9.40,		// 37
-			9.44,		// 38
-			9.50,		// 39
-			9.59,		// 40
-			9.62,		// 41
-			9.78,		// 42
-			12.0,		// 43
+			9.55,		// 32
+			9.96,		// 33
+			10.2,		// 34
+			11.0,		// 35
+			11.5,		// 36
+			12.0,		// 37
+			12.5,		// 38
+			13.0,		// 39
+			13.5,		// 40
+			14.5,		// 41
+			16.5,		// 42
+			20.0,		// 43
 		};
 		#endregion
 		#region Properties
@@ -716,15 +716,15 @@ namespace Starvers.AuraSystem
 			}
 			else if (lvl < (int)1e4)
 			{
-				return Math.Min((int)6.25e6f, (int)(lvl * Math.Log(lvl)));
+				return Math.Min(150000, (int)(lvl * Math.Log(lvl)));
 			}
 			else if (lvl < (int)1e5)
 			{
-				return Math.Min((int)5.1e5f, (int)(lvl * 10 * Math.Log(lvl)));
+				return 150000;
 			}
 			else
 			{
-				return (int)1e6f;
+				return 25 * 25 * 25 * 25;
 			}
 		}
 		#endregion
@@ -739,6 +739,7 @@ namespace Starvers.AuraSystem
 			if (id >= ItemID.KingSlimeBossBag && id <= ItemID.MoonLordBossBag)
 			{
 				exp = (id + 11 - ItemID.KingSlimeBossBag);
+				exp *= exp;
 				exp *= exp;
 				exp *= exp;
 			}

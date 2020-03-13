@@ -20,6 +20,7 @@ namespace Starvers.NPCSystem.NPCs
 			RawType = NPCID.PossessedArmor;
 			DefaultLife = 5000;
 			DefaultDefense = 1200;
+			dontNeedTarget = true;
 			Checker = SpawnChecker.ZombieLike;
 			Checker.SpawnChance /= 3;
 			Checker.Task = 25;
@@ -31,14 +32,14 @@ namespace Starvers.NPCSystem.NPCs
 		#region RealAI
 		protected override void RealAI()
 		{
-			if(Timer % 60 * 7 < 60 * 3)
+			if (Timer % 60 * 7 < 60 * 3)
 			{
 				Velocity.X /= 2;
-				if(Velocity.Y < 0 && RealNPC.collideY)
+				if (Velocity.Y < 0)
 				{
 					Velocity.Y = 0;
 				}
-				if(CheckSecond(1))
+				if (CheckSecond(1))
 				{
 					try
 					{

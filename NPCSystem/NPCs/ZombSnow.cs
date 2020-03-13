@@ -19,7 +19,7 @@ namespace Starvers.NPCSystem.NPCs
 		#region RealAI
 		protected override void RealAI()
 		{
-			if(RealNPC.type != Terraria.ID.NPCID.ZombieEskimo)
+			if (RealNPC.type != Terraria.ID.NPCID.ZombieEskimo)
 			{
 				RemoveFromNPCs();
 			}
