@@ -672,6 +672,13 @@ namespace Starvers
 		public void Update()
 		{
 			timer++;
+			if (!BLFinished(BLID.YrtAEvah))
+			{
+				if (FindBuffIndex(BuffID.DrillMount) != -1)
+				{
+					RemoveBuff(BuffID.DrillMount);
+				}
+			}
 			BranchTask?.Updating(timer);
 			UpdateCD();
 			UpdateTilePoint();
@@ -1447,6 +1454,29 @@ namespace Starvers
 		}
 		public void CreatingProj(GetDataHandlers.NewProjectileEventArgs args)
 		{
+			if (!BLFinished(BLID.YrtAEvah))
+			{
+				switch(args.Type)
+				{
+					case ProjectileID.Dynamite:
+					case ProjectileID.BouncyDynamite:
+					case ProjectileID.StickyDynamite:
+					case ProjectileID.Bomb:
+					case ProjectileID.BouncyBomb:
+					case ProjectileID.StickyBomb:
+					case ProjectileID.GrenadeII:
+					case ProjectileID.ProximityMineII:
+					case ProjectileID.RocketII:
+					case ProjectileID.RocketSnowmanII:
+					case ProjectileID.GrenadeIV:
+					case ProjectileID.ProximityMineIV:
+					case ProjectileID.RocketIV:
+					case ProjectileID.RocketSnowmanIV:
+						Main.projectile[args.Index].KillMeEx();
+						args.Handled = true;
+						return;
+				}
+			}
 			BranchTask?.CreatingProj(args);
 		}
 		public void ReleasingSkill(ReleaseSkillEventArgs args)

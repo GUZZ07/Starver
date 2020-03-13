@@ -338,11 +338,6 @@ namespace Starvers.AuraSystem
 			{
 				return;
 			}
-			if (args.Type == ProjectileID.RocketII || args.Type == ProjectileID.RocketIV || args.Type == ProjectileID.RocketSnowmanII || args.Type == ProjectileID.RocketSnowmanIV)
-			{
-				Main.projectile[args.Index].KillMeEx();
-				return;
-			}
 			if ((!Main.projectile[args.Index].friendly) && Main.projectile[args.Index].damage <= 300)
 			{
 				Main.projectile[args.Index].damage = (int)(Config.TaskNow / 4D);
