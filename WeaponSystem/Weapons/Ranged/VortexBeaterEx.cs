@@ -12,7 +12,7 @@ namespace Starvers.WeaponSystem.Weapons.Ranged
 	public class VortexBeaterEx : Weapon
 	{
 		#region Ctor
-		public VortexBeaterEx() : base(0,IDs.ItemID.VortexBeater, IDs.ProjectileID.VortexBeaterRocket, CareerType.Ranged, 235)
+		public VortexBeaterEx() : base(0,IDs.ItemID.VortexBeater, IDs.ProjectileID.VortexBeaterRocket, CareerType.Ranged, 65)
 		{
 			CatchID = IDs.ProjectileID.VortexBeater;
 		}

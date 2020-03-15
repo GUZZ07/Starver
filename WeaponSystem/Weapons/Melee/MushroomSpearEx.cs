@@ -13,7 +13,7 @@ namespace Starvers.WeaponSystem.Weapons.Melee
 	public class MushroomSpearEx : Weapon
 	{
 		#region Ctor
-		public MushroomSpearEx() : base(2, IID.MushroomSpear, PID.InfluxWaver, CareerType.Melee, 612)
+		public MushroomSpearEx() : base(2, IID.MushroomSpear, PID.InfluxWaver, CareerType.Melee, 102)
 		{
 			CatchID = PID.MushroomSpear;
 		}

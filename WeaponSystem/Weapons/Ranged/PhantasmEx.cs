@@ -15,7 +15,7 @@ namespace Starvers.WeaponSystem.Weapons.Ranged
 		private Vector vector;
 		#endregion
 		#region Ctor
-		public PhantasmEx():base(1,IID.Phantasm,PID.MoonlordArrow,CareerType.Ranged,245)
+		public PhantasmEx() : base(1, IID.Phantasm, PID.MoonlordArrow, CareerType.Ranged, 75)
 		{
 			CatchID = PID.Phantasm;
 		}

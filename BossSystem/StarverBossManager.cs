@@ -276,45 +276,49 @@ namespace Starvers.BossSystem
 					#endregion
 					#region 2(CrazyWang)
 					case 2:
-						if (EndBossDelay-- == 60 * 30)
+						if (EndBossDelay > 0)
 						{
-							StarverPlayer.All.SendMessage("Empty", Color.BlueViolet);
+							EndBossDelay--;
+						}
+						if (EndBossDelay == 60 * 30)
+						{
+							StarverPlayer.All.SendMessage("", Color.BlueViolet);
 						}
 						else if (EndBossDelay == 60 * 28)
 						{
-							StarverPlayer.All.SendMessage("Empty", Color.BlueViolet);
+							StarverPlayer.All.SendMessage("", Color.BlueViolet);
 						}
 						else if (EndBossDelay == 60 * 26)
 						{
-							StarverPlayer.All.SendMessage("Empty", Color.BlueViolet);
+							StarverPlayer.All.SendMessage("", Color.BlueViolet);
 						}
 						else if (EndBossDelay == 60 * 23)
 						{
-							StarverPlayer.All.SendMessage("Empty", Color.BlueViolet);
+							StarverPlayer.All.SendMessage("", Color.BlueViolet);
 						}
 						else if (EndBossDelay == 60 * 20)
 						{
-							StarverPlayer.All.SendMessage("Empty", Color.BlueViolet);
+							StarverPlayer.All.SendMessage("", Color.BlueViolet);
 						}
 						else if (EndBossDelay == 60 * 18)
 						{
-							StarverPlayer.All.SendMessage("Empty", Color.BlueViolet);
+							StarverPlayer.All.SendMessage("", Color.BlueViolet);
 						}
 						else if (EndBossDelay == 60 * 13)
 						{
-							StarverPlayer.All.SendMessage("Empty", Color.BlueViolet);
+							StarverPlayer.All.SendMessage("", Color.BlueViolet);
 						}
 						else if (EndBossDelay == 60 * 10)
 						{
-							StarverPlayer.All.SendMessage("Empty", Color.BlueViolet);
+							StarverPlayer.All.SendMessage("", Color.BlueViolet);
 						}
 						else if (EndBossDelay == 60 * 7)
 						{
-							StarverPlayer.All.SendMessage("Empty", Color.BlueViolet);
+							StarverPlayer.All.SendMessage("", Color.BlueViolet);
 						}
 						else if (EndBossDelay == 60 * 3)
 						{
-							StarverPlayer.All.SendMessage("Empty", Color.BlueViolet);
+							StarverPlayer.All.SendMessage("", Color.BlueViolet);
 						}
 						else if (EndBossDelay == 60 * 1)
 						{
@@ -342,41 +346,45 @@ namespace Starvers.BossSystem
 					#endregion
 					#region 4(Deaths)
 					case 4:
-						if (EndBossDelay-- == 60 * 30)
+						if (EndBossDelay > 0)
 						{
-							StarverPlayer.All.SendMessage("Empty", Color.BlueViolet);
+							EndBossDelay--;
+						}
+						if (EndBossDelay == 60 * 30)
+						{
+							StarverPlayer.All.SendMessage("", Color.DeepPink);
 						}
 						else if (EndBossDelay == 60 * 28)
 						{
-							StarverPlayer.All.SendMessage("Empty", Color.BlueViolet);
+							StarverPlayer.All.SendMessage("", Color.BlueViolet);
 						}
 						else if (EndBossDelay == 60 * 26)
 						{
-							StarverPlayer.All.SendMessage("Empty", Color.BlueViolet);
+							StarverPlayer.All.SendMessage("", Color.BlueViolet);
 						}
 						else if (EndBossDelay == 60 * 23)
 						{
-							StarverPlayer.All.SendMessage("Empty", Color.BlueViolet);
+							StarverPlayer.All.SendMessage("", Color.BlueViolet);
 						}
 						else if (EndBossDelay == 60 * 20)
 						{
-							StarverPlayer.All.SendMessage("Empty", Color.BlueViolet);
+							StarverPlayer.All.SendMessage("", Color.BlueViolet);
 						}
 						else if (EndBossDelay == 60 * 18)
 						{
-							StarverPlayer.All.SendMessage("Empty", Color.BlueViolet);
+							StarverPlayer.All.SendMessage("", Color.BlueViolet);
 						}
 						else if (EndBossDelay == 60 * 13)
 						{
-							StarverPlayer.All.SendMessage("Empty", Color.BlueViolet);
+							StarverPlayer.All.SendMessage("", Color.BlueViolet);
 						}
 						else if (EndBossDelay == 60 * 10)
 						{
-							StarverPlayer.All.SendMessage("Empty", Color.BlueViolet);
+							StarverPlayer.All.SendMessage("", Color.BlueViolet);
 						}
 						else if (EndBossDelay == 60 * 7)
 						{
-							StarverPlayer.All.SendMessage("Empty", Color.BlueViolet);
+							StarverPlayer.All.SendMessage("", Color.BlueViolet);
 						}
 						else if (EndBossDelay == 60 * 3)
 						{
@@ -394,6 +402,7 @@ namespace Starvers.BossSystem
 						if (EndBossDelay < 0)
 						{
 							EndBossDelay = 0;
+							WorldGen.TriggerLunarApocalypse();
 							SummonTower(NPCID.LunarTowerNebula);
 							StarverPlayer.All.SendMessage("战斗还将延续...", Color.DarkGreen);
 						}
@@ -407,25 +416,29 @@ namespace Starvers.BossSystem
 					#endregion
 					#region 6(Wither)
 					case 6:
-						if (EndBossDelay-- == 60 * 30)
+						if (EndBossDelay > 0)
 						{
-							StarverPlayer.All.SendMessage("Empty", Color.DeepPink);
+							EndBossDelay--;
+						}
+						if (EndBossDelay == 60 * 30)
+						{
+							StarverPlayer.All.SendMessage("", Color.DeepPink);
 						}
 						else if (EndBossDelay == 60 * 28)
 						{
-							StarverPlayer.All.SendMessage("Empty", Color.DeepPink);
+							StarverPlayer.All.SendMessage("", Color.DeepPink);
 						}
 						else if (EndBossDelay == 60 * 26)
 						{
-							StarverPlayer.All.SendMessage("Empty", Color.DeepPink);
+							StarverPlayer.All.SendMessage("", Color.DeepPink);
 						}
 						else if (EndBossDelay == 60 * 23)
 						{
-							StarverPlayer.All.SendMessage("Empty", Color.DeepPink);
+							StarverPlayer.All.SendMessage("", Color.DeepPink);
 						}
 						else if (EndBossDelay == 60 * 20)
 						{
-							StarverPlayer.All.SendMessage("Empty", Color.DeepPink);
+							StarverPlayer.All.SendMessage("", Color.DeepPink);
 						}
 						else if (EndBossDelay == 60 * 18)
 						{
@@ -459,6 +472,7 @@ namespace Starvers.BossSystem
 						if (EndBossDelay < 0)
 						{
 							EndBossDelay = 0;
+							WorldGen.TriggerLunarApocalypse();
 							SummonTower(NPCID.LunarTowerSolar);
 							StarverPlayer.All.SendMessage("战斗已接近尾声...", Color.DarkGreen);
 						}
@@ -472,7 +486,11 @@ namespace Starvers.BossSystem
 					#endregion
 					#region 8(TOFOUT)
 					case 8:
-						if (EndBossDelay-- == 60 * 30)
+						if (EndBossDelay > 0)
+						{
+							EndBossDelay--;
+						}
+						if (EndBossDelay == 60 * 30)
 						{
 							StarverPlayer.All.SendMessage("他正在逐步接近", Color.BlueViolet);
 						}
@@ -527,7 +545,11 @@ namespace Starvers.BossSystem
 					#endregion
 					#region 10(Clover)
 					case 10:
-						if (EndBossDelay-- == 0)
+						if (EndBossDelay > 0)
+						{
+							EndBossDelay--;
+						}
+						if (EndBossDelay == 0)
 						{
 							StarverPlayer.All.SendMessage("这是你们的最后一战", Color.Black);
 							Bosses[Bosses.Length - 2].Spawn(SelectLuckyPlayer() + Rand.NextVector2(16 * 80), StarverBoss.CriticalLevel + 2001);
@@ -686,6 +708,9 @@ namespace Starvers.BossSystem
 					NPC.type == NPCID.LunarTowerVortex)
 				{
 					NPC.SetDefaults(MainTower);
+					NPC.lifeMax = 100000;
+					NPC.life = 100000;
+					NPC.defense = 2000;
 					NetMessage.SendData((int)PacketTypes.NpcUpdate, -1, -1, null, NPC.whoAmI);
 				}
 				if (NPC.type == MainTower)

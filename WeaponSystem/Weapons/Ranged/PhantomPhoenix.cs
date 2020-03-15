@@ -17,7 +17,7 @@ namespace Starvers.WeaponSystem.Weapons.Ranged
 		protected double rd = 0;
 		#endregion
 		#region Ctor
-		public PhantomPhoenix() : base(2,IID.DD2PhoenixBow,PID.DD2PhoenixBowShot,CareerType.Ranged,243)
+		public PhantomPhoenix() : base(2,IID.DD2PhoenixBow,PID.DD2PhoenixBowShot,CareerType.Ranged, 43)
 		{
 			CatchID = PID.DD2PhoenixBow;
 		}
@@ -25,7 +25,7 @@ namespace Starvers.WeaponSystem.Weapons.Ranged
 		#region UseWeapon
 		public override void UseWeapon(StarverPlayer player, Vector Velocity,int lvl, TShockAPI.GetDataHandlers.NewProjectileEventArgs args)
 		{
-			player.ProjSector(player.Center, Velocity.Length, 16 * 3, Velocity.Angle, (float)(Math.PI / 3), CalcDamage(lvl), ProjID, lvl > 10 ? 5 : 7);
+			player.ProjSector(player.Center, Velocity.Length, 16 * 3, Velocity.Angle, (float)(Math.PI / 3), CalcDamage(lvl), ProjID, lvl > 10 ? 3 : 5);
 		}
 		#endregion
 	}

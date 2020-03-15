@@ -45,7 +45,7 @@ namespace Starvers.BossSystem.Bosses
 			DefaultDefense = 0;
 			RawType = NPCID.DukeFishron;
 			Name = "The Starver Wander";
-			FullName = "Gnawyzarc The Starver Wander";
+			// FullName = "Gnawyzarc The Starver Wander";
 			floats[3] = NPCID.VortexRifleman;
 			floats[2] = NPCID.VortexSoldier;
 			Vel.X = Vel.Y = 10;
