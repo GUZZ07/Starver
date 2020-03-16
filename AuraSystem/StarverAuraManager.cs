@@ -508,6 +508,7 @@ namespace Starvers.AuraSystem
 							throw new Exception();
 						}
 						player.Exp += bagexp;
+						player.SendInfoMessage("获得经验: " + bagexp);
 						player.SendData(PacketTypes.PlayerSlot, "", player.Index, 0);
 						player.Save();
 					}
@@ -734,7 +735,6 @@ namespace Starvers.AuraSystem
 			if (id >= ItemID.KingSlimeBossBag && id <= ItemID.MoonLordBossBag)
 			{
 				exp = (id + 11 - ItemID.KingSlimeBossBag);
-				exp *= exp;
 				exp *= exp;
 				exp *= exp;
 			}

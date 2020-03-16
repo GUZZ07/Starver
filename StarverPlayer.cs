@@ -1607,7 +1607,7 @@ namespace Starvers
 					return;
 				}
 				long expNow = value;
-				long lvl = level;
+				int lvl = level;
 				int Need = UpGradeExp;
 				if (HasPerm(Perms.VIP.LessCost))
 				{
@@ -1623,8 +1623,8 @@ namespace Starvers
 						Need /= 3;
 					}
 				}
-				Level = (int)lvl;
-				exp = (int)Math.Max(0, expNow);
+				Level = lvl;
+				exp = Math.Max(0, (int)expNow);
 			}
 		}
 		public int MP
