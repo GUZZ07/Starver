@@ -161,6 +161,7 @@ namespace Starvers.BossSystem.Bosses
 			Vel.Length = 15;
 			int shot = Starver.IsPE ? ProjectileID.RuneBlast : ProjectileID.DD2DrakinShot;
 			ProjSector(Center, Vel.Length, 0, Vel.Angle, Math.PI / 5, 127, shot, 5);
+			ProjSector(Center, Vel.Length, 0, Vel.Angle, Math.PI / 5, 127, shot, 5);
 			rtime++;
 		}
 		#endregion

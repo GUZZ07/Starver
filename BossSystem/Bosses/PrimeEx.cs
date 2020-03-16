@@ -143,7 +143,7 @@ namespace Starvers.BossSystem.Bosses
 			{
 				return;
 			}
-			ProjCircle(Center, 2, 18, ProjectileID.SaucerMissile, 20, 221, 2);
+			ProjCircle(Center, 2, 18, ProjectileID.SaucerMissile, 20, 221);
 		}
 		#endregion
 		#region Rocket

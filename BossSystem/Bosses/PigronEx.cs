@@ -179,7 +179,7 @@ namespace Starvers.BossSystem.Bosses
 		#region Arrow
 		private void Arrow()
 		{
-			ProjSector(Center, 17, 2, (TargetPlayer.Center - Center).Angle(), PI * 3 / 4, 160, ProjectileID.WoodenArrowHostile, 8); ;
+			ProjSector(Center, 17, 2, (TargetPlayer.Center - Center).Angle(), PI * 3 / 4, 160, ProjectileID.WoodenArrowHostile, 8);
 		}
 		#endregion
 		#region SummonFollows

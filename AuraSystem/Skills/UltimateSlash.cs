@@ -109,7 +109,7 @@ namespace Starvers.AuraSystem.Skills
 						damage *= 3;
 						for (int i = 0; i < Beams.Length; i++)
 						{
-							player.ProjCircle(player.Center, 16 * 4 + 16 * 8 * i, 13 + 2 * i, Beams[i], 10 + 5 * i, (int)(damage * (1 + 0.1f * i)), 2);
+							player.ProjCircle(player.Center, 16 * 4 + 16 * 8 * i, 13 + 2 * i, Beams[i], 10 + 5 * i, (int)(damage * (1 + 0.1f * i)));
 							Thread.Sleep(175 + 25 * i);
 						}
 						#endregion

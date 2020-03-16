@@ -89,10 +89,10 @@ namespace Starvers.BossSystem.Bosses
 						switch(floats[0])
 						{
 							case 1f:
-								ProjCircle(Center, 2, 15, ProjectileID.Stinger, 20, 112, 2);
+								ProjCircle(Center, 2, 15, ProjectileID.Stinger, 20, 112);
 								break;
 							case -1f:
-								ProjCircle(Center, 15 * 73, 15, ProjectileID.Stinger, 26, 106, 1);
+								ProjCircle(Center, 15 * 73, -15, ProjectileID.Stinger, 26, 106);
 								break;
 						}
 						floats[1] += 0.5f;

@@ -287,11 +287,11 @@ namespace Starvers.AuraSystem.Skills
 
 			for (int i = 0; i < 4; i++)
 			{
-				player.ProjCircle(pos, radium, 0.1f, ProjectileID.PureSpray, (int)(radium * 2 * Math.PI / 36), damage / 2, 2);
+				player.ProjCircle(pos, radium, 0.1f, ProjectileID.PureSpray, (int)(radium * 2 * Math.PI / 36), damage / 2);
 				radium += 16 * 3f;
 				Thread.Sleep(175);
 			}
-			player.ProjCircle(pos, 16 * 60, 25, LeafType, 50, damage);
+			player.ProjCircle(pos, 16 * 60, -25, LeafType, 50, damage);
 			UpingGreen(player, pos, 16 * 3, 16 * 30);
 		}
 		#endregion

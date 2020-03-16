@@ -36,7 +36,7 @@ namespace Starvers.WeaponSystem.Weapons.Melee
 				if (Microsoft.Xna.Framework.Vector2.Distance(player.Center, npc.Center) < 16 * 90)
 				{
 					count++;
-					player.ProjCircle(npc.Center, 16 * 10, 13, ProjID, 6, CalcDamage(lvl));
+					player.ProjCircle(npc.Center, 16 * 10, -13, ProjID, 6, CalcDamage(lvl));
 				}
 			}
 			if (player.TPlayer.hostile)
@@ -56,7 +56,7 @@ namespace Starvers.WeaponSystem.Weapons.Melee
 						if (Microsoft.Xna.Framework.Vector2.Distance(player.Center, ply.Center) < 16 * 90)
 						{
 							count++;
-							player.ProjCircle(ply.Center, 16 * 10, 13, ProjID, 6, CalcDamage(lvl));
+							player.ProjCircle(ply.Center, 16 * 10, -13, ProjID, 6, CalcDamage(lvl));
 						}
 					}
 				}

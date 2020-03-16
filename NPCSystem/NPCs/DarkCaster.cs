@@ -103,7 +103,7 @@ namespace Starvers.NPCSystem.NPCs
 			uint Mod = This.Timer % (60 * 4);
 			if (Mod == 0)
 			{
-				This.ProjCircle(This.TargetPlayer.Center, 16 * 30, 5, ProjectileID.LostSoulHostile, 8, 200);
+				This.ProjCircle(This.TargetPlayer.Center, 16 * 30, -5, ProjectileID.LostSoulHostile, 8, 200);
 			}
 		}
 		protected static void AI_2(DarkCaster This)

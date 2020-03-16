@@ -264,12 +264,12 @@ namespace Starvers.BossSystem.Bosses
 					{
 						continue;
 					}
-					ProjCircle(player.Center, 16 * 29 + 19 * floats[1], 24, ProjectileID.CultistBossFireBall, 8 + (int)floats[1], 233);
+					ProjCircle(player.Center, 16 * 29 + 19 * floats[1], -24, ProjectileID.CultistBossFireBall, 8 + (int)floats[1], 233);
 				}
 			}
 			else
 			{
-				ProjCircle(TargetPlayer.Center, 16 * 29 + 19 * floats[1], 19, ProjectileID.CultistBossFireBall, 8 + (int)floats[1], 186);
+				ProjCircle(TargetPlayer.Center, 16 * 29 + 19 * floats[1], -19, ProjectileID.CultistBossFireBall, 8 + (int)floats[1], 186);
 			}
 			floats[1]++;
 		}

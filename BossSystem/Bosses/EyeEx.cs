@@ -252,7 +252,7 @@ namespace Starvers.BossSystem.Bosses
 			TargetPlayer.SetBuff(BuffID.Obstructed, 90);
 			if (modetime % 60 == 0)
 			{
-				ProjCircle(TargetPlayer.Center, 16 * 30, 10, ProjectileID.RuneBlast, Rand.Next(4, 6), 120);
+				ProjCircle(TargetPlayer.Center, 16 * 30, -10, ProjectileID.RuneBlast, Rand.Next(4, 6), 120);
 			}
 		}
 		#endregion

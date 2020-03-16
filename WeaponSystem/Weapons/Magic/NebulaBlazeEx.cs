@@ -21,7 +21,7 @@ namespace Starvers.WeaponSystem.Weapons.Magic
 		#region UseWeapon
 		public override void UseWeapon(StarverPlayer player, Vector Velocity, int lvl, GetDataHandlers.NewProjectileEventArgs args)
 		{
-			player.ProjCircle(player.Center, 16 * 3, 29, ProjID, 4, CalcDamage(lvl), 2);
+			player.ProjCircle(player.Center, 16 * 3, 29, ProjID, 4, CalcDamage(lvl));
 		}
 		#endregion
 	}

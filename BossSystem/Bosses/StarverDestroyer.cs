@@ -241,7 +241,7 @@ namespace Starvers.BossSystem.Bosses
 				{
 					continue;
 				}
-				ProjCircle(player.Center, 16 * 20 + Times * 100, 0.1f, ProjectileID.FlamingScythe, 8, 305, 1);
+				ProjCircle(player.Center, 16 * 20 + Times * 100, -0.1f, ProjectileID.FlamingScythe, 8, 305);
 			}
 		}
 		#endregion

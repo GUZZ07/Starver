@@ -123,7 +123,7 @@ namespace Starvers.BossSystem.Bosses
 					}
 					if(Timer % 60 * 4 == 0)
 					{
-						ProjSector(TargetPlayer.Center, 16 * 28 / 60 / 4, 16 * 28, Rand.NextAngle(), PI * 2 / 3, 115, ProjectileID.SkeletonBone, 14, 1);
+						ProjSector(TargetPlayer.Center, -16 * 28 / 60 / 4, 16 * 28, Rand.NextAngle(), PI * 2 / 3, 115, ProjectileID.SkeletonBone, 14);
 					}
 					break;
 					#endregion

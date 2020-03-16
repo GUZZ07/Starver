@@ -24,7 +24,7 @@ namespace Starvers.AuraSystem.Skills
 		{
 			for (int i = 0; i < 8; i++)
 			{
-				player.ProjCircle(player.Center, 32 + 34 * i, 1, ProjectileID.ToxicCloud, 10 + 5 * i,103, 2);
+				player.ProjCircle(player.Center, 32 + 34 * i, 1, ProjectileID.ToxicCloud, 10 + 5 * i,103);
 			}
 		}
 	}

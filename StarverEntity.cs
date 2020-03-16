@@ -163,7 +163,7 @@ namespace Starvers
 			double averagerad = Math.PI * 2 / number;
 			for (int i = 0; i < number; i++)
 			{
-				NewProj(Center, FromPolar(averagerad * i, -speed), type, damage, 4f, ai0, ai1);
+				NewProj(Center, FromPolar(rotation + averagerad * i, -speed), type, damage, 4f, ai0, ai1);
 			}
 		}
 		/// <summary>
@@ -175,21 +175,8 @@ namespace Starvers
 		/// <param name="Type"></param>
 		/// <param name="number">弹幕总数</param>
 		/// <param name="Damage">伤害</param>
-		/// <param name="direction">0:不动 1:向内 2:向外</param>
-		public static void NewProjCircle(int owner, Vector2 Center, int r, float speed, int Type, int number, int Damage, byte direction = 1, float ai0 = 0, float ai1 = 0)
+		public static void NewProjCircle(int owner, Vector2 Center, int r, float speed, int Type, int number, int Damage, float ai0 = 0, float ai1 = 0)
 		{
-			switch (direction)
-			{
-				case 0:
-					speed = 0;
-					break;
-				case 1:
-					speed *= 1;
-					break;
-				case 2:
-					speed *= -1;
-					break;
-			}
 			double averagerad = Math.PI * 2 / number;
 			for (int i = 0; i < number; i++)
 			{
@@ -207,21 +194,8 @@ namespace Starvers
 		/// <param name="Type"></param>
 		/// <param name="number">弹幕总数</param>
 		/// <param name="Damage">伤害(已被加成)</param>
-		/// <param name="direction">0:不动 1:向内 2:向外</param>
-		public void ProjCircle(Vector2 Center, float r, float speed, int Type, int number, int Damage, byte direction = 1, float ai0 = 0, float ai1 = 0)
+		public void ProjCircle(Vector2 Center, float r, float speed, int Type, int number, int Damage, float ai0 = 0, float ai1 = 0)
 		{
-			switch (direction)
-			{
-				case 0:
-					speed = 0;
-					break;
-				case 1:
-					speed *= 1;
-					break;
-				case 2:
-					speed *= -1;
-					break;
-			}
 			double averagerad = Math.PI * 2 / number;
 			for (int i = 0; i < number; i++)
 			{
@@ -237,22 +211,9 @@ namespace Starvers
 		/// <param name="Type"></param>
 		/// <param name="number">弹幕总数</param>
 		/// <param name="Damage">伤害(已被加成)</param>
-		/// <param name="direction">0:不动 1:向内 2:向外</param>
-		public int[] ProjCircleWithReturn(Vector2 Center, float r, float Vel, int Type, int number, int Damage, byte direction = 1, float ai0 = 0, float ai1 = 0)
+		public int[] ProjCircleWithReturn(Vector2 Center, float r, float Vel, int Type, int number, int Damage, float ai0 = 0, float ai1 = 0)
 		{
 			int[] Indexes = new int[number];
-			switch (direction)
-			{
-				case 0:
-					Vel = 0;
-					break;
-				case 1:
-					Vel *= 1;
-					break;
-				case 2:
-					Vel *= -1;
-					break;
-			}
 			double averagerad = Math.PI * 2 / number;
 			for (int i = 0; i < number; i++)
 			{
@@ -269,7 +230,6 @@ namespace Starvers
 		/// <param name="Type"></param>
 		/// <param name="number">弹幕总数</param>
 		/// <param name="Damage">伤害(已被加成)</param>
-		/// <param name="direction">0:不动 1:向内 2:向外</param>
 		public int[] ProjCircleWithReturn(Vector2 Center, float r, Vector2 Vel, int Type, int number, int Damage, float ai0 = 0, float ai1 = 0)
 		{
 			int[] Indexes = new int[number];
@@ -334,30 +294,17 @@ namespace Starvers
 		/// <param name="Damage">伤害(带加成)</param>
 		/// <param name="Type"></param>
 		/// <param name="num">数量</param>
-		/// <param name="direction">0:不动 1:向内 2:向外</param>
 		/// <param name="ai0"></param>
 		/// <param name="ai1"></param>
-		public void ProjSector(Vector2 Center, float speed, float r, double interrad, double rad, int Damage, int Type, int num, byte direction = 2, float ai0 = 0, float ai1 = 0)
+		public void ProjSector(Vector2 Center, float speed, float r, double interrad, double rad, int Damage, int Type, int num, float ai0 = 0, float ai1 = 0)
 		{
 			if (num == 1)
 			{
-				Proj(Center, FromPolar(interrad, speed * -direction), Type, Damage);
+				Proj(Center, FromPolar(interrad, speed), Type, Damage);
 				return;
 			}
 			double start = interrad - rad / 2;
 			double average = rad / (num - 1);
-			switch (direction)
-			{
-				case 0:
-					speed *= 0;
-					break;
-				case 1:
-					speed *= -1;
-					break;
-				case 2:
-					speed *= 1;
-					break;
-			}
 			for (int i = 0; i < num; i++)
 			{
 				Proj(Center + FromPolar(start + i * average, r), FromPolar(start + i * average, speed), Type, Damage, 4f, ai0, ai1);

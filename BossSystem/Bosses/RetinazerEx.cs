@@ -144,7 +144,7 @@ namespace Starvers.BossSystem.Bosses
 		private void WalkerLaser()
 		{
 			Vel = (Vector)(-RelativePos);
-			ProjSector(TargetPlayer.Center, 16.66666666f, Vel.Length, Vel.Angle, PI * 2 / 5, 206, ProjectileID.MartianWalkerLaser, 5, 1);
+			ProjSector(TargetPlayer.Center, 16.66666666f, -Vel.Length, Vel.Angle, PI * 2 / 5, 206, ProjectileID.MartianWalkerLaser, 5);
 		}
 		#endregion
 		#region LaserBlue

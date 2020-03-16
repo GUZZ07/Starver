@@ -81,7 +81,7 @@ namespace Starvers.AuraSystem.Skills
 						float radium = 2 * 16;
 						for (int i = 0; i < 4; i++)
 						{
-							player.ProjCircle(player.Center, radium, 0.1f, ProjectileID.PureSpray, (int)(radium * 2 * Math.PI / 36), 0, 2);
+							player.ProjCircle(player.Center, radium, 0.1f, ProjectileID.PureSpray, (int)(radium * 2 * Math.PI / 36), 2);
 							radium += 16 * 3f;
 							Thread.Sleep(175);
 						}

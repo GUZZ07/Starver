@@ -53,11 +53,11 @@ namespace Starvers.AuraSystem.Skills
 					Thread.Sleep(1000);
 					if (Target != -1 && Main.npc[Target].active)
 					{
-						player.ProjCircle(Main.npc[Target].Center, 16 * 25, 9, ProjectileID.VortexBeaterRocket, player.Level > 200 ? 8 : 16, 80);
+						player.ProjCircle(Main.npc[Target].Center, 16 * 25, -9, ProjectileID.VortexBeaterRocket, player.Level > 200 ? 8 : 16, 80);
 					}
 					else
 					{
-						player.ProjCircle(player.Center, 16 * 25, 9, ProjectileID.VortexBeaterRocket, player.Level > 200 ? 8 : 16, 80);
+						player.ProjCircle(player.Center, 16 * 25, -9, ProjectileID.VortexBeaterRocket, player.Level > 200 ? 8 : 16, 80);
 					}
 				}
 			}

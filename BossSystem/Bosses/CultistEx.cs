@@ -125,7 +125,7 @@ namespace Starvers.BossSystem.Bosses
 					if (floats[0] > PI * 2)
 					{
 						floats[0] = 0;
-						ProjCircle(TargetPlayer.Center, 16 * 30, 0, ProjectileID.CultistBossLightningOrb, 8, 53, 0, Index);
+						ProjCircle(TargetPlayer.Center, 16 * 30, 0, ProjectileID.CultistBossLightningOrb, 8, 53, Index);
 						ResetMode();
 						break;
 					}
@@ -203,7 +203,7 @@ namespace Starvers.BossSystem.Bosses
 		private void Mist()
 		{
 			floats[2] = (float)(TargetPlayer.Center - Center).Angle();
-			ProjSector(Center, 16, 16 * 3, floats[2], PI * 2 / 3, 158, ProjectileID.CultistBossIceMist, 3, 2, -6e3f, 1);
+			ProjSector(Center, 16, 16 * 3, floats[2], PI * 2 / 3, 158, ProjectileID.CultistBossIceMist, 3, -6e3f, 1);
 		}
 		#endregion
 		#region Lightning
@@ -220,7 +220,7 @@ namespace Starvers.BossSystem.Bosses
 		#region PushFireBall
 		private void PushFireBall()
 		{
-			int[] result = ProjCircleWithReturn(Center, 1, 6, ProjectileID.CultistBossFireBall, 6, 243, 2);
+			int[] result = ProjCircleWithReturn(Center, 1, 6, ProjectileID.CultistBossFireBall, 6, 243);
 			vector = (Vector)(TargetPlayer.Center - Center);
 			vector.Length = 18;
 			FireBalls.Push(result, vector);

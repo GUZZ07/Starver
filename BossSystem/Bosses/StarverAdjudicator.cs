@@ -333,12 +333,12 @@ namespace Starvers.BossSystem.Bosses
 					{
 						continue;
 					}
-					ProjCircle(player.Center + vector, 2, 30, ProjectileID.NebulaSphere, 18, 320, 2);
+					ProjCircle(player.Center + vector, 2, 30, ProjectileID.NebulaSphere, 18, 320);
 				}
 			}
 			else
 			{
-				ProjCircle(Center, 2, 22, ProjectileID.NebulaSphere, 10, 260, 2);
+				ProjCircle(Center, 2, 22, ProjectileID.NebulaSphere, 10, 260);
 			}
 		}
 		#endregion
