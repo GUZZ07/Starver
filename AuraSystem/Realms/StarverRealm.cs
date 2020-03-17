@@ -12,7 +12,7 @@ namespace Starvers.AuraSystem.Realms
 	{
 		private bool KillByTimeLeft;
 
-		protected int TimeLeft;
+		public int TimeLeft { get; protected set; }
 
 		public int DefaultTimeLeft { get; set; }
 		public virtual Vector2 Center { get; set; }

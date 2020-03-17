@@ -49,6 +49,13 @@ namespace Starvers
 		}
 		#endregion
 		#region Buff
+		public void AddBuffIfNot(int type, int time = 60 * 60)
+		{
+			if (!HasBuff(type))
+			{
+				SetBuff(type, time);
+			}
+		}
 		public void SetBuff(int type, int time = 3600, bool bypass = false)
 		{
 			TSPlayer.SetBuff(type, time, bypass);
@@ -356,6 +363,12 @@ namespace Starvers
 		public void Spawn()
 		{
 			TSPlayer.Spawn();
+		}
+		#endregion
+		#region Teleport
+		public void TeleportTo(Vector2 target)
+		{
+			TSPlayer.Teleport(target.X, target.Y);
 		}
 		#endregion
 		#region OnLeave

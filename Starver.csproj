@@ -106,6 +106,7 @@
     <Compile Include="AuraSystem\Realms\Generics\ReflectingRealm.cs" />
     <Compile Include="AuraSystem\Realms\InternalShapes.cs" />
     <Compile Include="AuraSystem\Realms\IRealm.cs" />
+    <Compile Include="AuraSystem\Realms\PointBullet.cs" />
     <Compile Include="AuraSystem\Realms\PointPlayer.cs" />
     <Compile Include="AuraSystem\Realms\RectRealm.cs" />
     <Compile Include="AuraSystem\Realms\StarverRealm.cs" />

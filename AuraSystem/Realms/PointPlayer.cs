@@ -10,6 +10,7 @@ namespace Starvers.AuraSystem.Realms
 {
 	public class PointPlayer : CircleRealm
 	{
+		private Vector2 Velocity;
 		private int idx = -1;
 		public Projectile Proj
 		{
@@ -25,7 +26,6 @@ namespace Starvers.AuraSystem.Realms
 		public int ProjID { get; }
 		public int Owner { get; }
 		public float Speed { get; set; }
-		public Vector2 Velocity { get; set; }
 		public Rectangle? Range { get; set; }
 		public StarverPlayer Player => Starver.Players[Owner];
 		public PointPlayer(int owner, int projID, float radium = 16) : base(true)
@@ -111,9 +111,14 @@ namespace Starvers.AuraSystem.Realms
 				}
 			}
 		}
+		public bool Collided(CircleRealm circle)
+		{
+			return Vector2.Distance(Center, circle.Center) < Radium + circle.Radium;
+		}
 		public override void Kill()
 		{
 			StarverPlayer.All.SendDeBugMessage("catched");
+			Proj?.KillMeEx();
 			base.Kill();
 		}
 	}

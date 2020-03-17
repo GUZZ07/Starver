@@ -11,7 +11,7 @@ namespace Starvers.TaskSystem.Branches
 	using Events;
 	using Tiles;
 	using TShockAPI;
-
+	using AuraSystem.Realms;
 	public partial class StoryToContinue
 	{
 		private class Task : BranchTask
@@ -36,6 +36,9 @@ namespace Starvers.TaskSystem.Branches
 			private Vector2 vector;
 			private Action ActionsInEnd;
 			private ElfHeliEx targetHeli;
+			private PointPlayer pointPlayer;
+			private Queue<PointBullet> bullets;
+			private Rectangle battleRegion;
 
 			public int? ID { get; }
 			public override BLID BLID => BLID.StoryToContinue;
@@ -236,12 +239,16 @@ namespace Starvers.TaskSystem.Branches
 							datas.ShortValue6 = 5 * 60 * 60;
 							break;
 						}
+					case 7:
+						{
+							break;
+						}
 				}
 			}
 
-			public override void Updating(int Timer)
+			public override void Updated(int Timer)
 			{
-				base.Updating(Timer);
+				base.Updated(Timer);
 				if (msgCurrent < startMsgs.Length)
 				{
 					if (Timer % msgInterval == 0)
@@ -522,6 +529,39 @@ namespace Starvers.TaskSystem.Branches
 									TargetPlayer.Mana = TargetPlayer.Mana * 2 / 3;
 									TargetPlayer.mp = TargetPlayer.mp * 2 / 3;
 									process++;
+								}
+								else if (process == 1)
+								{
+									pointPlayer = new PointPlayer(TargetPlayer, ProjectileID.MagicMissile, 4);
+									pointPlayer.Speed = 12;
+									bullets = new Queue<PointBullet>();
+									targetPos = startPos + new Vector2(0, -16 * 150);
+									pointPlayer.DefaultTimeLeft = 60 * 70;
+									battleRegion = new Rectangle((int)targetPos.X - 16 * 25, (int)targetPos.Y - 16 * 40, 16 * 50, 16 * 80);
+									vector = new Vector2(battleRegion.Left / 2 + battleRegion.Right / 2, battleRegion.Top + 28 * 16);
+									TargetPlayer.TeleportTo(targetPos);
+									pointPlayer.Center = targetPos + new Vector2(0, 35 * 16);
+									pointPlayer.Range = battleRegion;
+									Starver.Instance.Aura.AddRealm(pointPlayer);
+									process++;
+								}
+								else if (process == 2)
+								{
+									if (datas.IntValue0 == 60 * 60)
+									{
+										process++;
+										pointPlayer.Kill();
+										bullets.ForEach(bullet => bullet.Clear());
+										bullets.Clear();
+										bullets = null;
+									}
+									else
+									{
+										datas.IntValue0++;
+										UpdateFinalBullets();
+										UpdateFinalPlayer();
+										UpdateCollision();
+									}
 								}
 								break;
 							}
@@ -812,6 +852,71 @@ namespace Starvers.TaskSystem.Branches
 			}
 
 			#region Utils
+			private void UpdateCollision()
+			{
+				int count = bullets.Count;
+				while (count-- > 0)
+				{
+					var bullet = bullets.Dequeue();
+					if (bullet.Active)
+					{
+						if (pointPlayer.Collided(bullet))
+						{
+							pointPlayer.Kill();
+							TargetPlayer.KillMe();
+							TargetPlayer.SendFailMessage("你好菜啊...");
+							End(false);
+							return;
+						}
+						bullets.Enqueue(bullet);
+					}
+				}
+			}
+			private void UpdateFinalPlayer()
+			{
+				if (datas.IntValue0 % 6 == 0)
+				{
+					TargetPlayer.Center = (targetPos);
+				}
+				TargetPlayer.AddBuffIfNot(BuffID.ShadowDodge);
+				TargetPlayer.AddBuffIfNot(BuffID.Invisibility);
+				TargetPlayer.AddBuffIfNot(BuffID.UFOMount);
+			}
+			private void UpdateFinalBullets()
+			{
+				if (datas.IntValue0 % 120 < 60)
+				{
+					if (datas.IntValue0 % 6 == 0)
+					{
+						int max = 10;
+						int direction = datas.IntValue0 % 240 > 120 ? 1 : -1;
+						if (datas.IntValue0 % 120 == 0)
+						{
+							datas.FloatValue3 += (float)Math.PI / 12;
+						}
+						double average = 2 * Math.PI / max;
+						for (int i = 0; i < max; i++)
+						{
+							PointBullet bullet = new PointBullet(ProjectileID.DD2DarkMageBolt, battleRegion);
+							bullet.Radium = 4;
+							var angle = average * i + (direction * (datas.IntValue0 % 60) / 10) * Math.PI / 8;
+							angle += datas.FloatValue3;
+							Vector offset = Vector.FromPolar(angle, 16 * 2 + 20 * (datas.IntValue0 % 60) / 10);
+							bullet.Center = vector + offset;
+							Vector velocity = offset.Vertical() * direction;
+							velocity.Length = 2.5f;
+							bullet.Velocity = velocity;
+							bullet.DefaultTimeLeft = (int)bullet.Velocity.Length() / (16 * 40);
+							AddBullet(bullet);
+						}
+					}
+				}
+			}
+			private void AddBullet(PointBullet bullet)
+			{
+				bullets.Enqueue(bullet);
+				Starver.Instance.Aura.AddRealm(bullet);
+			}
 			private void ClearEnemies()
 			{
 				enemies.ForEach(idx => Main.npc[idx].active = false);

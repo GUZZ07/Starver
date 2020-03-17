@@ -616,7 +616,6 @@ namespace Starvers
 		{
 			proj.type = 0;
 			proj.active = false;
-			proj.SetDefaults(0);
 			proj.SendData();
 		}
 		public static bool HasBuff(this NPC npc, int type)
