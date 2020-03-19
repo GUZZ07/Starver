@@ -1471,6 +1471,7 @@ namespace Starvers
 		}
 		#endregion
 		#region Datas
+		public NetInventory Inventory { get; }
 		public double DamageIndex
 		{
 			get
@@ -1716,6 +1717,10 @@ namespace Starvers
 			UserID = userID;
 			Name = GetUserNameByID(UserID);
 			Index = idx;
+			if (0 <= idx && idx < TShock.Players.Length)
+			{
+				Inventory = new NetInventory(this);
+			}
 		}
 		#endregion
 		#region NewMoon

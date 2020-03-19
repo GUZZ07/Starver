@@ -497,23 +497,24 @@ namespace Starvers.AuraSystem
 				#endregion
 				#region Toexp
 				case "toexp":
-					Item item = player.TPlayer.inventory[0];
-					int bagexp;
 					try
 					{
-						bagexp = item.stack * BagExp(item.type);
-						item.netDefaults(0);
+						var item = player.Inventory[0];
+						int bagexp;
+						bagexp = BagExp(item.Type);
 						if (bagexp == 0)
 						{
-							throw new Exception();
+							player.SendMessage("请将可兑换为经验的物品(主要为boss袋子)放置在背包第一格", Color.Red);
+							return;
 						}
 						player.Exp += bagexp;
 						player.SendInfoMessage("获得经验: " + bagexp);
-						player.SendData(PacketTypes.PlayerSlot, "", player.Index, 0);
+						item.Stack -= 1;
 						player.Save();
 					}
-					catch
+					catch (Exception e)
 					{
+						player.SendDeBugMessage(e.ToString());
 						player.SendMessage("请将可兑换为经验的物品(主要为boss袋子)放置在背包第一格", Color.Red);
 					}
 					break;

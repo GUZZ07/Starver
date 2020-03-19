@@ -89,6 +89,8 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="NetInventory.cs" />
+    <Compile Include="NetInventorySlot.cs" />
     <Compile Include="AuraSystem\Realms\AnalogItem.cs" />
     <Compile Include="AuraSystem\Realms\ApoptoticRealm.cs" />
     <Compile Include="AuraSystem\Realms\BlindingRealm.cs" />

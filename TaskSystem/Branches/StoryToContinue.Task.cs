@@ -709,7 +709,6 @@ namespace Starvers.TaskSystem.Branches
 					case 3:
 					case 5:
 					case 6:
-					case 7:
 						{
 							Vector2 dungeon = new Vector2(Main.dungeonX * 16, Main.dungeonY * 16);
 							if (Vector2.Distance(dungeon, player.Center) > 16 * 20)
@@ -719,8 +718,9 @@ namespace Starvers.TaskSystem.Branches
 							return (true, null);
 						}
 					case 1:
+					case 7:
 						{
-							if (Starver.Players.Count(ply => (ply?.BranchTask as Task)?.ID == 1) != 0)
+							if (Starver.Players.Count(ply => (ply?.BranchTask as Task)?.ID == ID) != 0)
 							{
 								return (false, "请先等待其他玩家完成本任务");
 							}
