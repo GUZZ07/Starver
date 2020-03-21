@@ -1122,8 +1122,8 @@ namespace Starvers
 			int num = Projectile.NewProjectile(new Vector2(args.Player.X, args.Player.Y), Vector2.Zero, 170, 0, 0f, 255, 0f, 0f);
 			Main.projectile[num].timeLeft = 0;
 			NetMessage.SendData(27, -1, -1, null, num, 0f, 0f, 0f, 0, 0, 0);
-			args.TPlayer.active = !args.TPlayer.active;
-			NetMessage.SendData(14, -1, args.Player.Index, null, args.Player.Index, (float)args.TPlayer.active.GetHashCode(), 0f, 0f, 0, 0, 0);
+			args.TPlayer.active ^= true;
+			NetMessage.SendData(14, -1, args.Player.Index, null, args.Player.Index, args.TPlayer.active.GetHashCode());
 			bool active = args.TPlayer.active;
 			if (active)
 			{
@@ -1394,40 +1394,6 @@ namespace Starvers
 		#region UpdateForm
 		private void UpdateForm(StarverPlayer player, bool delete = false)
 		{
-			#region Temp
-			//mod群的某人从灾厄搬出来的
-			//说看不懂，就临时把代码放到这里帮他分析
-			/*
-			if (Main.projectile[TeaNPCGlobalProjectile.MiniSO].active)
-			{
-				Vector2 vector = Center;
-				Vector Delta = Main.projectile[TeaNPCGlobalProjectile.MiniSO].Center - Center;
-				double angle;
-				float length;
-				bool flag = true;
-				while (flag)
-				{
-					length = 20;
-					angle = Delta.Angle;
-					float Distance = Delta.Length;
-					if (Distance < 52)
-					{
-						length = (int)Distance - 16 * 2;
-						flag = false;
-					}
-					//DeltaX *= LenDelta;
-					//DeltaY *= LenDelta;
-					//vector.X += DeltaX;
-					//vector.Y += DeltaY;
-					vector += Vector.FromPolar(angle, length);
-					Delta = Main.projectile[TeaNPCGlobalProjectile.MiniSO].Center - vector;
-					Color color2 = Lighting.GetColor((int)vector.X / 16, (int)(vector.Y / 16f));
-					var Texture = mod.GetTexture("Extra/MiniSOChain");
-					Main.spriteBatch.Draw(Texture, vector - Main.screenPosition, new Rectangle(0, 0, Texture.Width, length), Color.White, angle - PI / 2, new Vector2(Texture.Width * 0.5f, Texture.Height * 0.5f), 1f, SpriteEffects.None, 0f);
-				}
-			}
-			*/
-			#endregion
 			if (delete)
 			{
 				try

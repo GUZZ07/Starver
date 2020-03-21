@@ -457,7 +457,8 @@ namespace Starvers
 			int count = Starver.Rand.Next(min, Max);
 			while (count-- > 0)
 			{
-				NewProj(Center + Starver.Rand.NextVector2(16 * 60, 16 * 30), Vector2.Zero, rockets.Next(), 0);
+				int idx = NewProj(Center + Starver.Rand.NextVector2(16 * 60, 16 * 30), Vector2.Zero, rockets.Next(), 0);
+				Main.projectile[idx].timeLeft = 0;
 			}
 		}
 		#endregion

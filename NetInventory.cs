@@ -8,21 +8,17 @@ namespace Starvers
 {
 	public class NetInventory
 	{
+		private NetInventorySlot[] slots;
 		public StarverPlayer Player { get; }
 		public NetInventory(StarverPlayer player)
 		{
 			Player = player;
-		}
-		public NetInventorySlot this[int slot]
-		{
-			get
+			slots = new NetInventorySlot[player.TPlayer.inventory.Length];
+			for (int i = 0; i < slots.Length; i++)
 			{
-				if (slot < 0 || Player.TPlayer.inventory.Length <= slot)
-				{
-					throw new IndexOutOfRangeException($"slot: {slot}");
-				}
-				return new NetInventorySlot(Player, slot);
+				slots[i] = new NetInventorySlot(player, i);
 			}
 		}
+		public NetInventorySlot this[int slot] => slots[slot];
 	}
 }

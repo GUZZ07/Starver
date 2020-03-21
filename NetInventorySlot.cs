@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Starvers
 {
 	using Item = Terraria.Item;
-	public struct NetInventorySlot
+	public class NetInventorySlot
 	{
 		private readonly int? owner;
 
