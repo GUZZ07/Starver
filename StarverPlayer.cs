@@ -1022,15 +1022,15 @@ namespace Starvers
 		/// </summary>
 		/// <param name="Center"></param>
 		/// <param name="r"></param>
-		/// <param name="Vel">速率</param>
+		/// <param name="speed">速率</param>
 		/// <param name="Type"></param>
 		/// <param name="number">弹幕总数</param>
-		public void ProjCircle(Vector2 Center, float r, float Vel, int Type, int number, int Damage, float ai0 = 0, float ai1 = 0)
+		public void ProjCircle(Vector2 Center, float r, float speed, int Type, int number, int Damage, float ai0 = 0, float ai1 = 0)
 		{
 			double averagerad = Math.PI * 2 / number;
 			for (int i = 0; i < number; i++)
 			{
-				NewProj(Center + FromPolar(averagerad * i, r), FromPolar(averagerad * i, -Vel), Type, Damage, 4f, ai0, ai1);
+				NewProj(Center + FromPolar(averagerad * i, r), -FromPolar(averagerad * i, -speed), Type, Damage, 4f, ai0, ai1);
 			}
 		}
 		/// <summary>
@@ -1047,7 +1047,7 @@ namespace Starvers
 			double averagerad = Math.PI * 2 / number;
 			for (int i = 0; i < number; i++)
 			{
-				NewProj(Center + FromPolar(averagerad * i, r), FromPolar(angle + averagerad * i, -Vel), Type, Damage, 4f, ai0, ai1);
+				NewProj(Center + FromPolar(averagerad * i, r), -FromPolar(angle + averagerad * i, -Vel), Type, Damage, 4f, ai0, ai1);
 			}
 		}
 		#endregion
@@ -1057,29 +1057,29 @@ namespace Starvers
 		/// </summary>
 		/// <param name="Center"></param>
 		/// <param name="r"></param>
-		/// <param name="Vel">速率</param>
+		/// <param name="speed">速率</param>
 		/// <param name="Type"></param>
 		/// <param name="number">弹幕总数</param>
 		/// <param name="direction">0:不动 1:向内 2:向外</param>
-		public int[] ProjCircleRet(Vector2 Center, float r, float Vel, int Type, int number, int Damage, byte direction = 1, float ai0 = 0, float ai1 = 0)
+		public int[] ProjCircleRet(Vector2 Center, float r, float speed, int Type, int number, int Damage, byte direction = 1, float ai0 = 0, float ai1 = 0)
 		{
 			switch (direction)
 			{
 				case 0:
-					Vel = 0;
+					speed = 0;
 					break;
 				case 1:
-					Vel *= 1;
+					speed *= 1;
 					break;
 				case 2:
-					Vel *= -1;
+					speed *= -1;
 					break;
 			}
 			double averagerad = Math.PI * 2 / number;
 			int[] arr = new int[number];
 			for (int i = 0; i < number; i++)
 			{
-				arr[i] = NewProj(Center + FromPolar(averagerad * i, r), FromPolar(averagerad * i, -Vel), Type, Damage, 4f, ai0, ai1);
+				arr[i] = NewProj(Center + FromPolar(averagerad * i, r), FromPolar(averagerad * i, -speed), Type, Damage, 4f, ai0, ai1);
 			}
 			return arr;
 		}
