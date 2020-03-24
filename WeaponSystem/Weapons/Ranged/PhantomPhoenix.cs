@@ -17,7 +17,7 @@ namespace Starvers.WeaponSystem.Weapons.Ranged
 		protected double rd = 0;
 		#endregion
 		#region Ctor
-		public PhantomPhoenix() : base(2,IID.DD2PhoenixBow,PID.DD2PhoenixBowShot,CareerType.Ranged, 43)
+		public PhantomPhoenix() : base(2,IID.DD2PhoenixBow,PID.DD2PhoenixBowShot,CareerType.Ranged, 143)
 		{
 			CatchID = PID.DD2PhoenixBow;
 		}

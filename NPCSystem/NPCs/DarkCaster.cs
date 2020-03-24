@@ -194,9 +194,16 @@ namespace Starvers.NPCSystem.NPCs
 		#region Warp
 		protected void Warp()
 		{
-			if (Target != -1 && Target < Starver.Players.Length)
+			try
 			{
-				Position = CalcSpawnPosInScreen((Vector)TargetPlayer.Center);
+				if (Target != -1 && Target < Starver.Players.Length)
+				{
+					Position = CalcSpawnPosInScreen((Vector)TargetPlayer.Center);
+				}
+			}
+			catch
+			{
+
 			}
 		}
 		#endregion
