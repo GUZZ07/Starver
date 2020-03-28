@@ -142,7 +142,7 @@ namespace Starvers.NPCSystem
 			RealNPC.SetDefaults(RawType);
 			RealNPC.life = dl;
 			RealNPC.lifeMax = dl;
-			RealNPC.aiStyle = ai;
+			RealNPC.aiStyle = AIStyle;
 			RealNPC.noTileCollide = notc;
 			RealNPC.defense = def;
 			RealNPC.noGravity = nogra;
