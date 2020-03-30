@@ -70,7 +70,7 @@ namespace Starvers
 			SendData();
 		}
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		private void SendData()
+		public void SendData()
 		{
 			Owner.SendData(PacketTypes.PlayerSlot, "", Owner, (int)Slot);
 		}

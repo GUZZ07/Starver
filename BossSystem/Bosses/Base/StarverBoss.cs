@@ -180,7 +180,6 @@ namespace Starvers.BossSystem.Bosses.Base
 			}
 			_active = false;
 			RealNPC.active = false;
-#if false
 			ExpGive = LifeMax;
 			ExpGive *= LifesMax;
 			for (int i = 0; i < Starver.Players.Length; ++i)
@@ -190,7 +189,6 @@ namespace Starvers.BossSystem.Bosses.Base
 					Starver.Players[i]?.UPGrade(ExpGive);
 				}
 			}
-#endif
 			if (Drops != null)
 			{
 				DropItems();
