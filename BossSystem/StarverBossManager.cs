@@ -551,6 +551,7 @@ namespace Starvers.BossSystem
 						}
 						if (EndBossDelay == 0)
 						{
+							EndTrialProcess++;
 							StarverPlayer.All.SendMessage("这是你们的最后一战", Color.Black);
 							Bosses[Bosses.Length - 2].Spawn(SelectLuckyPlayer() + Rand.NextVector2(16 * 80), StarverBoss.CriticalLevel + 2001);
 						}
