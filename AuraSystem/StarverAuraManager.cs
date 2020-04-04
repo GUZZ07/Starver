@@ -609,7 +609,7 @@ namespace Starvers.AuraSystem
 					break;
 				#endregion
 				#region Help
-				case "Help":
+				case "help":
 					try
 					{
 						int id = int.Parse(args.Parameters[1]);
