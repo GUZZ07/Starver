@@ -35,8 +35,9 @@ namespace Starvers
 	using StarverBoss = BossSystem.Bosses.Base.StarverBoss;
 	using Calculator = Func<int, int>;
     using Starvers.Events;
+	using System.Text.RegularExpressions;
 
-    [ApiVersion(2, 1)]
+	[ApiVersion(2, 1)]
 	public class Starver : TerrariaPlugin
 	{
 		#region Fields
@@ -533,7 +534,24 @@ namespace Starvers
 		#region OnChat
 		private static void OnChat(ServerChatEventArgs args)
 		{
-			if (args.Text.IndexOf(TShock.Config.CommandSilentSpecifier) == 0 || args.Text.IndexOf(TShock.Config.CommandSpecifier) == 0)
+			bool stench =
+				args.Text.Contains("哼哼") || args.Text.Contains("啊啊") || args.Text.Contains("aaaa") ||
+				args.Text.Contains("阿阿") || args.Text.Contains("亨亨") || args.Text.Contains("啊阿") ||
+				args.Text.Contains("哼亨");
+			if (stench) 
+			{
+				StarverPlayer.All.SendMessage(Players[args.Who].Name + "因试图恶臭而被口球", Color.Blue);
+				args.Handled = true;
+				return;
+			}
+			if (args.Text.StartsWith(TShock.Config.CommandSilentSpecifier) || args.Text.StartsWith(TShock.Config.CommandSpecifier))
+			{
+				if (args.Text.Length > 1)
+				{
+					return;
+				}
+			}
+			if (TShock.Players[args.Who].mute)
 			{
 				return;
 			}
