@@ -467,10 +467,14 @@ namespace Starvers
 			int liferemain = RealNPC.life;
 			RealNPC.life -= realdamage;
 			RealNPC.playerInteraction[player.Index] = true;
+			RealNPC.PlayerInteraction(player);
+			args.Npc.HitEffect();
 			player.TPlayer.OnHit((int)RealNPC.Center.X, (int)RealNPC.Center.Y, RealNPC);
 			if (RealNPC.life < 1)
 			{
 				player.Exp += liferemain;
+				RealNPC.life = 0;
+				// RealNPC.StrikeNPC(int.MaxValue, 0, args.HitDirection);
 				if (!(snpc is null))
 				{
 					player.UPGrade(snpc.ExpGive);
@@ -480,6 +484,7 @@ namespace Starvers
 				{
 					RealNPC.checkDead();
 				}
+				RealNPC.active = false;
 				NArgs.KilledNPC = true;
 			}
 			else
