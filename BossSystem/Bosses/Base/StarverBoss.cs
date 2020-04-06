@@ -711,9 +711,10 @@ namespace Starvers.BossSystem.Bosses.Base
 		#region UpdateWall
 		private void UpdateWall()
 		{
-			if (WallTarget == null || !WallTarget.Active)
+			if (WallTarget?.TPlayer?.active != true)
 			{
 				WallActive = false;
+				return;
 			}
 			if (!WallStop)
 			{

@@ -534,10 +534,22 @@ namespace Starvers
 		#region OnChat
 		private static void OnChat(ServerChatEventArgs args)
 		{
-			bool stench =
-				args.Text.Contains("哼哼") || args.Text.Contains("啊啊") || args.Text.Contains("aaaa") ||
-				args.Text.Contains("阿阿") || args.Text.Contains("亨亨") || args.Text.Contains("啊阿") ||
-				args.Text.Contains("哼亨");
+			var hCount = args.Text.Count(c => c switch
+			{
+				'哼' => true,
+				'亨' => true,
+				'h' => true,
+				_ => false
+			});
+			var aCount = args.Text.Count(c => c switch
+			{
+				'a' => true,
+				'A' => true,
+				'啊' => true,
+				'阿' => true,
+				_ => false
+			});
+			var stench = hCount > 2 || aCount > 2;
 			if (stench) 
 			{
 				StarverPlayer.All.SendMessage(Players[args.Who].Name + "因试图恶臭而被口球", Color.Blue);
