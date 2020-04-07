@@ -584,13 +584,10 @@ namespace Starvers
 			{
 				'哼' => true,
 				'亨' => true,
-				'h' => true,
 				_ => false
 			});
 			var aCount = args.Text.Count(c => c switch
 			{
-				'a' => true,
-				'A' => true,
 				'啊' => true,
 				'阿' => true,
 				_ => false
@@ -1193,7 +1190,7 @@ namespace Starvers
 		#region Ghost
 		private static void Ghost(CommandArgs args)
 		{
-			int num = Projectile.NewProjectile(new Vector2(args.Player.X, args.Player.Y), Vector2.Zero, 170, 0, 0f, 255, 0f, 0f);
+			int num = Utils.NewProj(args.TPlayer.Center, Vector2.Zero, 170);
 			Main.projectile[num].timeLeft = 0;
 			NetMessage.SendData(27, -1, -1, null, num, 0f, 0f, 0f, 0, 0, 0);
 			args.TPlayer.active ^= true;
