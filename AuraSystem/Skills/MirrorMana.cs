@@ -26,7 +26,7 @@ namespace Starvers.AuraSystem.Skills
 		{
 			player.TSPlayer.Spawn();
 			player.MP += player.MaxMP / 3;
-			player.Life += player.LifeMax / 3;
+			player.Heal(player.LifeMax / 3);
 		}
 	}
 }

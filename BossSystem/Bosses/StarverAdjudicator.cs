@@ -40,8 +40,8 @@ namespace Starvers.BossSystem.Bosses
 		public StarverAdjudicator() : base(4)
 		{
 			TaskNeed = 29;
-			Name = "The Starver Adjudicator";
-			FullName = "Iesnet The Starver Adjudicator";
+			Name = "Starver Adjudicator";
+			FullName = "The Starver Adjudicator";
 			DefaultLife = 29000;
 			DefaultLifes = 120;
 			DefaultDefense = 990;
@@ -333,12 +333,12 @@ namespace Starvers.BossSystem.Bosses
 					{
 						continue;
 					}
-					ProjCircle(player.Center + vector, 2, 30, ProjectileID.NebulaSphere, 18, 320);
+					ProjCircle(player.Center + vector, 2, 30, ProjectileID.NebulaSphere, 18, 320, proj => proj.timeLeft /= 4);
 				}
 			}
 			else
 			{
-				ProjCircle(Center, 2, 22, ProjectileID.NebulaSphere, 10, 260);
+				ProjCircle(Center, 2, 22, ProjectileID.NebulaSphere, 10, 260, proj => proj.timeLeft /= 4);
 			}
 		}
 		#endregion

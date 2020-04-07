@@ -35,8 +35,8 @@ namespace Starvers.BossSystem.Bosses
 		public StarverDestroyer() : base(1)
 		{
 			TaskNeed = 30;
-			Name = "The Starver Destroyer";
-			FullName = "Tuofot The Starver Destroyer";
+			Name = "Starver Destroyer";
+			FullName = "The Starver Destroyer";
 			RawType = NPCID.DukeFishron;
 			IgnoreDistance = true;
 			DefaultLife = 82000;

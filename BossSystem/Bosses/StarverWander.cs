@@ -44,8 +44,8 @@ namespace Starvers.BossSystem.Bosses
 			DefaultLifes = 200;
 			DefaultDefense = 0;
 			RawType = NPCID.DukeFishron;
-			Name = "The Starver Wander";
-			// FullName = "Gnawyzarc The Starver Wander";
+			Name = "Starver Wander";
+			FullName = "The Starver Wander";
 			floats[3] = NPCID.VortexRifleman;
 			floats[2] = NPCID.VortexSoldier;
 			Vel.X = Vel.Y = 10;
@@ -230,10 +230,12 @@ namespace Starvers.BossSystem.Bosses
 			if (floats[0] > 0)
 			{
 				WhereToGo = new Vector(-16 * 30, 0);
+				RealNPC.directionY = 1;
 			}
 			else
 			{
 				WhereToGo = new Vector(16 * 30, 0);
+				RealNPC.directionY = -1;
 			}
 			WhereToGo += (Vector)TargetPlayer.Center;
 			FakeVelocity = WhereToGo - (Vector)Center;
@@ -254,7 +256,7 @@ namespace Starvers.BossSystem.Bosses
 		#endregion
 		#region AIs
 		#region FireBall
-		protected unsafe void FireBall()
+		protected void FireBall()
 		{
 			if (ExVersion)
 			{

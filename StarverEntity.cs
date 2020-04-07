@@ -149,7 +149,7 @@ namespace Starvers
 			double averagerad = Math.PI * 2 / number;
 			for (int i = 0; i < number; i++)
 			{
-				NewProj(Center + FromPolar(averagerad * i, r), FromPolar(averagerad * i, -speed), Type, Damage, 4f, ai0, ai1);
+				NewProj(Center + FromPolar(averagerad * i, r), FromPolar(averagerad * i, speed), Type, Damage, 4f, ai0, ai1);
 			}
 		}
 		/// <summary>
@@ -167,7 +167,7 @@ namespace Starvers
 			double averagerad = Math.PI * 2 / number;
 			for (int i = 0; i < number; i++)
 			{
-				NewProj(Center, FromPolar(rotation + averagerad * i, -speed), type, damage, 4f, ai0, ai1);
+				NewProj(Center, FromPolar(rotation + averagerad * i, speed), type, damage, 4f, ai0, ai1);
 			}
 		}
 		/// <summary>
@@ -184,7 +184,7 @@ namespace Starvers
 			double averagerad = Math.PI * 2 / number;
 			for (int i = 0; i < number; i++)
 			{
-				NewProj(Center + FromPolar(averagerad * i, r), FromPolar(averagerad * i, -speed), Type, Damage, owner, 4f, ai0, ai1);
+				NewProj(Center + FromPolar(averagerad * i, r), FromPolar(averagerad * i, speed), Type, Damage, owner, 4f, ai0, ai1);
 			}
 		}
 		#endregion
@@ -203,7 +203,27 @@ namespace Starvers
 			double averagerad = Math.PI * 2 / number;
 			for (int i = 0; i < number; i++)
 			{
-				Proj(Center + FromPolar(averagerad * i, r), FromPolar(averagerad * i, -speed), Type, Damage, 4f, ai0, ai1);
+				Proj(Center + FromPolar(averagerad * i, r), FromPolar(averagerad * i, speed), Type, Damage, 4f, ai0, ai1);
+			}
+		}
+		/// <summary>
+		/// 弹幕圆
+		/// </summary>
+		/// <param name="Center"></param>
+		/// <param name="r"></param>
+		/// <param name="speed">速率</param>
+		/// <param name="Type"></param>
+		/// <param name="number">弹幕总数</param>
+		/// <param name="Damage">伤害(已被加成)</param>
+		/// <param name="action">要对弹幕进行的操作</param>
+		public void ProjCircle(Vector2 Center, float r, float speed, int Type, int number, int Damage, Action<Projectile> action)
+		{
+			double averagerad = Math.PI * 2 / number;
+			int idx;
+			for (int i = 0; i < number; i++)
+			{
+				idx = Proj(Center + FromPolar(averagerad * i, r), FromPolar(averagerad * i, speed), Type, Damage, 4f);
+				action(Main.projectile[idx]);
 			}
 		}
 		/// <summary>
@@ -221,7 +241,7 @@ namespace Starvers
 			double averagerad = Math.PI * 2 / number;
 			for (int i = 0; i < number; i++)
 			{
-				Indexes[i] = Proj(Center + FromPolar(averagerad * i, r), FromPolar(averagerad * i, -Vel), Type, Damage, 4f, ai0, ai1);
+				Indexes[i] = Proj(Center + FromPolar(averagerad * i, r), FromPolar(averagerad * i, Vel), Type, Damage, 4f, ai0, ai1);
 			}
 			return Indexes;
 		}

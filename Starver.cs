@@ -517,13 +517,14 @@ namespace Starvers
 				player.UPGrade(snpc.ExpGive);
 				snpc.CheckDead();
 			}
-			else if (Config.EnableAura)
+			else
 			{
 				RealNPC.checkDead();
 			}
 			if (RealNPC.life < 1)
 			{
 				player.Exp += liferemain;
+				StarverPlayer.All.SendData(PacketTypes.NpcStrike, string.Empty, RealNPC.whoAmI, -2);
 				// RealNPC.StrikeNPC(int.MaxValue, 0, args.HitDirection);
 				NArgs.KilledNPC = true;
 			}

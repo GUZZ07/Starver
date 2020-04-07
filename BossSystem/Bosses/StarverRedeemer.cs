@@ -38,8 +38,8 @@ namespace Starvers.BossSystem.Bosses
 		{
 			CheckType = false;
 			TaskNeed = 28;
-			Name = "The Starver Redeemer";
-			FullName = "Shtaed The Starver Redeemer";
+			Name = "Starver Redeemer";
+			FullName = "The Starver Redeemer";
 			DefaultLife = 3000;
 			DefaultLifes = 200;
 			DefaultDefense = 0;

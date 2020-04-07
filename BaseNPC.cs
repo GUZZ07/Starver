@@ -31,16 +31,19 @@ namespace Starvers
 		{
 			try
 			{
-				OnKilled();
 				RealNPC.checkDead();
+				if (Life < 1)
+				{
+					OnKilled();
+					Starver.NPCs[Index] = NPCSystem.StarverNPC.NPCs[Index] = null;
+					KillMe();
+					_active = false;
+				}
 			}
-			catch(Exception e)
+			catch (Exception e)
 			{
 				TShockAPI.TShock.Log.ConsoleInfo(e.ToString());
 			}
-			Starver.NPCs[Index] = NPCSystem.StarverNPC.NPCs[Index] = null;
-			KillMe();
-			_active = false;
 		}
 		#endregion
 		#region ToString

@@ -983,6 +983,7 @@ namespace Starvers
 				return;
 			}
 			int Life = 500 + Utils.CalculateLife(level);
+			TPlayer.statLife = Life;
 			TPlayer.SetLife(Life);
 		}
 		#endregion
