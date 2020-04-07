@@ -349,12 +349,49 @@ namespace Starvers
 				}
 			}
 #endif
-			if(args.MsgId == PacketTypes.PlayerDeathV2)
+			if (args.MsgId == PacketTypes.PlayerDeathV2)
 			{
 				int who = args.number;
 				if (0 <= who && who < Players.Length)
 				{
 					Players[who]?.OnDeath();
+				}
+			}
+			if (args.MsgId == PacketTypes.ProjectileNew)
+			{
+				var proj = Main.projectile[args.number];
+				if (proj.damage < 1000 && !proj.ignoreWater)
+				{
+					switch (proj.type)
+					{
+						case ProjectileID.PhantasmalBolt:
+						case ProjectileID.PhantasmalSphere:
+						case ProjectileID.PhantasmalEye:
+						case ProjectileID.PhantasmalDeathray:
+							proj.damage *= 5;
+							break;
+						case ProjectileID.Sharknado:
+							proj.damage *= 10;
+							break;
+						case ProjectileID.VortexLaser:
+						case ProjectileID.VortexAcid:
+						case ProjectileID.StardustJellyfishSmall:
+						case ProjectileID.StardustSoldierLaser:
+						case ProjectileID.NebulaBolt:
+						case ProjectileID.NebulaLaser:
+						case ProjectileID.NebulaSphere:
+						case ProjectileID.NebulaEye:
+							if (StarverBoss.EndTrial)
+							{
+								proj.damage *= 10;
+							}
+							else
+							{
+								proj.damage *= 4;
+							}
+							break;
+					}
+					proj.ignoreWater = true;
 				}
 			}
 		}
@@ -394,7 +431,12 @@ namespace Starvers
 			float damageindex = (float)player.DamageIndex;
 			float interdamage;
 			interdamage = args.Damage * damageindex;
-			interdamage -= args.Npc.ValidDefense() / 2;
+			int divide = 2;
+			if (player.TPlayer.NPCBannerBuff[Item.NPCtoBanner(args.Npc.type)])
+			{
+				divide *= 2;
+			}
+			interdamage -= args.Npc.ValidDefense() / divide;
 			if(args.Critical)
 			{
 				interdamage *= 2;
@@ -470,21 +512,19 @@ namespace Starvers
 			RealNPC.PlayerInteraction(player);
 			args.Npc.HitEffect();
 			player.TPlayer.OnHit((int)RealNPC.Center.X, (int)RealNPC.Center.Y, RealNPC);
+			if (!(snpc is null))
+			{
+				player.UPGrade(snpc.ExpGive);
+				snpc.CheckDead();
+			}
+			else if (Config.EnableAura)
+			{
+				RealNPC.checkDead();
+			}
 			if (RealNPC.life < 1)
 			{
 				player.Exp += liferemain;
-				RealNPC.life = 0;
 				// RealNPC.StrikeNPC(int.MaxValue, 0, args.HitDirection);
-				if (!(snpc is null))
-				{
-					player.UPGrade(snpc.ExpGive);
-					snpc.CheckDead();
-				}
-				else if (Config.EnableAura)
-				{
-					RealNPC.checkDead();
-				}
-				RealNPC.active = false;
 				NArgs.KilledNPC = true;
 			}
 			else
@@ -681,8 +721,9 @@ namespace Starvers
 								liferegen = Math.Min(liferegen, player.TPlayer.statLife / 10);
 								if (liferegen > 0)
 								{
-									player.TPlayer.statLife = Math.Min(player.TPlayer.statLifeMax2, player.TPlayer.statLife + liferegen);
-									player.SendData(PacketTypes.PlayerHp, "", player.Index);
+									player.Heal(liferegen);
+									// player.TPlayer.statLife = Math.Min(player.TPlayer.statLifeMax2, player.TPlayer.statLife + liferegen);
+									// player.SendData(PacketTypes.PlayerHp, "", player.Index);
 								}
 							}
 						}
@@ -1067,10 +1108,7 @@ namespace Starvers
 				{
 					continue;
 				}
-				if (npc.Active)
-				{
-					npc.AI();
-				}
+				npc.AI();
 			}
 		}
 		#endregion

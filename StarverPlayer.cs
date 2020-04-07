@@ -1404,6 +1404,28 @@ namespace Starvers
 		public void OnGetData(GetDataEventArgs args)
 		{
 			BranchTask?.OnGetData(args);
+			if (args.MsgID == PacketTypes.EffectHeal || args.MsgID == PacketTypes.PlayerHealOther)
+			{
+				short heal = args.Msg.readBuffer[args.Index + 1];
+				heal += (short)(args.Msg.readBuffer[args.Index + 2] << 8);
+				int healExtra = heal switch
+				{
+					15 => LifeMax / 20,
+					20 => 200,
+					50 => LifeMax / 15,
+					80 => LifeMax / 12,
+					100 => LifeMax / 10,
+					120 => LifeMax / 8,
+					150 => LifeMax / 5,
+					200 => LifeMax / 3,
+					_ when heal < 15 => heal * 10,
+					_ => -1
+				};
+				if (healExtra != -1)
+				{
+					Heal(healExtra);
+				}
+			}
 		}
 		public void StrikingNPC(NPCStrikeEventArgs args)
 		{

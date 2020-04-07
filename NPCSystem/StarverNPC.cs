@@ -500,24 +500,29 @@ namespace Starvers.NPCSystem
 						{
 							NPCs[i].OnCollide(ply, ref Handled);
 						}
-						if ((!Handled) && RealNPC.damage > 0 && !ply.TPlayer.immune)
+						int damage = RealNPC.damage;
+						if (ply.TPlayer.NPCBannerBuff[Terraria.Item.NPCtoBanner(RealNPC.type)])
 						{
-							if(Starver.IsPE)
+							damage /= 2;
+						}
+						if ((!Handled) && damage > 0 && !ply.TPlayer.immune)
+						{
+							if (Starver.IsPE)
 							{
-								ply.Damage(RealNPC.damage);
+								ply.Damage(damage);
 							}
 							else
 							{
-								OfPC1353(ply, RealNPC);
+								OfPC1353(ply, RealNPC, damage);
 							}
 						}
 					}
 				}
 			}
 		}
-		private static void OfPC1353(StarverPlayer ply, Terraria.NPC npc)
+		private static void OfPC1353(StarverPlayer ply, Terraria.NPC npc, int damage)
 		{
-			ply.Damage(npc.damage, PlayerDeathReason.ByNPC(npc.whoAmI));
+			ply.Damage(damage, PlayerDeathReason.ByNPC(npc.whoAmI));
 		}
 		#endregion
 		#region OnCollide

@@ -103,11 +103,15 @@ namespace Starvers
 		#region NewProj
 		public static int NewProj(Vector2 position, Vector2 velocity, int Type, int Damage, float KnockBack = 3f, float ai0 = 0, float ai1 = 0)
 		{
-			return Utils.NewProj(position, velocity, Type, Damage, KnockBack, Main.myPlayer, ai0, ai1);
+			int idx = Utils.NewProj(position, velocity, Type, Damage, KnockBack, Main.myPlayer, ai0, ai1);
+			Main.projectile[idx].ignoreWater = true;
+			return idx;
 		}
 		public static int NewProj(Vector2 position, Vector2 velocity, int Type, int Damage, int owner, float KnockBack, float ai0 = 0, float ai1 = 0)
 		{
-			return Utils.NewProj(position, velocity, Type, Damage, KnockBack, owner, ai0, ai1);
+			int idx = Utils.NewProj(position, velocity, Type, Damage, KnockBack, owner, ai0, ai1);
+			Main.projectile[idx].ignoreWater = true;
+			return idx;
 		}
 		#endregion
 		#region Proj

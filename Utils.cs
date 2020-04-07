@@ -634,11 +634,11 @@ namespace Starvers
 		public static int ValidDefense(this NPC npc)
 		{
 			double defense = npc.defense;
-			if(npc.ichor)
+			if (npc.ichor)
 			{
 				defense /= 2;
 			}
-			if(npc.onFire || npc.onFire2 || npc.onFrostBurn || npc.poisoned || npc.shadowFlame || npc.venom)
+			if (npc.onFire || npc.onFire2 || npc.onFrostBurn || npc.poisoned || npc.shadowFlame || npc.venom)
 			{
 				defense /= 1.5;
 			}

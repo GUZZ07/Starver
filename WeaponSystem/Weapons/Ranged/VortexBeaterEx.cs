@@ -12,7 +12,7 @@ namespace Starvers.WeaponSystem.Weapons.Ranged
 	public class VortexBeaterEx : Weapon
 	{
 		#region Ctor
-		public VortexBeaterEx() : base(0,IDs.ItemID.VortexBeater, IDs.ProjectileID.VortexBeaterRocket, CareerType.Ranged, 165)
+		public VortexBeaterEx() : base(0,IDs.ItemID.VortexBeater, IDs.ProjectileID.VortexBeaterRocket, CareerType.Ranged, 185)
 		{
 			CatchID = IDs.ProjectileID.VortexBeater;
 		}
@@ -23,11 +23,6 @@ namespace Starvers.WeaponSystem.Weapons.Ranged
 			var vertical = Velocity.Vertical();
 			var dmg = CalcDamage(lvl);
 			vertical.Normalize();
-			if (lvl > 7)
-			{
-				player.NewProj(player.Center, Velocity + vertical * 3, ProjID, dmg, 10f);
-				player.NewProj(player.Center, Velocity - vertical * 3, ProjID, dmg, 10f);
-			}
 			if (lvl > 5)
 			{
 				player.NewProj(player.Center, Velocity + vertical * 2, ProjID, dmg, 10f);
