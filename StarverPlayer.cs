@@ -279,6 +279,25 @@ namespace Starvers
 			}
 		}
 		#endregion
+		#region Damage & KnockBack
+		public int HeldItemDamage => TPlayer.GetWeaponDamage(HeldItem);
+		public float HeldItemKnockback => TPlayer.GetWeaponKnockback(HeldItem, HeldItem.knockBack);
+		#endregion
+		#region ItemUse
+		public double ItemUseAngle
+		{
+			get
+			{
+				double angle = TPlayer.itemRotation;
+				if (TPlayer.direction == -1)
+				{
+					angle += Math.PI;
+				}
+				return angle;
+			}
+		}
+		public bool ControlUseItem => TPlayer.controlUseItem;
+		#endregion
 		#region Center
 		public Vector2 Center
 		{
@@ -696,6 +715,12 @@ namespace Starvers
 			BranchTask?.Updating(timer);
 			UpdateCD();
 			UpdateTilePoint();
+			if (itemUseDelay > 0)
+			{
+				itemUseDelay--;
+			}
+			var item = Starver.Instance.Aura.TryGetItem(HeldItem);
+			item?.UpdateInHand(this);
 			BranchTask?.Updated(timer);
 		}
 		protected void UpdateTilePoint()
@@ -1427,6 +1452,28 @@ namespace Starvers
 					Heal(healExtra);
 				}
 			}
+			else if (args.MsgID == PacketTypes.PlayerAnimation)
+			{
+				using var stream = new MemoryStream(args.Msg.readBuffer, args.Index, args.Length);
+				using var reader = new BinaryReader(stream);
+				int index = reader.ReadByte();
+				index = Index;
+				Player player3 = TPlayer;
+				var itemRotation = reader.ReadSingle();
+				int itemAnimation = reader.ReadInt16();
+				TPlayer.itemRotation = itemRotation;
+				TPlayer.itemAnimation = itemAnimation;
+				TPlayer.channel = HeldItem.channel;
+				if (itemUseDelay == 0 && ControlUseItem)
+				{
+					var item = Starver.Instance.Aura.TryGetItem(HeldItem);
+					if (item?.CanUseItem(this) == true)
+					{
+						itemUseDelay += item.UseDelay ?? HeldItem.useTime;
+						item.UseItem(this);
+					}
+				}
+			}
 		}
 		public void StrikingNPC(NPCStrikeEventArgs args)
 		{
@@ -1719,6 +1766,7 @@ namespace Starvers
 		#endregion
 		#region Privates
 		#region Fields
+		private int itemUseDelay;
 		private Point TilePoint;
 		private int timer;
 		private bool IsServer;

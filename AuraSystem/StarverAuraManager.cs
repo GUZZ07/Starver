@@ -12,6 +12,7 @@ using Starvers.AuraSystem.Realms;
 using Starvers.AuraSystem.Realms.Generics;
 using Starvers.AuraSystem.Realms.Interfaces;
 using Starvers.AuraSystem.Realms.Conditioners;
+using Starvers.AuraSystem.Items;
 
 namespace Starvers.AuraSystem
 {
@@ -137,11 +138,13 @@ namespace Starvers.AuraSystem
 			new AuraSkillWeapon(ItemID.DarkLance,ProjectileID.DarkLance,8000),
 			new AuraSkillWeapon(ItemID.ObsidianSwordfish,ProjectileID.ObsidianSwordfish,30000)
 		};
+		public static StarverItem[] Items;
 		#endregion
 		#region I & D
 		public void Load()
 		{
 			LoadVars();
+			LoadItems();
 			LoadHandlers();
 			LoadSkillList();
 			LoadCommands();
@@ -245,6 +248,18 @@ namespace Starvers.AuraSystem
 				SB.Clear();
 			}
 		}
+		private void LoadItems()
+		{
+			var types = typeof(StarverAuraManager).Assembly.GetTypes();
+			var itemTypes = types.Where(type => !type.IsAbstract && type.IsSubclassOf(typeof(StarverItem)));
+			Items = new StarverItem[itemTypes.Count()];
+			int t = 0;
+			foreach (var type in itemTypes)
+			{
+				Items[t++] = (StarverItem)Activator.CreateInstance(type);
+			}
+			Array.Sort(Items, (left, right) => left.ItemType - right.ItemType);
+		}
 		private void LoadCommands()
 		{
 			AuraCommand = new Command(Perms.Aura.Normal, Command, "au", "aura");
@@ -317,6 +332,12 @@ namespace Starvers.AuraSystem
 		}
 		#endregion
 		#region Hooks
+		#region UseItem
+		public StarverItem TryGetItem(Item item)
+		{
+			return SearchItem(item.type);
+		}
+		#endregion
 		#region OnUpdate
 		private void OnUpdate(object args)
 		{
@@ -753,6 +774,43 @@ namespace Starvers.AuraSystem
 			return exp;
 		}
 		#endregion
+		#endregion
+		#region Privates
+		private StarverItem SearchItem(int itemType)
+		{
+			StarverItem item = null;
+			if (Items.Length == 0)
+			{
+				return item;
+			}
+			if (Items[0].ItemType <= itemType && itemType <= Items[Items.Length - 1].ItemType)
+			{
+				int left = 0;
+				int right = Items.Length;
+				int mid = default;
+				while (left <= right)
+				{
+					mid = left + right >> 1;
+					if (Items[mid].ItemType > itemType)
+					{
+						right = mid - 1;
+					}
+					else if (Items[mid].ItemType < itemType)
+					{
+						left = mid + 1;
+					}
+					else
+					{
+						break;
+					}
+				}
+				if (Items[mid].ItemType == itemType)
+				{
+					item = Items[mid];
+				}
+			}
+			return item;
+		}
 		#endregion
 	};
 }

@@ -13,6 +13,7 @@ namespace Starvers.AuraSystem.Realms
 		private int itemIndex = 400;
 		private int id;
 		private int stack;
+		public Data16 ExtraData;
 		public Item RealItem
 		{
 			get => Main.item[itemIndex];

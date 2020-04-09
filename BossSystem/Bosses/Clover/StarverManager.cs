@@ -30,7 +30,7 @@ namespace Starvers.BossSystem.Bosses.Clover
 			Name = "The Starver Manager";
 			RawType = NPCID.MoonLordCore;
 			DefaultDefense = 3000;
-			DefaultLife = 60000000;
+			DefaultLife = 100000;
 			DefaultLifes = 1000;
 			Drops = new DropItem[] 
 			{

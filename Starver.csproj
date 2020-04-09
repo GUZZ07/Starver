@@ -89,6 +89,10 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AuraSystem\Items\CrystalSerpentEx.cs" />
+    <Compile Include="AuraSystem\Items\DiamondStaffEx.cs" />
+    <Compile Include="AuraSystem\Items\ShadowBeamStaffEx.cs" />
+    <Compile Include="AuraSystem\Items\StarverItem.cs" />
     <Compile Include="NetInventory.cs" />
     <Compile Include="NetInventorySlot.cs" />
     <Compile Include="AuraSystem\Realms\AnalogItem.cs" />

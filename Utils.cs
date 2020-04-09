@@ -42,7 +42,8 @@ namespace Starvers
 			{
 				return;
 			}
-			Terraria.Main.itemLockoutTime[num] = 54000;
+			Main.itemLockoutTime[num] = 54000;
+			Main.item[num].instanced = true;
 			for (int i = 0; i < Starver.Players.Length; i++)
 			{
 				if ((npc.playerInteraction[i] || !interactionRequired) && Main.player[i].active)
@@ -356,6 +357,10 @@ namespace Starvers
 		public static float NextFloat(this Random rand)
 		{
 			return (float)rand.NextDouble();
+		}
+		public static float NextFloat(this Random rand, float max)
+		{
+			return rand.NextFloat(0, max);
 		}
 		public static float NextFloat(this Random rand, float min, float max)
 		{

@@ -123,10 +123,12 @@ namespace Starvers.TaskSystem.Branches
 							startMsgs = new[]
 							{
 								"配置这药水所需要的第二种材料叫做\"   \"",
-								"它只出现在满月的凌晨,当2点以后它就会消失",
-								"而且只有当采集到一朵后, 才会出现第二朵",
-								"每颗植株的出现地点都相距很远",
-								"所以你要快"
+								"它很不好采集",
+								"而且只有当采集到一株后, 才会出现第二株",
+								"看这里, 这种东西长得很像你要采集的材料",
+								"但它实际上并不是我们要的东西",
+								"而且它有毒",
+								"别碰到它了"
 							};
 							break;
 						}
@@ -521,6 +523,52 @@ namespace Starvers.TaskSystem.Branches
 								}
 								break;
 							}
+						case 4:
+							{
+								if (process == 0)
+								{
+									startPos = direction switch
+									{
+										1 => new Vector2(Main.maxTilesX * 16, 16 + 16 * Task4.HalfHeight),
+										-1 => new Vector2(0, 16 + 16 * Task4.HalfHeight)
+									};
+									process++;
+									TargetPlayer.TeleportTo(startPos);
+								}
+								else if (process == 1)
+								{
+									TargetPlayer.AddBuffIfNot(BuffID.Gravitation);
+									#region CheckPosition
+									bool updateVel = false;
+									if (Math.Abs(TargetPlayer.Velocity.X - direction * -Task4.XSpeed) > 0.1)
+									{
+										TargetPlayer.TPlayer.velocity.X = direction * -Task4.XSpeed;
+										updateVel = true;
+									}
+									if (Math.Abs(TargetPlayer.Center.Y - startPos.Y) > Task4.HalfHeight * 16 + 16)
+									{
+										TargetPlayer.TPlayer.velocity.Y = 0;
+										TargetPlayer.TPlayer.gravDir = 0;
+										var center = TargetPlayer.Center;
+										if (center.Y > startPos.Y)
+										{
+											center.Y = startPos.Y + Task4.HalfHeight * 16;
+										}
+										else
+										{
+											center.Y = startPos.Y - Task4.HalfHeight * 16;
+										}
+											TargetPlayer.TPlayer.Center = center;
+										updateVel = true;
+									}
+									if (updateVel)
+									{
+										TargetPlayer.SendData(PacketTypes.PlayerUpdate, string.Empty, TargetPlayer);
+									}
+									#endregion
+								}
+								break;
+							}
 						case 7:
 							{
 								if (process == 0)
@@ -733,6 +781,10 @@ namespace Starvers.TaskSystem.Branches
 						}
 					case 4:
 						{
+							if (player.HasPerm(Perms.Test))
+							{
+								return (true, null);
+							}
 							return (false, "这个任务被神秘力量封印了");
 						}
 					default:
@@ -1333,6 +1385,48 @@ namespace Starvers.TaskSystem.Branches
 					Main.tile[x, y].bTileHeader2 = 1;
 					Main.tile[x, y].frameX = 0;
 					Main.tile[x, y].frameY = 630;
+				}
+			}
+			#endregion
+			#region Task4
+			private static class Task4
+			{
+				public const short MaterialID = ItemID.FragmentStardust;
+				public const short PoisonID = ItemID.FragmentVortex;
+				public const float ScreenWidth = 42 * 2;
+				public const float HalfHeight = 40;
+				public const float XSpeed = 8;
+				public static bool IsMaterial(AnalogItem item)
+				{
+					return item.ExtraData[0] && item.ID == MaterialID;
+				}
+				public static AnalogItem NewTaskItem(StarverPlayer player, int taskDirection)
+				{
+					return Starver.Rand.Next(4) == 0 ? NewMaterial(player, taskDirection) : NewPoison(player, taskDirection);
+				}
+				public static AnalogItem NewMaterial(StarverPlayer player, int taskDirection)
+				{
+					var x = Starver.Rand.NextFloat(-HalfHeight * 16, HalfHeight * 16);
+					var y = -taskDirection * (5 + ScreenWidth) * 16;
+
+					var item = new AnalogItem(MaterialID, 1, (int)Math.Ceiling(ScreenWidth * 16 / XSpeed));
+
+					item.Center = player.Center + new Vector2(x, y);
+					item.ExtraData[0] = true;
+
+					return item;
+				}
+
+				public static AnalogItem NewPoison(StarverPlayer player, int taskDirection)
+				{
+					var x = Starver.Rand.NextFloat(-HalfHeight * 16, HalfHeight * 16);
+					var y = -taskDirection * (5 + ScreenWidth) * 16;
+
+					var item = new AnalogItem(PoisonID, 1, (int)Math.Ceiling(ScreenWidth * 16 / XSpeed));
+
+					item.Center = player.Center + new Vector2(x, y);
+
+					return item;
 				}
 			}
 			#endregion
