@@ -59,6 +59,8 @@ namespace Starvers.AuraSystem.Realms
 			get;
 			set;
 		}
+		public float? WidthOverride { get; set; }
+		public float? HeightOverride { get; set; }
 		/// <summary>
 		/// 消失后是否重新生成
 		/// </summary>
@@ -81,6 +83,7 @@ namespace Starvers.AuraSystem.Realms
 		public override void Kill()
 		{
 			RealItem.netDefaults(0);
+			RealItem.active = false;
 			StarverPlayer.All.SendData(PacketTypes.UpdateItemDrop, "", itemIndex);
 			base.Kill();
 		}
@@ -132,12 +135,15 @@ namespace Starvers.AuraSystem.Realms
 				}
 			}
 			RealItem.keepTime = 60 * 60;
+			Main.itemLockoutTime[itemIndex] = 60 * 60;
 		}
 		protected override void SetDefault()
 		{
-			if(itemIndex == 400)
+			if (itemIndex == 400)
 			{
 				itemIndex = Utils.NewItem(Center, ID, stack);
+				RealItem.keepTime = 60 * 60;
+				Main.itemLockoutTime[itemIndex] = 60 * 60;
 				//S
 				SetSize();
 			}
@@ -145,6 +151,8 @@ namespace Starvers.AuraSystem.Realms
 		protected void SetSize()
 		{
 			(Width, Height) = (16 * 6 + RealItem.width, 16 * 6 + RealItem.height);
+			Width = WidthOverride ?? Width;
+			Height = HeightOverride ?? Height;
 		}
 	}
 }

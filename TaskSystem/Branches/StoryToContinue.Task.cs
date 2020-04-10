@@ -12,6 +12,8 @@ namespace Starvers.TaskSystem.Branches
 	using Tiles;
 	using TShockAPI;
 	using AuraSystem.Realms;
+	using Starvers.AuraSystem.Realms;
+
 	public partial class StoryToContinue
 	{
 		private class Task : BranchTask
@@ -239,6 +241,11 @@ namespace Starvers.TaskSystem.Branches
 					case 3:
 						{
 							datas.ShortValue6 = 5 * 60 * 60;
+							break;
+						}
+					case 4:
+						{
+							datas.ByteValue1 = Task4.MaterialCountRequire;
 							break;
 						}
 					case 7:
@@ -529,26 +536,42 @@ namespace Starvers.TaskSystem.Branches
 								{
 									startPos = direction switch
 									{
-										1 => new Vector2(Main.maxTilesX * 16, 16 + 16 * Task4.HalfHeight),
-										-1 => new Vector2(0, 16 + 16 * Task4.HalfHeight)
+										1 => new Vector2(Main.maxTilesX * 16, 50 * 16 + 16 * Task4.HalfHeight),
+										-1 => new Vector2(0, 50 * 16 + 16 * Task4.HalfHeight)
+									};
+									targetPos = direction switch
+									{
+										-1 => new Vector2(Main.maxTilesX * 16, 50 * 16 + 16 * Task4.HalfHeight),
+										1 => new Vector2(0, 50 * 16 + 16 * Task4.HalfHeight)
 									};
 									process++;
 									TargetPlayer.TeleportTo(startPos);
+									vector = startPos;
 								}
 								else if (process == 1)
 								{
-									TargetPlayer.AddBuffIfNot(BuffID.Gravitation);
+									TargetPlayer.AddBuffIfNot(BuffID.UFOMount);
 									#region CheckPosition
-									bool updateVel = false;
-									if (Math.Abs(TargetPlayer.Velocity.X - direction * -Task4.XSpeed) > 0.1)
+									bool netupdate = false;
+									vector.X += direction * -Task4.XSpeed;
+									vector.Y = TargetPlayer.Center.Y;
+									if (-direction * (vector.X - TargetPlayer.Center.X) > 16 * 3)
+									{
+										TargetPlayer.TPlayer.Center = vector;
+										netupdate = true;
+									}
+									else if (-direction * (TargetPlayer.Center.X - vector.X) > 0)
+									{
+										vector.X = TargetPlayer.Center.X;
+									}
+									if (TargetPlayer.Velocity.X * -direction - Task4.XSpeed < -0.1)
 									{
 										TargetPlayer.TPlayer.velocity.X = direction * -Task4.XSpeed;
-										updateVel = true;
+										netupdate = true;
 									}
 									if (Math.Abs(TargetPlayer.Center.Y - startPos.Y) > Task4.HalfHeight * 16 + 16)
 									{
 										TargetPlayer.TPlayer.velocity.Y = 0;
-										TargetPlayer.TPlayer.gravDir = 0;
 										var center = TargetPlayer.Center;
 										if (center.Y > startPos.Y)
 										{
@@ -558,14 +581,31 @@ namespace Starvers.TaskSystem.Branches
 										{
 											center.Y = startPos.Y - Task4.HalfHeight * 16;
 										}
-											TargetPlayer.TPlayer.Center = center;
-										updateVel = true;
+										TargetPlayer.TPlayer.Center = center;
+										netupdate = true;
 									}
-									if (updateVel)
+									if (netupdate)
 									{
 										TargetPlayer.SendData(PacketTypes.PlayerUpdate, string.Empty, TargetPlayer);
 									}
+									if (Math.Abs(targetPos.X - vector.X) < 16 * 3)
+									{
+										process++;
+									}
 									#endregion
+									if (Timer % 15 == 0)
+									{
+										Task4.UpdateBorder(this);
+									}
+									if (Timer % 60 == 0)
+									{
+										Task4.NewTaskItem(this);
+									}
+								}
+								else if (process == 2)
+								{
+									TargetPlayer.SendMessage($"你收集了{datas.ByteValue0}", Color.Blue);
+									End(datas.ByteValue0 >= datas.ByteValue1);
 								}
 								break;
 							}
@@ -616,6 +656,37 @@ namespace Starvers.TaskSystem.Branches
 						default:
 							throw new InvalidOperationException("空任务!");
 					}
+				}
+			}
+
+			public override void OnPickAnalogItem(AnalogItem item)
+			{
+				base.OnPickAnalogItem(item);
+				switch(ID)
+				{
+					case 4:
+						{
+							item.Kill();
+							if (Task4.IsMaterial(item))
+							{
+								Starvers.Utils.SendCombatMsg(item.Center, $"{++datas.ByteValue0} / {datas.ByteValue1}已收集", Color.Blue);
+							}
+							else
+							{
+								Starvers.Utils.SendCombatMsg(item.Center, "这是毒药!", Color.Red);
+								if (datas.ByteValue0 == 0)
+								{
+									End(false);
+									return;
+								}
+								else
+								{
+									Starvers.Utils.SendCombatMsg(item.Center, "收集个数 -1", Color.Red);
+									datas.ByteValue0--;
+								}
+							}
+							break;
+						}
 				}
 			}
 
@@ -1396,35 +1467,72 @@ namespace Starvers.TaskSystem.Branches
 				public const float ScreenWidth = 42 * 2;
 				public const float HalfHeight = 40;
 				public const float XSpeed = 8;
+				public const short BorderProj = ProjectileID.VortexVortexPortal;
+				public const byte MaterialCountRequire = 15;
+				public static void UpdateBorder(Task task)
+				{
+					var up = new Vector2(-ScreenWidth * 16 * task.direction, -HalfHeight * 16);
+					var down = new Vector2(-ScreenWidth * 16 * task.direction, HalfHeight * 16);
+
+					var vector = task.vector;
+					vector.Y = task.startPos.Y;
+
+					int idx1 = Starvers.Utils.NewProj(vector + up, default, BorderProj, -1);
+					Main.projectile[idx1].aiStyle = -1;
+					Main.projectile[idx1].timeLeft = (int)(ScreenWidth * 2 * 16 / XSpeed);
+					Main.projectile[idx1].netImportant = true;
+					Main.projectile[idx1].SendData();
+
+					int idx2 = Starvers.Utils.NewProj(vector + down, default, BorderProj, -1);
+					Main.projectile[idx2].aiStyle = -1;
+					Main.projectile[idx2].timeLeft = (int)(ScreenWidth * 2 * 16 / XSpeed);
+					Main.projectile[idx2].netImportant = true;
+					Main.projectile[idx2].SendData();
+
+					// Main.projectile[idx1].active = false;
+					// Main.projectile[idx2].active = false;
+				}
 				public static bool IsMaterial(AnalogItem item)
 				{
 					return item.ExtraData[0] && item.ID == MaterialID;
 				}
-				public static AnalogItem NewTaskItem(StarverPlayer player, int taskDirection)
+				public static AnalogItem NewTaskItem(Task task)
 				{
-					return Starver.Rand.Next(4) == 0 ? NewMaterial(player, taskDirection) : NewPoison(player, taskDirection);
+					var item = Starver.Rand.Next(3) == 0 ? NewMaterial(task) : NewPoison(task);
+					Starver.Instance.Aura.AddRealm(item);
+					StarverPlayer.All.SendDeBugMessage(IsMaterial(item) ? "material" : "poison");
+					return item;
 				}
-				public static AnalogItem NewMaterial(StarverPlayer player, int taskDirection)
+				public static AnalogItem NewMaterial(Task task)
 				{
-					var x = Starver.Rand.NextFloat(-HalfHeight * 16, HalfHeight * 16);
-					var y = -taskDirection * (5 + ScreenWidth) * 16;
+					var y = Starver.Rand.NextFloat(-HalfHeight * 16, HalfHeight * 16);
+					var x = -task.direction * (5 + ScreenWidth / 2) * 16;
+
+					var vector = task.vector;
+					vector.Y = task.startPos.Y;
 
 					var item = new AnalogItem(MaterialID, 1, (int)Math.Ceiling(ScreenWidth * 16 / XSpeed));
 
-					item.Center = player.Center + new Vector2(x, y);
+					item.Center = vector + new Vector2(x, y);
 					item.ExtraData[0] = true;
 
 					return item;
 				}
 
-				public static AnalogItem NewPoison(StarverPlayer player, int taskDirection)
+				public static AnalogItem NewPoison(Task task)
 				{
-					var x = Starver.Rand.NextFloat(-HalfHeight * 16, HalfHeight * 16);
-					var y = -taskDirection * (5 + ScreenWidth) * 16;
+					var y = Starver.Rand.NextFloat(-HalfHeight * 16, HalfHeight * 16);
+					var x = -task.direction * (5 + ScreenWidth / 2) * 16;
+
+					var vector = task.vector;
+					vector.Y = task.startPos.Y;
 
 					var item = new AnalogItem(PoisonID, 1, (int)Math.Ceiling(ScreenWidth * 16 / XSpeed));
 
-					item.Center = player.Center + new Vector2(x, y);
+					item.HeightOverride = 16 * 3f;
+					item.WidthOverride = 16 * 3f;
+
+					item.Center = vector + new Vector2(x, y);
 
 					return item;
 				}
