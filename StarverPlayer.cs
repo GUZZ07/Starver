@@ -38,7 +38,7 @@ namespace Starvers
 			{
 				health = TPlayer.statLifeMax2;
 			}
-			TSPlayer.Heal(health);
+			SendData(PacketTypes.EffectHeal,"",health);
 		}
 		#endregion
 		#region GodMode
