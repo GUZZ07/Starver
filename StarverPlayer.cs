@@ -34,11 +34,15 @@ namespace Starvers
 		#region Heal
 		public void Heal(int health = -1)
 		{
+			if (health == 0)
+			{
+				return;
+			}
 			if (health == -1)
 			{
 				health = TPlayer.statLifeMax2;
 			}
-			SendData(PacketTypes.EffectHeal,"",health);
+			SendData(PacketTypes.EffectHeal, "", Index, health);
 		}
 		#endregion
 		#region GodMode
@@ -1733,11 +1737,11 @@ namespace Starvers
 		/// <summary>
 		/// 代表服务器
 		/// </summary>
-		internal static StarverPlayer Server => server;
+		public static StarverPlayer Server => server;
 		/// <summary>
 		/// 代表all(仅用于SendMessage和SendData)
 		/// </summary>
-		internal static StarverPlayer All => all;
+		public static StarverPlayer All => all;
 		/// <summary>
 		/// 用于未注册用户(退出后消失)
 		/// </summary>

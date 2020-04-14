@@ -317,7 +317,7 @@ namespace Starvers.TaskSystem
 		private void MainCommand(CommandArgs args)
 		{
 			string p = args.Parameters.Count < 1 ? "None" : args.Parameters[0];
-			var player = args.SPlayer();
+			var player = args.Player is TSRestPlayer ? null : args.SPlayer();
 			//LoadTasks();
 			switch (p.ToLower())
 			{
@@ -347,7 +347,7 @@ namespace Starvers.TaskSystem
 				case "check":
 					if (Config.TaskNow >= Config.TaskLock)
 					{
-						player.SendInfoMessage("当前主线任务已完结");
+						args.Player.SendInfoMessage("当前主线任务已完结");
 					}
 					else
 					{
@@ -391,7 +391,7 @@ namespace Starvers.TaskSystem
 					{
 						foreach (MainLineTask task in MainLine)
 						{
-							player.SendInfoMessage(task.Description);
+							args.Player.SendInfoMessage(task.Description);
 						}
 					}
 					break;
@@ -535,26 +535,26 @@ namespace Starvers.TaskSystem
 				#endregion
 				#region SendHelpText
 				default:
-					player.SendInfoMessage(HelpTexts.Task);
-					if (player.HasPerm(Perms.Task.ListAll))
+					args.Player.SendInfoMessage(HelpTexts.Task);
+					if (args.Player.HasPermission(Perms.Task.ListAll))
 					{
-						player.SendInfoMessage("    listall    列出所有任务");
+						args.Player.SendInfoMessage("    listall    列出所有任务");
 					}
-					if (player.HasPerm(Perms.Task.FFF))
+					if (args.Player.HasPermission(Perms.Task.FFF))
 					{
-						player.SendInfoMessage("    fff:     无视条件强制完成任务");
+						args.Player.SendInfoMessage("    fff:     无视条件强制完成任务");
 					}
-					if (player.HasPerm(Perms.Task.Set))
+					if (args.Player.HasPermission(Perms.Task.Set))
 					{
-						player.SendInfoMessage("    set <任务序号>  设置当前任务为制定任务");
+						args.Player.SendInfoMessage("    set <任务序号>  设置当前任务为制定任务");
 					}
-					if (player.HasPerm(Perms.Task.Reload))
+					if (args.Player.HasPermission(Perms.Task.Reload))
 					{
-						player.SendInfoMessage("    reload   重新加载任务");
+						args.Player.SendInfoMessage("    reload   重新加载任务");
 					}
-					if (player.HasPerm(Perms.Task.BranchT))
+					if (args.Player.HasPermission(Perms.Task.BranchT))
 					{
-						player.SendInfoMessage("    bt       branch line test");
+						args.Player.SendInfoMessage("    bt       branch line test");
 					}
 					break;
 					#endregion

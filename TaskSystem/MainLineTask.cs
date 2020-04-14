@@ -2298,7 +2298,7 @@ namespace Starvers.TaskSystem
 		{
 			EatChestItem(Main.chest[chestIndex].item);
 			RewardChestItem(Main.chest[chestIndex]);
-			if (player.ActiveChest == chestIndex)
+			if (player?.ActiveChest == chestIndex)
 			{
 				player.ActiveChest = -1;
 			}

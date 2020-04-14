@@ -36,6 +36,7 @@ namespace Starvers
 	using Calculator = Func<int, int>;
     using Starvers.Events;
 	using System.Text.RegularExpressions;
+	using Starvers.NetTricks;
 
 	[ApiVersion(2, 1)]
 	public class Starver : TerrariaPlugin
@@ -220,7 +221,7 @@ namespace Starvers
 				Commands.ChatCommands.Add(new Command(Perms.Test, PtrTest, "vt"));
 				Commands.ChatCommands.Add(new Command(Perms.Exchange, ExchangeCommand, "exchange"));
 				Commands.ChatCommands.Add(new Command(Perms.ShowInfo, ShowInfoCommand, "showinfo"));
-				Commands.ChatCommands.Add(new Command(Perms.Normal, Command_Aura, "starver") { HelpText = HelpTexts.LevelSystem });
+				Commands.ChatCommands.Add(new Command(Perms.Normal, MainCommand, "starver") { HelpText = HelpTexts.LevelSystem });
 #if DEBUG
 				Commands.ChatCommands.Add(new Command(Perms.Test, (CommandArgs args) => { new Thread(() => { throw new Exception(); }).Start(); }, "exception"));
 #endif
@@ -1207,42 +1208,13 @@ namespace Starvers
 		#region PtrTest
 		private static unsafe void PtrTest(CommandArgs args) { }
 		#endregion
-		#region FromAura
-		private void Command_Aura(CommandArgs args)
+		#region MainCommand
+		private void MainCommand(CommandArgs args)
 		{
 			string p = args.Parameters.Count < 1 ? "None" : args.Parameters[0];
 			StarverPlayer player = args.SPlayer();
 			switch (p.ToLower())
 			{
-				#region up
-				case "up":
-					int exp = player.Exp;
-					int lvl = player.Level;
-					int need = UpGradeExp(lvl);
-					if (player.HasPerm(Perms.VIP.LessCost))
-					{
-						need /= 3;
-						while (exp > need)
-						{
-							exp -= need;
-							need = UpGradeExp(++lvl) / 3;
-						}
-					}
-					else
-					{
-						while (exp > need)
-						{
-							exp -= need;
-							need = UpGradeExp(++lvl);
-						}
-					}
-					player.Level = lvl;
-					player.Exp = exp;
-					player.Save();
-					player.SendInfoMessage("当前等级:{0}", player.Level);
-					player.SendInfoMessage("所需经验:{0}", UpGradeExp(player.Level));
-					break;
-				#endregion
 				#region ForceUp
 				case "forceup":
 					if (!player.HasPerm(Perms.Aura.ForceUp))
@@ -1261,28 +1233,6 @@ namespace Starvers
 					player.Level += up;
 					player.SendInfoMessage("当前等级:{0}", player.Level);
 					player.Save();
-					break;
-				#endregion
-				#region toexp
-				case "toexp":
-					Item item = player.TPlayer.inventory[0];
-					int bagexp;
-					try
-					{
-						bagexp = item.stack * BagExp(item.type);
-						item.netDefaults(0);
-						if (bagexp == 0)
-						{
-							throw new Exception();
-						}
-						player.Exp += bagexp;
-						player.SendData(PacketTypes.PlayerSlot, "", player.Index, 0);
-						player.Save();
-					}
-					catch
-					{
-						player.SendMessage("请将可兑换为经验的物品(主要为boss袋子)放置在背包第一格", Color.Red);
-					}
 					break;
 				#endregion
 				#region Setlvl
@@ -1337,7 +1287,7 @@ namespace Starvers
 												player.SendInfoMessage("多个玩家匹配:");
 												player.SendInfoMessage("    " + string.Join(", ", values: find));
 											}
-											else if(find.Count() < 1)
+											else if (find.Count() < 1)
 											{
 												player.SendErrorMessage("无匹配玩家");
 											}
@@ -1372,7 +1322,24 @@ namespace Starvers
 					}
 					break;
 				#endregion
-				#region default
+				#region NPCTrick
+				case "trick":
+					{
+						var vector = Main.npc.First(npc => npc.active && npc.type == NPCID.Wizard).position - player.Center;
+						FakeNPC npc = new FakeNPC();
+						npc.NetID = NPCID.DukeFishron;
+						npc.NPCai[0] = 7;
+						npc.Index = (byte)Main.npc.First(npc => npc.active && npc.type == NPCID.Wizard).whoAmI;
+						npc.Life = 10086;
+						npc.IsLifeMax = true;
+						npc.Position = player.Center + vector;
+						npc.Velocity = -vector.ToLenOf(10);
+						npc.Target = player;
+						npc.SendData();
+						break;
+					}
+				#endregion
+				#region Default
 				default:
 					player.SendInfoMessage(HelpTexts.LevelSystem);
 					if (player.HasPerm(Perms.Aura.ForceUp))
