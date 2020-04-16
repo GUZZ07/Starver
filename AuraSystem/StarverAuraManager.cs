@@ -13,6 +13,7 @@ using Starvers.AuraSystem.Realms.Generics;
 using Starvers.AuraSystem.Realms.Interfaces;
 using Starvers.AuraSystem.Realms.Conditioners;
 using Starvers.AuraSystem.Items;
+using Starvers.AuraSystem.Accessories;
 
 namespace Starvers.AuraSystem
 {
@@ -138,13 +139,15 @@ namespace Starvers.AuraSystem
 			new AuraSkillWeapon(ItemID.DarkLance,ProjectileID.DarkLance,8000),
 			new AuraSkillWeapon(ItemID.ObsidianSwordfish,ProjectileID.ObsidianSwordfish,30000)
 		};
-		public static StarverItem[] Items;
+		public static StarverItem[] Items { get; private set; }
+		public static StarverAccessory[] Accessories { get; private set; }
 		#endregion
 		#region I & D
 		public void Load()
 		{
 			LoadVars();
 			LoadItems();
+			LoadAccessories();
 			LoadHandlers();
 			LoadSkillList();
 			LoadCommands();
@@ -248,6 +251,18 @@ namespace Starvers.AuraSystem
 				SB.Clear();
 			}
 		}
+		private void LoadAccessories()
+		{
+			var types = typeof(StarverAuraManager).Assembly.GetTypes();
+			var itemTypes = types.Where(type => !type.IsAbstract && type.IsSubclassOf(typeof(StarverAccessory)));
+			Accessories = new StarverAccessory[itemTypes.Count()];
+			int t = 0;
+			foreach (var type in itemTypes)
+			{
+				Accessories[t++] = (StarverAccessory)Activator.CreateInstance(type);
+			}
+			Array.Sort(Accessories, (left, right) => left.ItemType - right.ItemType);
+		}
 		private void LoadItems()
 		{
 			var types = typeof(StarverAuraManager).Assembly.GetTypes();
@@ -325,6 +340,16 @@ namespace Starvers.AuraSystem
 		}
 		#endregion
 		#endregion
+		#region Item & Accessory
+		public static StarverItem TryGetItem(Item item)
+		{
+			return SearchItem(item.type);
+		}
+		public static StarverAccessory TryGetAccessory(Item item)
+		{
+			return SearchAccessory(item.type);
+		}
+		#endregion
 		#region OperateRealms
 		public void OperateRealms(Action<IRealm> operation)
 		{
@@ -332,12 +357,6 @@ namespace Starvers.AuraSystem
 		}
 		#endregion
 		#region Hooks
-		#region UseItem
-		public StarverItem TryGetItem(Item item)
-		{
-			return SearchItem(item.type);
-		}
-		#endregion
 		#region OnUpdate
 		private void OnUpdate(object args)
 		{
@@ -776,7 +795,7 @@ namespace Starvers.AuraSystem
 		#endregion
 		#endregion
 		#region Privates
-		private StarverItem SearchItem(int itemType)
+		private static StarverItem SearchItem(int itemType)
 		{
 			StarverItem item = null;
 			if (Items.Length == 0)
@@ -807,6 +826,41 @@ namespace Starvers.AuraSystem
 				if (Items[mid].ItemType == itemType)
 				{
 					item = Items[mid];
+				}
+			}
+			return item;
+		}
+		private static StarverAccessory SearchAccessory(int itemType)
+		{
+			StarverAccessory item = null;
+			if (Accessories.Length == 0)
+			{
+				return item;
+			}
+			if (Accessories[0].ItemType <= itemType && itemType <= Accessories[Accessories.Length - 1].ItemType)
+			{
+				int left = 0;
+				int right = Accessories.Length;
+				int mid = default;
+				while (left <= right)
+				{
+					mid = left + right >> 1;
+					if (Accessories[mid].ItemType > itemType)
+					{
+						right = mid - 1;
+					}
+					else if (Accessories[mid].ItemType < itemType)
+					{
+						left = mid + 1;
+					}
+					else
+					{
+						break;
+					}
+				}
+				if (Accessories[mid].ItemType == itemType)
+				{
+					item = Accessories[mid];
 				}
 			}
 			return item;

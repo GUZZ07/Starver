@@ -27,6 +27,8 @@ namespace Starvers
 	using Skill = AuraSystem.Skills.Base.Skill;
 	using System.Diagnostics;
 	using TerrariaApi.Server;
+	using Starvers.AuraSystem;
+	using Starvers.AuraSystem.Accessories;
 
 	public partial class StarverPlayer
 	{
@@ -280,6 +282,24 @@ namespace Starvers
 			{
 				TPlayer.statManaMax = value;
 				SendData(PacketTypes.PlayerMana, "", Index);
+			}
+		}
+		#endregion
+		#region ArrowSpeed
+		public float ArrowSpeed
+		{
+			get
+			{
+				var speed = HeldItem.shootSpeed;
+				if (TPlayer.magicQuiver)
+				{
+					speed *= 1.2f;
+				}
+				if (TPlayer.archery)
+				{
+					speed *= 1.2f;
+				}
+				return speed;
 			}
 		}
 		#endregion
@@ -719,13 +739,28 @@ namespace Starvers
 			BranchTask?.Updating(timer);
 			UpdateCD();
 			UpdateTilePoint();
+			UpdateSItem();
+			UpdateSAccessory();
+			BranchTask?.Updated(timer);
+		}
+		protected void UpdateSItem()
+		{
 			if (itemUseDelay > 0)
 			{
 				itemUseDelay--;
 			}
-			var item = Starver.Instance.Aura.TryGetItem(HeldItem);
+			var item = StarverAuraManager.TryGetItem(HeldItem);
 			item?.UpdateInHand(this);
-			BranchTask?.Updated(timer);
+		}
+		protected void UpdateSAccessory()
+		{
+			SAccessoryForeach(acc =>
+			{
+				if (acc?.CanUseAccessory(this) == true)
+				{
+					acc.UpdateAccessory(this);
+				}
+			});
 		}
 		protected void UpdateTilePoint()
 		{
@@ -781,6 +816,36 @@ namespace Starvers
 				// Main.npc[MoonIndex].Center = Center;
 				NetMessage.SendData((int)PacketTypes.NpcUpdate, -1, -1, null, MoonIndex);
 			}
+		}
+		#endregion
+		#region Items and SAccessory
+		protected void SAccessoryForeach(Action<StarverAccessory> action)
+		{
+			for (int i = 0; i < 5; i++)
+			{
+				var accessory = StarverAuraManager.TryGetAccessory(TPlayer.armor[3 + i]);
+				action(accessory);
+			}
+			var last = StarverAuraManager.TryGetAccessory(TPlayer.armor[TPlayer.armor.Length - 2]);
+			action(last);
+		}
+		public bool HasAccessory<T>() where T : StarverAccessory, new()
+		{
+			for (int i = 0; i < 5; i++)
+			{
+				var accessory = StarverAuraManager.TryGetAccessory(TPlayer.armor[3 + i]);
+				if (accessory != null && accessory is T)
+				{
+					return true;
+				}
+			}
+			var last = StarverAuraManager.TryGetAccessory(TPlayer.armor[TPlayer.armor.Length - 2]);
+
+			if (last != null && last is T)
+			{
+				return true;
+			}
+			return false;
 		}
 		#endregion
 		#region UPGrade
@@ -1470,7 +1535,14 @@ namespace Starvers
 				TPlayer.channel = HeldItem.channel;
 				if (itemUseDelay == 0 && ControlUseItem)
 				{
-					var item = Starver.Instance.Aura.TryGetItem(HeldItem);
+					SAccessoryForeach(acc =>
+					{
+						if (acc?.CanUseAccessory(this) == true)
+						{
+							acc.OnUseItem(this);
+						}
+					});
+					var item = StarverAuraManager.TryGetItem(HeldItem);
 					if (item?.CanUseItem(this) == true)
 					{
 						itemUseDelay += item.UseDelay ?? HeldItem.useTime;
@@ -1546,6 +1618,7 @@ namespace Starvers
 		}
 		#endregion
 		#region Datas
+		public int Timer => timer;
 		public NetInventory Inventory { get; }
 		public double DamageIndex
 		{

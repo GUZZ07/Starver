@@ -86,7 +86,7 @@ namespace Starvers.TaskSystem.Branches
 								"⭐非常有用, 它可以用来制作魔力药水, 魔能药水, 魔力腰带...",
 								"今晚的天气很晴朗, 一定会有很多落星",
 								"帮我收集尽可能多星星",
-								"[c/008800:至少收集45科星星]"
+								"[c/008800:至少收集45颗星星]"
 							};
 							targetID = ItemID.FallenStar;
 							countRequire = 45;

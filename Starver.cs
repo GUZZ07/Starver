@@ -993,6 +993,7 @@ namespace Starvers
 					switch (npc.type)
 					{
 						case NPCID.KingSlime:
+						case NPCID.HeadlessHorseman:
 							return;
 						case NPCID.EyeofCthulhu:
 							scale += 1.5f;
@@ -1003,11 +1004,30 @@ namespace Starvers
 						case NPCID.BrainofCthulhu:
 							scale += 2f;
 							break;
+						case NPCID.SantaNK1:
+						case NPCID.MourningWood:
+						case NPCID.Everscream:
+							scale += 2.5f;
+							scale /= 10;
+							npc.defense = 0;
+							break;
+						case NPCID.DD2EterniaCrystal:
+							scale += 20;
+							npc.life += 90000;
+							npc.lifeMax += 90000;
+							npc.defense += 10000;
+							break;
 						case NPCID.QueenBee:
 							scale += 2.5f;
 							break;
 						case NPCID.SkeletronHead:
 							scale += 3f;
+							break;
+						case NPCID.IceQueen:
+						case NPCID.Pumpking:
+							scale += 4f;
+							scale /= 10;
+							npc.defense = 0;
 							break;
 						case NPCID.WallofFlesh:
 							scale += 4f;
@@ -1088,6 +1108,12 @@ namespace Starvers
 					npc.life -= 1;
 					npc.damage = (int)(npc.damage * (1 + scale) * Config.TaskNow < 15 ? 0.1f : 0.6f);
 				senddata:
+					Main.npcLifeBytes[npc.type] = (short)npc.life switch
+					{
+						_ when npc.life <= byte.MaxValue => 1,
+						_ when npc.life <= short.MaxValue => 2,
+						_ => 4
+					};
 					NetMessage.SendData((int)PacketTypes.NpcUpdate, -1, -1, null, npc.whoAmI);
 					//snpc.ExpGive =  snpc.RealNPC.lifeMax * Config.TaskNow * Config.TaskNow;
 					//snpc.SendData();

@@ -89,6 +89,9 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AuraSystem\Accessories\HivePackEx.cs" />
+    <Compile Include="AuraSystem\Accessories\SporeSacEx.cs" />
+    <Compile Include="AuraSystem\Accessories\StarverAccessory.cs" />
     <Compile Include="AuraSystem\Items\CrystalSerpentEx.cs" />
     <Compile Include="AuraSystem\Items\DiamondStaffEx.cs" />
     <Compile Include="AuraSystem\Items\ShadowBeamStaffEx.cs" />

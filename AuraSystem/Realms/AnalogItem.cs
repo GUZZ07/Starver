@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,6 +15,7 @@ namespace Starvers.AuraSystem.Realms
 		private int id;
 		private int stack;
 		public Data16 ExtraData;
+		public int Index => itemIndex;
 		public Item RealItem
 		{
 			get => Main.item[itemIndex];
@@ -89,9 +91,9 @@ namespace Starvers.AuraSystem.Realms
 		}
 		protected override void InternalUpdate()
 		{
-			if(TimeLeft.HasValue)
+			if (TimeLeft.HasValue)
 			{
-				if(--TimeLeft == 0)
+				if (--TimeLeft == 0)
 				{
 					Kill();
 					return;
@@ -132,10 +134,13 @@ namespace Starvers.AuraSystem.Realms
 				if (HasOverlapping(player))
 				{
 					player.OnPickAnalogItem(this);
+					if (!Active)
+					{
+						return;
+					}
 				}
 			}
 			RealItem.keepTime = 60 * 60;
-			Main.itemLockoutTime[itemIndex] = 60 * 60;
 		}
 		protected override void SetDefault()
 		{
@@ -143,7 +148,6 @@ namespace Starvers.AuraSystem.Realms
 			{
 				itemIndex = Utils.NewItem(Center, ID, stack);
 				RealItem.keepTime = 60 * 60;
-				Main.itemLockoutTime[itemIndex] = 60 * 60;
 				//S
 				SetSize();
 			}
