@@ -89,8 +89,13 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AuraSystem\Accessories\BrainOfConfusionEx.cs" />
+    <Compile Include="AuraSystem\Accessories\FlameWingsEx.cs" />
+    <Compile Include="AuraSystem\Accessories\FrozenWingsEx.cs" />
     <Compile Include="AuraSystem\Accessories\HivePackEx.cs" />
+    <Compile Include="AuraSystem\Accessories\SpectreWingsEx.cs" />
     <Compile Include="AuraSystem\Accessories\SporeSacEx.cs" />
+    <Compile Include="AuraSystem\Accessories\StarVeilEx.cs" />
     <Compile Include="AuraSystem\Accessories\StarverAccessory.cs" />
     <Compile Include="AuraSystem\Items\CrystalSerpentEx.cs" />
     <Compile Include="AuraSystem\Items\DiamondStaffEx.cs" />

@@ -505,6 +505,7 @@ namespace Starvers.NPCSystem
 						{
 							damage /= 2;
 						}
+						damage -= (int)(damage * ply.TPlayer.endurance);
 						if ((!Handled) && damage > 0 && !ply.TPlayer.immune)
 						{
 							if (Starver.IsPE)

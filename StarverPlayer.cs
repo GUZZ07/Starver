@@ -44,7 +44,7 @@ namespace Starvers
 			{
 				health = TPlayer.statLifeMax2;
 			}
-			SendData(PacketTypes.EffectHeal, "", Index, health);
+			SendData(PacketTypes.PlayerHealOther, "", Index, health);
 		}
 		#endregion
 		#region GodMode
@@ -741,6 +741,7 @@ namespace Starvers
 			UpdateTilePoint();
 			UpdateSItem();
 			UpdateSAccessory();
+			UpdateNPCStatus();
 			BranchTask?.Updated(timer);
 		}
 		protected void UpdateSItem()
@@ -771,6 +772,69 @@ namespace Starvers
 			for (int i = 0; i < CDs.Length; i++)
 			{
 				CDs[i] = Math.Max(0, CDs[i] - 1);
+			}
+		}
+		protected void UpdateNPCStatus()
+		{
+			if (level >= 500)
+			{
+				var distance = 16 * 30;
+				if (level >= 1500)
+				{
+					distance = 16 * 45;
+				}
+				foreach (var npc in Main.npc)
+				{
+					if (!npc.active || npc.townNPC || npc.friendly || npc.damage < 1)
+					{
+						continue;
+					}
+					if (npc.Distance(Center) > distance)
+					{
+						continue;
+					}
+					if (TPlayer.magmaStone)
+					{
+						npc.AddBuffIfNot(BuffID.OnFire);
+					}
+					if (TPlayer.frostBurn)
+					{
+						npc.AddBuffIfNot(BuffID.Frostburn);
+					}
+					int buffType = TPlayer.meleeEnchant switch
+					{
+						1 => BuffID.Venom,
+						2 => BuffID.CursedInferno,
+						3 => BuffID.OnFire,
+						4 => BuffID.Midas,
+						5 => BuffID.Ichor,
+						6 => BuffID.Confused,
+						8 => BuffID.Poisoned,
+						_ => -1
+					};
+					if (buffType != -1)
+					{
+						npc.AddBuffIfNot(buffType);
+					}
+				}
+			}
+		}
+		public void UpdateHealth()
+		{
+			if (!Dead)
+			{
+				var liferegen = (int)(50 * Math.Log((TPlayer.lifeRegen + TPlayer.statDefense) * (Level / 100)));
+				liferegen = Math.Min(liferegen, TPlayer.statLife / 10);
+				if (TPlayer.shinyStone)
+				{
+					liferegen = (int)(liferegen * (1 + 10 / (2 + Velocity.Length())));
+				}
+				if (liferegen > 0)
+				{
+					Heal(liferegen);
+					// player.TPlayer.statLife = Math.Min(player.TPlayer.statLifeMax2, player.TPlayer.statLife + liferegen);
+					// player.SendData(PacketTypes.PlayerHp, "", player.Index);
+				}
 			}
 		}
 		public void UpdateMoon()
@@ -826,10 +890,28 @@ namespace Starvers
 				var accessory = StarverAuraManager.TryGetAccessory(TPlayer.armor[3 + i]);
 				action(accessory);
 			}
-			var last = StarverAuraManager.TryGetAccessory(TPlayer.armor[TPlayer.armor.Length - 2]);
-			action(last);
+			if (TPlayer.extraAccessorySlots > 0)
+			{
+				var last = StarverAuraManager.TryGetAccessory(TPlayer.armor[8]);
+				action(last);
+			}
 		}
-		public bool HasAccessory<T>() where T : StarverAccessory, new()
+		public bool HasAccessory(int type)
+		{
+			for (int i = 0; i < 5; i++)
+			{
+				if(TPlayer.armor[3 + i].type == type)
+				{
+					return true;
+				}
+			}
+			if (TPlayer.extraAccessorySlots > 0)
+			{
+				return TPlayer.armor[8].type == type;
+			}
+			return false;
+		}
+		public bool HasSAccessory<T>() where T : StarverAccessory, new()
 		{
 			for (int i = 0; i < 5; i++)
 			{
@@ -839,11 +921,13 @@ namespace Starvers
 					return true;
 				}
 			}
-			var last = StarverAuraManager.TryGetAccessory(TPlayer.armor[TPlayer.armor.Length - 2]);
-
-			if (last != null && last is T)
+			if (TPlayer.extraAccessorySlots > 0)
 			{
-				return true;
+				var last = StarverAuraManager.TryGetAccessory(TPlayer.armor[8]);
+				if (last != null && last is T)
+				{
+					return true;
+				}
 			}
 			return false;
 		}
@@ -1077,7 +1161,7 @@ namespace Starvers
 				return;
 			}
 			int Life = 500 + Utils.CalculateLife(level);
-			TPlayer.statLife = Life;
+			// TPlayer.statLife = Life;
 			TPlayer.SetLife(Life);
 		}
 		#endregion
@@ -1317,6 +1401,13 @@ namespace Starvers
 				return;
 			}
 			damage = GetDamage(damage);
+			SAccessoryForeach(acc =>
+			{
+				if (acc?.CanUseAccessory(this) == true)
+				{
+					acc.OnDamaged(this, damage, false, false);
+				}
+			});
 			TSPlayer.DamagePlayer(damage);
 			//NetMessage.SendPlayerHurt(Index, PlayerDeathReason.LegacyDefault(), damage, Index, false, false, 0);
 		}
@@ -1327,6 +1418,13 @@ namespace Starvers
 				return;
 			}
 			damage = GetDamage(damage);
+			SAccessoryForeach(acc =>
+			{
+				if (acc?.CanUseAccessory(this) == true)
+				{
+					acc.OnDamaged(this, damage, false, false);
+				}
+			});
 			NetMessage.SendPlayerHurt(Index, reason ?? PlayerDeathReason.LegacyDefault(), damage, new Random().Next(-1, 1), false, false, 0);
 		}
 		public void Damage(int damage, Color effectTextColor)
@@ -1336,6 +1434,13 @@ namespace Starvers
 				return;
 			}
 			damage = GetDamage(damage);
+			SAccessoryForeach(acc =>
+			{
+				if (acc?.CanUseAccessory(this) == true)
+				{
+					acc.OnDamaged(this, damage, false, false);
+				}
+			});
 			TSPlayer.DamagePlayer(damage);
 			SendCombatMsg(damage.ToString(), effectTextColor);
 			//NetMessage.SendPlayerHurt(Index, PlayerDeathReason.LegacyDefault(), damage, Index, false, false, 0);
@@ -1480,6 +1585,16 @@ namespace Starvers
 		#endregion
 		#endregion
 		#region Hooks
+		public void OnDamaged(GetDataHandlers.PlayerDamageEventArgs args)
+		{
+			SAccessoryForeach(acc =>
+			{
+				if (acc?.CanUseAccessory(this) == true)
+				{
+					acc.OnDamaged(this, args.Damage, args.Critical, args.PVP);
+				}
+			});
+		}
 		public void OnUpdateItemDrop(UpdateItemDropEventArgs args)
 		{
 			BranchTask?.OnUpdateItemDrop(args);
@@ -1505,7 +1620,14 @@ namespace Starvers
 				heal += (short)(args.Msg.readBuffer[args.Index + 2] << 8);
 				int healExtra = heal switch
 				{
-					15 => LifeMax / 20,
+					0 => -1,
+					1 => 11,
+					2 => 21,
+					5 => 51,
+					8 => 81,
+					10 => 101,
+					12 => 121,
+					15 => 150,
 					20 => 200,
 					50 => LifeMax / 15,
 					80 => LifeMax / 12,
@@ -1513,10 +1635,10 @@ namespace Starvers
 					120 => LifeMax / 8,
 					150 => LifeMax / 5,
 					200 => LifeMax / 3,
-					_ when heal < 15 => heal * 10,
+					_ when heal < 10 => heal * 10,
 					_ => -1
 				};
-				if (healExtra != -1)
+				if (healExtra > 0)
 				{
 					Heal(healExtra);
 				}
@@ -1567,6 +1689,13 @@ namespace Starvers
 					args.RealDamage *= 2;
 				}
 			}
+			SAccessoryForeach(acc =>
+			{
+				if (acc?.CanUseAccessory(this) == true)
+				{
+					acc.PreStrike(this, args);
+				}
+			});
 			BranchTask?.StrikingNPC(args);
 		}
 		public void StrikedNPC(NPCStrikeEventArgs args)
@@ -1693,6 +1822,10 @@ namespace Starvers
 			set
 			{
 				if (level == int.MaxValue)
+				{
+					return;
+				}
+				if (value == level)
 				{
 					return;
 				}

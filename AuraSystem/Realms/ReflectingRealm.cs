@@ -109,7 +109,7 @@ namespace Starvers.AuraSystem.Realms
 			if (Owner == Main.myPlayer)
 				borderProj = ProjectileID.CannonballHostile;
 			else if (0 <= Owner && Owner < Main.myPlayer)
-				borderProj = ProjectileID.PaladinsHammerFriendly;
+				borderProj = ProjectileID.WaterBolt;
 			else
 				borderProj = ProjectileID.CannonballFriendly;
 

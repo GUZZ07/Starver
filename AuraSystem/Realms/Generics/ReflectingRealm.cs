@@ -25,7 +25,7 @@ namespace Starvers.AuraSystem.Realms.Generics
 		}
 		public ReflectingRealm(ReflectorType reflector) : base(true)
 		{
-			BorderProjID = ProjectileID.CannonballHostile;
+			BorderProjID = ProjectileID.WaterBolt;
 			Owner = Main.myPlayer;
 			DefaultTimeLeft = 60 * 30;
 			Reflector = reflector;

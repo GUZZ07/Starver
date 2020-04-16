@@ -37,6 +37,7 @@ namespace Starvers
     using Starvers.Events;
 	using System.Text.RegularExpressions;
 	using Starvers.NetTricks;
+	using System.Diagnostics;
 
 	[ApiVersion(2, 1)]
 	public class Starver : TerrariaPlugin
@@ -374,8 +375,13 @@ namespace Starvers
 						case ProjectileID.Sharknado:
 							proj.damage *= 10;
 							break;
-						case ProjectileID.VortexLaser:
 						case ProjectileID.VortexAcid:
+							if (proj.damage < 100)
+							{
+								goto case ProjectileID.VortexLaser;
+							}
+							break;
+						case ProjectileID.VortexLaser:
 						case ProjectileID.StardustJellyfishSmall:
 						case ProjectileID.StardustSoldierLaser:
 						case ProjectileID.NebulaBolt:
@@ -460,7 +466,7 @@ namespace Starvers
 				interdamage *= snpc.DamagedIndex;
 			}
 			int realdamage = (int)interdamage;
-			if(player.Level > 1000000)
+			if (player.Level > 1000000)
 			{
 				realdamage = int.MaxValue;
 			}
@@ -555,7 +561,6 @@ namespace Starvers
 					}
 				}
 				snpc?.OnStrike(realdamage, args.KnockBack, player);
-				TheBoss?.OnStrike(realdamage, args.KnockBack, player);
 			}
 			player.StrikedNPC(NArgs);
 		}
@@ -639,9 +644,9 @@ namespace Starvers
 		#region OnDamage
 		private void OnDamage(object sender, GetDataHandlers.PlayerDamageEventArgs args)
 		{
-			if (Players[args.ID] != null)
+			if (Players[args.ID] == null || !Players[args.ID].IsGuest)
 			{
-				args.Damage *= (short)(Config.TaskNow * Config.TaskNow * Config.TaskNow * 100 - Players[args.ID].Level);
+				Players[args.ID].OnDamaged(args);
 			}
 		}
 		#endregion
@@ -714,17 +719,7 @@ namespace Starvers
 						try
 						{
 							player.MP += player.Level / 33 + 1;
-							if (!player.Dead)
-							{
-								liferegen = (int)(50 * Math.Log((player.TPlayer.lifeRegen + player.TPlayer.statDefense) * (player.Level / 100)));
-								liferegen = Math.Min(liferegen, player.TPlayer.statLife / 10);
-								if (liferegen > 0)
-								{
-									player.Heal(liferegen);
-									// player.TPlayer.statLife = Math.Min(player.TPlayer.statLifeMax2, player.TPlayer.statLife + liferegen);
-									// player.SendData(PacketTypes.PlayerHp, "", player.Index);
-								}
-							}
+							player.UpdateHealth();
 						}
 						catch
 						{

@@ -628,13 +628,21 @@ namespace Starvers
 			int idx = -1;
 			for (int i = 0; i < npc.buffType.Length; i++)
 			{
-				if(npc.buffType[i] == type && npc.buffTime[i] > 0)
+				if (npc.buffType[i] == type && npc.buffTime[i] > 0)
 				{
 					idx = i;
 					break;
 				}
 			}
 			return idx != -1;
+		}
+		public static void AddBuffIfNot(this NPC npc, int type, int time = 60 * 60)
+		{
+			if (!npc.HasBuff(type))
+			{
+				npc.AddBuff(type, time, true);
+				StarverPlayer.All.SendData(PacketTypes.NpcUpdateBuff, string.Empty, npc.whoAmI);
+			}
 		}
 		public static int ValidDefense(this NPC npc)
 		{

@@ -18,26 +18,27 @@ namespace Starvers.AuraSystem.Accessories
 
 		public override void UpdateAccessory(StarverPlayer player)
 		{
+			const short shoot = ProjectileID.CrystalLeafShot;
 			if (player.Timer % 120 == 0)
 			{
 				#region Level-Binded Datas
 				NPC targetNPC = null;
 				float oldDistance = 16 * 400;
 				int max = 15;
-				int damage = 150;
+				int damage = 100;
 				float knockback = 1f;
 				float maxDistance = 16 * 60;
 				if (player.Level >= 8000)
 				{
-					max = 25;
-					damage = 350;
+					max = 20;
+					damage = 150;
 					knockback = 4f;
 					maxDistance = 16 * 90;
 				}
 				else if (player.Level >= 5000)
 				{
-					max = 20;
-					damage = 250;
+					max = 17;
+					damage = 125;
 					knockback = 2f;
 				}
 				#endregion
@@ -106,7 +107,7 @@ namespace Starvers.AuraSystem.Accessories
 									case ProjectileID.SporeTrap:
 									case ProjectileID.SporeTrap2:
 										var velocity = CalcVelocity(12, proj.Center, targetNPC2);
-										player.NewProj(proj.Center, velocity.ToLenOf(13), ProjectileID.CrystalLeafShot, proj.damage, proj.knockBack);
+										player.NewProj(proj.Center, velocity.ToLenOf(13), shoot, proj.damage, proj.knockBack);
 										break;
 								}
 							}
@@ -128,7 +129,7 @@ namespace Starvers.AuraSystem.Accessories
 							case ProjectileID.SporeTrap:
 							case ProjectileID.SporeTrap2:
 								var velocity = CalcVelocity(12, proj.Center, targetNPC);
-								player.NewProj(proj.Center, velocity.ToLenOf(13), ProjectileID.CrystalLeafShot, proj.damage, proj.knockBack);
+								player.NewProj(proj.Center, velocity.ToLenOf(13), shoot, proj.damage, proj.knockBack);
 								break;
 						}
 					}
