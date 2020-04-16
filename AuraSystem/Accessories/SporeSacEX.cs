@@ -29,14 +29,14 @@ namespace Starvers.AuraSystem.Accessories
 				float maxDistance = 16 * 60;
 				if (player.Level >= 8000)
 				{
-					max = 30;
+					max = 25;
 					damage = 350;
 					knockback = 4f;
 					maxDistance = 16 * 90;
 				}
 				else if (player.Level >= 5000)
 				{
-					max = 25;
+					max = 20;
 					damage = 250;
 					knockback = 2f;
 				}
@@ -95,7 +95,7 @@ namespace Starvers.AuraSystem.Accessories
 							}
 						}
 					}
-					if(targetNPC2?.active == true)
+					if (targetNPC2?.active == true)
 					{
 						foreach (var proj in Main.projectile)
 						{
