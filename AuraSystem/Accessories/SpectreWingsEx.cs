@@ -20,6 +20,11 @@ namespace Starvers.AuraSystem.Accessories
 		{
 
 		}
+		public override void OnDamaged(StarverPlayer player, int damage, bool ctit, bool pvp)
+		{
+			player.AddBuffIfNot(BuffID.Obstructed, 60 * 10);
+			base.OnDamaged(player, damage, ctit, pvp);
+		}
 		public override void PreStrike(StarverPlayer player, NPCStrikeEventArgs args)
 		{
 			int max = 1;

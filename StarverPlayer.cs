@@ -306,6 +306,7 @@ namespace Starvers
 		#region Damage & KnockBack
 		public int HeldItemDamage => TPlayer.GetWeaponDamage(HeldItem);
 		public float HeldItemKnockback => TPlayer.GetWeaponKnockback(HeldItem, HeldItem.knockBack);
+		public int MeleeCrit => HeldItem.crit + TPlayer.meleeCrit + 4;
 		#endregion
 		#region ItemUse
 		public double ItemUseAngle
@@ -752,6 +753,13 @@ namespace Starvers
 			}
 			var item = StarverAuraManager.TryGetItem(HeldItem);
 			item?.UpdateInHand(this);
+			if (ControlUseItem)
+			{ 
+				if (item?.CanUseItem(this) == true)
+				{
+					item.ControlUseItem(this);
+				}
+			}
 		}
 		protected void UpdateSAccessory()
 		{

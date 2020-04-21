@@ -97,6 +97,9 @@
     <Compile Include="AuraSystem\Accessories\SporeSacEx.cs" />
     <Compile Include="AuraSystem\Accessories\StarVeilEx.cs" />
     <Compile Include="AuraSystem\Accessories\StarverAccessory.cs" />
+    <Compile Include="AuraSystem\Items\BlizzardStuffEx.cs" />
+    <Compile Include="AuraSystem\Items\ButchersChainSawEx.cs" />
+    <Compile Include="AuraSystem\Items\ChainSawEx.cs" />
     <Compile Include="AuraSystem\Items\CrystalSerpentEx.cs" />
     <Compile Include="AuraSystem\Items\DiamondStaffEx.cs" />
     <Compile Include="AuraSystem\Items\ShadowBeamStaffEx.cs" />

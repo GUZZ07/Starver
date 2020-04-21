@@ -12,7 +12,7 @@ namespace Starvers.AuraSystem.Items
 	{
 		public CrystalSerpentEx() : base(ItemID.CrystalSerpent, 2000, 200 * 7 / 1000 * 60)
 		{
-
+			
 		}
 		public async override void UseItem(StarverPlayer player)
 		{

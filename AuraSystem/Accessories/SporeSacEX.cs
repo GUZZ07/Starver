@@ -19,7 +19,7 @@ namespace Starvers.AuraSystem.Accessories
 		public override void UpdateAccessory(StarverPlayer player)
 		{
 			const short shoot = ProjectileID.CrystalLeafShot;
-			if (player.Timer % 120 == 0)
+			if (player.Timer % 150 == 0)
 			{
 				#region Level-Binded Datas
 				NPC targetNPC = null;
@@ -30,14 +30,14 @@ namespace Starvers.AuraSystem.Accessories
 				float maxDistance = 16 * 60;
 				if (player.Level >= 8000)
 				{
-					max = 20;
+					max = 25;
 					damage = 150;
 					knockback = 4f;
 					maxDistance = 16 * 90;
 				}
 				else if (player.Level >= 5000)
 				{
-					max = 17;
+					max = 20;
 					damage = 125;
 					knockback = 2f;
 				}
@@ -52,7 +52,7 @@ namespace Starvers.AuraSystem.Accessories
 				});
 				for (int i = 0; i < count; i++)
 				{
-					var offset = Starver.Rand.NextVector2(16 * 35, 16 * 35);
+					var offset = Starver.Rand.NextVector2(16 * 60, 16 * 60);
 					var velocity = Starver.Rand.NextVector2(0.75f);
 					player.NewProj(player.Center + offset, velocity, ProjectileID.SporeTrap2, damage, knockback);
 				}

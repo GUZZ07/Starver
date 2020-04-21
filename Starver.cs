@@ -54,6 +54,10 @@ namespace Starvers
 		private Forms.StarverManagerForm Manager;
 		private IStarverPlugin[] Plugins;
 		private static uint Timer;
+		/// <summary>
+		/// Not TShockAPI.User but UserAccount
+		/// </summary>
+		private bool IsUserAccount;
 		#endregion
 		#region BaseProperties
 		public override string Name => "Starver";
@@ -110,7 +114,8 @@ namespace Starvers
 					FolderBacking = Path.Combine(FolderForTransfer, "Backings");
 					FolderSending = Path.Combine(FolderForTransfer, "Sendings");
 				}
-				IsPE = Main.player.Length != 256;
+				IsUserAccount = typeof(TSPlayer).GetProperty(nameof(TSPlayer.User)) == null;
+				IsPE = curRelease != Main.curRelease;
 				CombatTextPacket = IsPE ? (int)PacketTypes.CreateCombatText : (int)PacketTypes.CreateCombatTextExtended;
 				Rand = new Random();
 				BagExp = StarverAuraManager.BagExp;
@@ -792,7 +797,7 @@ namespace Starvers
 				{
 					int ID;
 					//由于TrPE的TS里是TSPlayer.Account,所以只能这么做
-					if (!IsPE)
+					if (!IsUserAccount)
 					{
 						ID = args.Player.GetUserID();
 					}
@@ -817,7 +822,7 @@ namespace Starvers
 				else
 				{
 					string Name;
-					if (!IsPE)
+					if (!IsUserAccount)
 					{
 						Name = args.Player.GetUserName();
 					}
