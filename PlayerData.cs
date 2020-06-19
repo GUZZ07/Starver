@@ -1,6 +1,10 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.EntityFrameworkCore;
+using MySql.Data.EntityFrameworkCore.Infrastructure;
+using MySql.Data.MySqlClient;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -11,7 +15,7 @@ namespace Starver
 {
 	public class PlayerData
 	{
-		public int UserID { get; set; }
+		[Key] public int UserID { get; set; }
 		public int Level { get; set; }
 		public int Exp { get; set; }
 		public PlayerData(int userID)
@@ -33,28 +37,78 @@ namespace Starver
 	}
 	public class PlayerDataManager
 	{
-		private string folder;
-
-		public PlayerDataManager()
+		private class DatasContext : DbContext
 		{
-			folder = Path.Combine(Starver.Instance.Config.SavePath, "PlayerDatas");
+			public DbSet<PlayerData> Datas { get; set; }
+			public DatasContext()
+			{
+
+			}
+			protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+			{
+				base.OnConfiguring(optionsBuilder);
+				var connectionString = TShock.DB.ConnectionString; 
+				optionsBuilder.UseMySQL(connectionString);
+				//optionsBuilder.Options.
+			}
+		}
+		private string folder;
+		private DatasContext context;
+
+		public StorageType StorageType { get; }
+		public PlayerDataManager(StorageType storageType)
+		{
+			StorageType = storageType;
+			if (storageType == StorageType.MySql)
+			{
+				context = new DatasContext();
+			}
+			else if (storageType == StorageType.Json)
+			{
+				folder = Path.Combine(Starver.Instance.Config.SavePath, "PlayerDatas");
+			}
 		}
 
 		public PlayerData GetData(int userID)
 		{
-			var path = GetPath(userID);
-			if (!File.Exists(path))
+			switch(StorageType)
 			{
-				PlayerData data = new PlayerData(userID);
-				File.WriteAllText(path, data.Serialize());
-				return data;
+				case StorageType.Json:
+					{
+						var path = GetPath(userID);
+						if (!File.Exists(path))
+						{
+							PlayerData data = new PlayerData(userID);
+							File.WriteAllText(path, data.Serialize());
+							return data;
+						}
+						return PlayerData.Deserialize(File.ReadAllText(path));
+					}
+				case StorageType.MySql:
+					{
+						return context.Datas.Find(userID) ?? throw new KeyNotFoundException("key: " + nameof(userID));
+					}
+				default:throw new NotImplementedException();
 			}
-			return PlayerData.Deserialize(File.ReadAllText(path));
 		}
 		public void SaveData(PlayerData data)
 		{
-			var path = GetPath(data.UserID);
-			File.WriteAllText(path, data.Serialize());
+			switch (StorageType)
+			{
+				case StorageType.Json:
+					{
+						var path = GetPath(data.UserID);
+						File.WriteAllText(path, data.Serialize());
+						break;
+					}
+				case StorageType.MySql:
+					{
+						context.Datas.Add(data);
+						context.SaveChanges();
+						break;
+					}
+				default: throw new NotImplementedException();
+			}
 		}
 
 		private string GetPath(int userID)
