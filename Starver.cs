@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.IO;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 using Terraria;
 using TerrariaApi.Server;
 using TShockAPI;
+using TShockAPI.Hooks;
 
 namespace Starver
 {
@@ -19,12 +21,14 @@ namespace Starver
 	{
 		#region Fields
 		public const string ConfigPath = "tshock//StarverConfig.json";
+		public readonly static Color DamageColor = Color.Yellow;
 		#endregion
 		#region Properties
 		public static Starver Instance { get; private set; }
 
 		public StarverConfig Config { get; private set; }
 		public PlayerDataManager PlayerDatas { get; private set; }
+		public StarverPlayer[] Players { get; private set; }
 		#region Plugin Infos
 		public override string Name => nameof(Starver);
 		public override string Description => nameof(Starver);
@@ -52,11 +56,64 @@ namespace Starver
 
 			Config = StarverConfig.Read(ConfigPath);
 			PlayerDatas = new PlayerDataManager(StorageType.MySql);
-			PlayerDatas.SaveData(new PlayerData(-44) { Exp = 1, Level = 20 });
+			Players = new StarverPlayer[TShock.Players.Length];
+			#region Hooks
+			ServerApi.Hooks.ServerJoin.Register(this, OnJoin);
+			ServerApi.Hooks.ServerLeave.Register(this, OnLeave);
+			ServerApi.Hooks.NpcStrike.Register(this, OnNpcStrike);
+			ServerApi.Hooks.GameUpdate.Register(this, OnUpdate);
+			TShockAPI.Hooks.PlayerHooks.PlayerPostLogin += OnPostLogin;
+			#endregion
 		}
+
 		protected override void Dispose(bool disposing)
 		{
 			base.Dispose(disposing);
+			#region Hooks
+			ServerApi.Hooks.ServerJoin.Deregister(this, OnJoin);
+			ServerApi.Hooks.ServerLeave.Deregister(this, OnLeave);
+			ServerApi.Hooks.NpcStrike.Deregister(this, OnNpcStrike);
+			ServerApi.Hooks.GameUpdate.Deregister(this, OnUpdate);
+			TShockAPI.Hooks.PlayerHooks.PlayerPostLogin -= OnPostLogin;
+			#endregion
+		}
+
+		#endregion
+		#region Events
+		private void OnPostLogin(PlayerPostLoginEventArgs args)
+		{
+			Players[args.Player.Index] = new StarverPlayer(args.Player.Index);
+		}
+		private void OnJoin(JoinEventArgs args)
+		{
+			if (!TShock.Players[args.Who].IsLoggedIn)
+			{
+				Players[args.Who] = StarverPlayer.GetGuest(args.Who);
+			}
+		}
+		private void OnLeave(LeaveEventArgs args)
+		{
+			Players[args.Who]?.OnLeave();
+			Players[args.Who] = null;
+		}
+#warning 这两块都只是临时写法，记得要移到StarverPlayer里
+		private void OnUpdate(EventArgs args)
+		{
+			foreach (var player in Players)
+			{
+				if(player == null)
+				{
+					continue;
+				}
+				player.SendStatusText($"Level: {player.Level}\nExp:{player.Exp}");
+			}
+		}
+
+		private void OnNpcStrike(NpcStrikeEventArgs args)
+		{
+			var player = Players[args.Player.whoAmI];
+			args.Damage = (int)(args.Damage * player.DamageIndex);
+			args.Npc.SendCombatText(args.Damage.ToString(), DamageColor);
 		}
 		#endregion
 	}
