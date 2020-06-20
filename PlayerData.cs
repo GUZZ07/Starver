@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -13,6 +14,7 @@ using TShockAPI;
 
 namespace Starver
 {
+	[Table("Starver14")]
 	public class PlayerData
 	{
 		[Key] public int UserID { get; set; }
