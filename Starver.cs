@@ -11,7 +11,7 @@ using TerrariaApi.Server;
 using TShockAPI;
 using TShockAPI.Hooks;
 
-namespace Starver
+namespace Starvers
 {
 	#region Using Alias
 	using Assembly = System.Reflection.Assembly;
@@ -96,7 +96,6 @@ namespace Starver
 			Players[args.Who]?.OnLeave();
 			Players[args.Who] = null;
 		}
-#warning 这两块都只是临时写法，记得要移到StarverPlayer里
 		private void OnUpdate(EventArgs args)
 		{
 			foreach (var player in Players)
@@ -105,15 +104,14 @@ namespace Starver
 				{
 					continue;
 				}
-				player.SendStatusText($"Level: {player.Level}\nExp:{player.Exp}");
+				player?.Update();
 			}
 		}
 
 		private void OnNpcStrike(NpcStrikeEventArgs args)
 		{
 			var player = Players[args.Player.whoAmI];
-			args.Damage = (int)(args.Damage * player.DamageIndex);
-			args.Npc.SendCombatText(args.Damage.ToString(), DamageColor);
+			player.OnStrikeNpc(args);
 		}
 		#endregion
 	}

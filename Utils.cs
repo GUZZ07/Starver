@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Terraria;
 using Terraria.Localization;
 
-namespace Starver
+namespace Starvers
 {
 	public static class Utils
 	{

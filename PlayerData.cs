@@ -12,7 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TShockAPI;
 
-namespace Starver
+namespace Starvers
 {
 	[Table("Starver14")]
 	public class PlayerData

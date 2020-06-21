@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 
-namespace Starver
+namespace Starvers
 {
 	/***************************************************
 	 * 这个东西的存在主要是为了简化向量极坐标的操作    *

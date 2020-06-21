@@ -6,9 +6,10 @@ using System.Text;
 using System.Threading.Tasks;
 using Terraria;
 using Terraria.Localization;
+using TerrariaApi.Server;
 using TShockAPI;
 
-namespace Starver
+namespace Starvers
 {
 	public class StarverPlayer
 	{
@@ -91,14 +92,16 @@ namespace Starver
 		public int Exp
 		{
 			get => Data.Exp;
-			set => Data.Exp = value;
+			set => OnExpChange(Exp, value);
 		}
 
 		public int Level
 		{
 			get => Data.Level;
-			set => Data.Level = value;
+			set => OnLevelChange(Level, value);
 		}
+#warning 还没做
+		public bool IsVip { get; set; }
 
 		public virtual double DamageIndex => 1 + Level * 0.01;
 
@@ -121,14 +124,60 @@ namespace Starver
 			}
 		}
 
-		public virtual void Save()
+		public virtual void SaveData()
 		{
 			Starver.Instance.PlayerDatas.SaveData(Data);
 		}
+		public int CalcUpgradeLevel()
+		{
+			int divide = IsVip ? 3 : 1;
+			return CalcUpgradeLevel(Level) / divide;
+		}
+		#region OnXXChange
+		private void OnExpChange(int oldValue, int newValue)
+		{
+			if (Level > Starver.Instance.Config.AutoUpgradeLevel)
+			{
+				int divide = IsVip ? 3 : 1;
+				var (exp, lvl) = (newValue, Level);
+				int expNeed = CalcUpgradeLevel(lvl) / divide;
+				while (exp >= expNeed)
+				{
+					exp -= expNeed;
+					lvl++;
+					expNeed = CalcUpgradeLevel(lvl) / divide;
+				}
+				(Exp, Level) = (exp, lvl);
+			}
+		}
+		private void OnLevelChange(int oldValue,int newValue)
+		{
+			Data.Level = newValue;
+		}
+		#endregion
 		#region Events
+		private void OnUseItem()
+		{
+
+		}
+		public virtual void OnGetData(GetDataEventArgs args)
+		{
+
+		}
 		public virtual void OnLeave()
 		{
 
+		}
+		public virtual void OnStrikeNpc(NpcStrikeEventArgs args)
+		{
+			args.Damage = (int)(args.Damage * DamageIndex);
+			args.Npc.SendCombatText(args.Damage.ToString(), Starver.DamageColor);
+			var realdamage = (int)Main.CalculateDamageNPCsTake(args.Damage, args.Npc.defense);
+			Exp += realdamage;
+		}
+		public virtual void Update()
+		{
+			SendStatusText($"Level: {Level}\nExp:{Exp}");
 		}
 		#endregion
 		#region Utilities
@@ -200,6 +249,29 @@ namespace Starver
 		#endregion
 		#region Statics
 		public static StarverPlayer GetGuest(int idx) => new GuestPlayer(idx);
+		public static int CalcUpgradeLevel(int lvl)
+		{
+			if (lvl < 1000)
+			{
+				return (int)(lvl * 10.5f);
+			}
+			else if (lvl < 2500)
+			{
+				return (int)(lvl * 15.5f);
+			}
+			else if (lvl < (int)1e4)
+			{
+				return Math.Min(150000, (int)(lvl * Math.Log(lvl)));
+			}
+			else if (lvl < (int)1e5)
+			{
+				return 150000;
+			}
+			else
+			{
+				return 25 * 25 * 25 * 25;
+			}
+		}
 		#endregion
 	}
 }

@@ -7,17 +7,19 @@ using System.Text;
 using System.Threading.Tasks;
 
 
-namespace Starver
+namespace Starvers
 {
 	public class StarverConfig
 	{
 		public string SavePath { get; set; }
 		public int SaveInterval{ get; set; }
+		public int AutoUpgradeLevel { get; set; }
 
 		private StarverConfig()
 		{
 			SavePath = Path.Combine(Environment.CurrentDirectory, "Starvers");
 			SaveInterval = 60;
+			AutoUpgradeLevel = 100;
 		}
 
 		public static StarverConfig Read(string path)
