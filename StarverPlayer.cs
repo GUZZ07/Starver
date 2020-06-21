@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -30,6 +31,7 @@ namespace Starvers
 		public virtual Player TPlayer => Main.player[Index];
 		public virtual TSPlayer TSPlayer => TShock.Players[Index];
 		#region From TPlayer
+		public int ItemUseDelay { get; set; }
 		public Item HeldItem => TPlayer.inventory[TPlayer.selectedItem];
 		public double ItemUseAngle
 		{
@@ -103,7 +105,22 @@ namespace Starvers
 #warning 还没做
 		public bool IsVip { get; set; }
 
-		public virtual double DamageIndex => 1 + Level * 0.01;
+		public virtual double DamageIndex
+		{
+			get
+			{
+				int level = Level;
+				return level switch
+				{
+					_ when level < 100 => 1 + 0.015 * level,
+					_ when 100 <= level && level < 1000 => 1 + 1.5 + Math.Log(level / 100, 2),
+					// _ when 1000 <= level && level < 10000 => 1 + 1.5 + Math.Pow(level, 0.2) + 3 * Math.Pow(level / 10000, 10) - 4
+					_ when 1000 <= level && level < 10000 => 1.821928094887362 + Math.Pow(level, 0.2) + 3 * Math.Pow(level / 10000, 10),
+					_ when 10000 <= level && level < 100000 => 11.131501539689296 + Math.Pow(Math.Log10(level) - 3.7, Math.Log(level / 1000, 2) + 1),
+					_ => 20
+				};
+			}
+		}
 
 		protected StarverPlayer()
 		{
@@ -156,13 +173,35 @@ namespace Starvers
 		}
 		#endregion
 		#region Events
-		private void OnUseItem()
+		private void OnUseItem(Item item)
 		{
 
 		}
 		public virtual void OnGetData(GetDataEventArgs args)
 		{
-
+			switch(args.MsgID)
+			{
+				case PacketTypes.PlayerAnimation:
+					{
+						using var stream = new MemoryStream(args.Msg.readBuffer, args.Index, args.Length);
+						using var reader = new BinaryReader(stream);
+						int index = reader.ReadByte();
+						index = Index;
+						Player player3 = TPlayer;
+						var itemRotation = reader.ReadSingle();
+						int itemAnimation = reader.ReadInt16();
+						TPlayer.itemRotation = itemRotation;
+						TPlayer.itemAnimation = itemAnimation;
+						TPlayer.channel = HeldItem.channel;
+						if (ItemUseDelay == 0 && ControlUseItem)
+						{
+							OnUseItem(HeldItem);
+							ItemUseDelay += HeldItem.useTime;
+						}
+						args.Handled = true;
+						break;
+					}
+			}
 		}
 		public virtual void OnLeave()
 		{
@@ -178,6 +217,10 @@ namespace Starvers
 		public virtual void Update()
 		{
 			SendStatusText($"Level: {Level}\nExp:{Exp}");
+			if (ItemUseDelay > 0)
+			{
+				ItemUseDelay--;
+			}
 		}
 		#endregion
 		#region Utilities
