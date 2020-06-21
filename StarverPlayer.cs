@@ -107,7 +107,7 @@ namespace Starvers
 
 		protected StarverPlayer()
 		{
-
+			
 		}
 
 		public StarverPlayer(int index)
