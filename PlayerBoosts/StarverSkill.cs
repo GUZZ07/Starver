@@ -8,8 +8,11 @@ namespace Starvers.PlayerBoosts
 {
 	public abstract class StarverSkill
 	{
-		public static int Count { get; private set; }
-		public int ID { get; }
+		public static byte Count { get; private set; }
+
+		protected Random Rand { get; }
+
+		public byte ID { get; }
 		/// <summary>
 		/// 技能名
 		/// </summary>
@@ -40,6 +43,7 @@ namespace Starvers.PlayerBoosts
 			ID = Count++;
 			var instance = typeof(SkillInstance<>).MakeGenericType(GetType());
 			instance.GetMethod(nameof(SkillInstance<StarverSkill>.Load)).Invoke(null, new[] { this, (object)ID });
+			Rand = new Random();
 		}
 
 		public abstract void ReleaseSkill(StarverPlayer player);
@@ -63,10 +67,12 @@ MP消耗:       {MPCost}
 		public virtual bool CanSet(StarverPlayer player)
 		{
 			int levelNeed = LevelNeed ?? 0;
-			if(player.Level < levelNeed)
+			if (player.Level < levelNeed)
 			{
 				player.SendErrorText("你的等级不足, 所需等级: " + levelNeed);
+				return false;
 			}
+			return true;
 		}
 	}
 }

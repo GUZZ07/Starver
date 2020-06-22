@@ -152,6 +152,184 @@ namespace Starvers
 			int divide = IsVip ? 3 : 1;
 			return CalcUpgradeLevel(Level) / divide;
 		}
+		#region Projs
+		#region FromPolar
+		/// <summary>
+		/// 极坐标获取角度
+		/// </summary>
+		/// <param name="angle">所需角度(弧度)</param>
+		/// <param name="radius"></param>
+		/// <returns></returns>
+		public Vector FromPolar(double angle, float radius)
+		{
+			return Vector.FromPolar(angle, radius);
+		}
+		#endregion
+		#region NewProj
+		/// <summary>
+		/// 生成弹幕
+		/// </summary>
+		/// <param name="position"></param>
+		/// <param name="velocity"></param>
+		/// <param name="Type"></param>
+		/// <param name="Damage"></param>
+		/// <param name="KnockBack"></param>
+		/// <param name="ai0"></param>
+		/// <param name="ai1"></param>
+		/// <returns></returns>
+		public int NewProj(Vector2 position, Vector2 velocity, int Type, int Damage, float KnockBack = 20f, float ai0 = 0, float ai1 = 0)
+		{
+			return Utils.NewProj(position, velocity, Type, Damage, KnockBack, Index, ai0, ai1);
+		}
+		/// <summary>
+		/// 生成弹幕
+		/// </summary>
+		public int NewProj(Vector2 velocity, int Type, int Damage, float KnockBack = 20f, float ai0 = 0, float ai1 = 0)
+		{
+			return Utils.NewProj(Center, velocity, Type, Damage, KnockBack, Index, ai0, ai1);
+		}
+		#endregion
+		#region ProjCircle
+		/// <summary>
+		/// 弹幕圆
+		/// </summary>
+		/// <param name="Center"></param>
+		/// <param name="r"></param>
+		/// <param name="speed">向外速率</param>
+		/// <param name="Type"></param>
+		/// <param name="number">弹幕总数</param>
+		public void ProjCircle(Vector2 Center, float r, float speed, int Type, int number, int Damage, float ai0 = 0, float ai1 = 0)
+		{
+			double averagerad = Math.PI * 2 / number;
+			for (int i = 0; i < number; i++)
+			{
+				NewProj(Center + FromPolar(averagerad * i, r), FromPolar(averagerad * i, speed), Type, Damage, 4f, ai0, ai1);
+			}
+		}
+		/// <summary>
+		/// 弹幕圆
+		/// </summary>
+		/// <param name="Center"></param>
+		/// <param name="angle">偏转角</param>
+		/// <param name="r"></param>
+		/// <param name="speed">速率</param>
+		/// <param name="Type"></param>
+		/// <param name="number">弹幕总数</param>
+		public void ProjCircleEx(Vector2 Center, double angle, float r, float speed, int Type, int number, int Damage, float ai0 = 0, float ai1 = 0)
+		{
+			double averagerad = Math.PI * 2 / number;
+			for (int i = 0; i < number; i++)
+			{
+				NewProj(Center + FromPolar(angle + averagerad * i, r), FromPolar(angle + averagerad * i, speed), Type, Damage, 4f, ai0, ai1);
+			}
+		}
+
+		/// <summary>
+		/// 弹幕圆
+		/// </summary>
+		/// <param name="Center"></param>
+		/// <param name="angle">偏转角</param>
+		/// <param name="r"></param>
+		/// <param name="velocity">速度</param>
+		/// <param name="Type"></param>
+		/// <param name="number">弹幕总数</param>
+		public void ProjCircleEx(Vector2 Center, double angle, float r, Vector2 velocity, int Type, int number, int Damage, float ai0 = 0, float ai1 = 0)
+		{
+			double averagerad = Math.PI * 2 / number;
+			for (int i = 0; i < number; i++)
+			{
+				NewProj(Center + FromPolar(angle + averagerad * i, r), velocity, Type, Damage, 4f, ai0, ai1);
+			}
+		}
+
+		/// <summary>
+		/// 弹幕圆
+		/// </summary>
+		/// <param name="Center"></param>
+		/// <param name="r"></param>
+		/// <param name="speed">向外速率</param>
+		/// <param name="Type"></param>
+		/// <param name="number">弹幕总数</param>
+		public int[] ProjCircleRet(Vector2 Center, float r, float speed, int Type, int number, int Damage, float ai0 = 0, float ai1 = 0)
+		{
+			double averagerad = Math.PI * 2 / number;
+			int[] arr = new int[number];
+			for (int i = 0; i < number; i++)
+			{
+				arr[i] = NewProj(Center + FromPolar(averagerad * i, r), FromPolar(averagerad * i, speed), Type, Damage, 4f, ai0, ai1);
+			}
+			return arr;
+		}
+		#endregion
+		#region ProjSector
+		/// <summary>
+		/// 扇形弹幕
+		/// </summary>
+		/// <param name="Center">圆心</param>
+		/// <param name="speed">向外速率</param>
+		/// <param name="r">半径</param>
+		/// <param name="interrad">中心半径的方向</param>
+		/// <param name="rad">张角</param>
+		/// <param name="Damage">伤害(带加成)</param>
+		/// <param name="type"></param>
+		/// <param name="num">数量</param>
+		/// <param name="ai0"></param>
+		/// <param name="ai1"></param>
+		public void ProjSector(Vector2 Center, float speed, float r, double interrad, double rad, int Damage, int type, int num, float ai0 = 0, float ai1 = 0)
+		{
+			double start = interrad - rad / 2;
+			double average = rad / num;
+			for (int i = 0; i < num; i++)
+			{
+				NewProj(Center + FromPolar(start + i * average, r), FromPolar(start + i * average, speed), type, Damage, 4f, ai0, ai1);
+			}
+		}
+		#endregion
+		#region ProjLine
+		/// <summary>
+		/// 制造速度平行的弹幕直线
+		/// </summary>
+		/// <param name="Begin">起点</param>
+		/// <param name="End">终点</param>
+		/// <param name="Vel">速度</param>
+		/// <param name="num">数量</param>
+		/// <param name="Damage"></param>
+		/// <param name="type"></param>
+		/// <param name="ai0"></param>
+		/// <param name="ai1"></param>
+		public void ProjLine(Vector2 Begin, Vector2 End, Vector2 Vel, int num, int Damage, int type, float ai0 = 0, float ai1 = 0)
+		{
+			Vector2 average = End - Begin;
+			average /= num;
+			for (int i = 0; i < num; i++)
+			{
+				NewProj(Begin + average * i, Vel, type, Damage, 3f, ai0, ai1);
+			}
+		}
+		/// <summary>
+		/// 制造速度平行的弹幕直线
+		/// </summary>
+		/// <param name="Begin">起点</param>
+		/// <param name="End">终点</param>
+		/// <param name="Vel">速度</param>
+		/// <param name="num">数量</param>
+		/// <param name="Damage"></param>
+		/// <param name="type"></param>
+		/// <param name="ai0"></param>
+		/// <param name="ai1"></param>
+		public int[] ProjLineReturns(Vector2 Begin, Vector2 End, Vector2 Vel, int num, int Damage, int type, float ai0 = 0, float ai1 = 0)
+		{
+			int[] arr = new int[num];
+			Vector2 average = End - Begin;
+			average /= num;
+			for (int i = 0; i < num; i++)
+			{
+				arr[i] = NewProj(Begin + average * i, Vel, type, Damage, 3f, ai0, ai1);
+			}
+			return arr;
+		}
+		#endregion
+		#endregion
 		#region OnXXChange
 		private void OnExpChange(int oldValue, int newValue)
 		{

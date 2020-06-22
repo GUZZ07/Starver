@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Terraria;
 using Terraria.Localization;
+using TShockAPI;
 
 namespace Starvers
 {
@@ -25,6 +26,12 @@ namespace Starvers
 		public static void SendCombatText(this Entity entity, string text, Color color, int remoteClient = -1, int ignoreClient = -1)
 		{
 			SendCombatText(entity.Size, entity.position, text, color, remoteClient, ignoreClient);
+		}
+		public static int NewProj(Vector2 position, Vector2 velocity, int Type, int Damage, float KnockBack = 20f, int owner = 255, float ai0 = 0, float ai1 = 0)
+		{
+			int index = Projectile.NewProjectile(position, velocity, Type, Damage, KnockBack, owner, ai0, ai1);
+			TSPlayer.All.SendData(PacketTypes.ProjectileNew, "", index);
+			return index;
 		}
 		#region Rands
 		/// <summary>

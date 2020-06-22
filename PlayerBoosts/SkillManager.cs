@@ -27,7 +27,9 @@ namespace Starvers.PlayerBoosts
 		public void Load()
 		{
 			var types = typeof(SkillManager).Assembly.GetTypes();
-			var skillTypes = types.Where(type => type.IsSubclassOf(typeof(StarverSkill)) && !type.IsAbstract);
+			var skillTypes = types.Where(type => type.IsSubclassOf(typeof(StarverSkill)) && !type.IsAbstract).ToArray();
+			Array.Sort(skillTypes, (l, r) => string.Compare(l.Name, r.Name));
+			skills = new StarverSkill[skillTypes.Count()];
 			foreach (var type in skillTypes)
 			{
 				var skill = (StarverSkill)Activator.CreateInstance(type);
