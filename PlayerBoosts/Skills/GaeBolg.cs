@@ -18,7 +18,7 @@ namespace Starvers.PlayerBoosts.Skills
 			Author = "三叶草";
 			Description = "发着一支速度极快的黎明";
 		}
-		public override void ReleaseSkill(StarverPlayer player)
+		public override void Release(StarverPlayer player)
 		{
 			Vector vel = Vector.FromPolar(player.ItemUseAngle, 12);
 			int damage = 122 + player.Level > 10000 ? (int)(122 * Math.Log(player.Level)) : 0;

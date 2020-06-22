@@ -37,7 +37,7 @@ namespace Starvers.PlayerBoosts.Skills
 		}
 		#endregion
 		#region Release
-		public override void ReleaseSkill(StarverPlayer player)
+		public override void Release(StarverPlayer player)
 		{
 			AsyncRelease(player, Vector.FromPolar(player.ItemUseAngle, 12));
 		}

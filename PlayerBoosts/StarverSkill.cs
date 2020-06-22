@@ -46,7 +46,7 @@ namespace Starvers.PlayerBoosts
 			Rand = new Random();
 		}
 
-		public abstract void ReleaseSkill(StarverPlayer player);
+		public abstract void Release(StarverPlayer player);
 		/// <summary>
 		/// 为可能的动态更新bossban之类的做准备
 		/// </summary>
