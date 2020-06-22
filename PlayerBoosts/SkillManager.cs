@@ -71,6 +71,7 @@ namespace Starvers.PlayerBoosts
 			ID = id;
 		}
 	}
+
 	public static class SkillID<T> where T : StarverSkill, new()
 	{
 		public static byte Value => SkillInstance<T>.ID;
