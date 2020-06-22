@@ -92,6 +92,7 @@ namespace Starvers
 		#endregion
 
 
+
 		public int Exp
 		{
 			get => Data.Exp;
