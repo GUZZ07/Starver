@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Starvers.PlayerBoosts;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
@@ -29,6 +30,7 @@ namespace Starvers
 		public StarverConfig Config { get; private set; }
 		public PlayerDataManager PlayerDatas { get; private set; }
 		public StarverPlayer[] Players { get; private set; }
+		public SkillManager Skills { get; private set; }
 		#region Plugin Infos
 		public override string Name => nameof(Starver);
 		public override string Description => nameof(Starver);
@@ -57,6 +59,7 @@ namespace Starvers
 			Config = StarverConfig.Read(ConfigPath);
 			PlayerDatas = new PlayerDataManager(StorageType.MySql);
 			Players = new StarverPlayer[TShock.Players.Length];
+			Skills = new SkillManager();
 			#region Hooks
 			ServerApi.Hooks.ServerJoin.Register(this, OnJoin);
 			ServerApi.Hooks.ServerLeave.Register(this, OnLeave);

@@ -30,6 +30,7 @@ namespace Starvers
 		public virtual PlayerData Data { get; }
 		public virtual Player TPlayer => Main.player[Index];
 		public virtual TSPlayer TSPlayer => TShock.Players[Index];
+		public int Timer { get; protected set; }
 		#region From TPlayer
 		public int ItemUseDelay { get; set; }
 		public Item HeldItem => TPlayer.inventory[TPlayer.selectedItem];
@@ -216,7 +217,11 @@ namespace Starvers
 		}
 		public virtual void Update()
 		{
-			SendStatusText($"Level: {Level}\nExp:{Exp}");
+			Timer++;
+			if (Timer % 60 == 0)
+			{
+				SendStatusText($"Level: {Level}\nExp:{Exp}");
+			}
 			if (ItemUseDelay > 0)
 			{
 				ItemUseDelay--;
@@ -280,6 +285,10 @@ namespace Starvers
 		public void SendBlueText(string text)
 		{
 			SendText(text, 0, 0, 255);
+		}
+		public void SendErrorText(string text)
+		{
+			SendText(text, 255, 0, 0);
 		}
 		private static readonly string EndLine19 = new string('\n', 19);
 		private static readonly string EndLine20 = new string('\n', 20);
