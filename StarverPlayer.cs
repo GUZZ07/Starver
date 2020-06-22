@@ -330,6 +330,20 @@ namespace Starvers
 		}
 		#endregion
 		#endregion
+		#region Cast
+		public static implicit operator TSPlayer(StarverPlayer player)
+		{
+			return player.TSPlayer;
+		}
+		public static implicit operator Player(StarverPlayer player)
+		{
+			return player.TPlayer;
+		}
+		public static implicit operator int(StarverPlayer player)
+		{
+			return player.Index;
+		}
+		#endregion
 		#region OnXXChange
 		private void OnExpChange(int oldValue, int newValue)
 		{
