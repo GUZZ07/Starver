@@ -7,13 +7,6 @@
 	  <RootNamespace>Starvers</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <None Include="SkillTypes.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>SkillTypes.tt</DependentUpon>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="MySql.Data.EntityFrameworkCore" Version="8.0.20" />
   </ItemGroup>
   <ItemGroup>
@@ -38,20 +31,9 @@
     <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Update="SkillTypes.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>SkillTypes.tt</DependentUpon>
-    </Compile>
     <Compile Update="SkillTypesGenerator.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>SkillTypesGenerator.tt</DependentUpon>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Update="SkillTypes.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>SkillTypes.cs</LastGenOutput>
-    </None>
   </ItemGroup></Project>

@@ -20,7 +20,7 @@ namespace Starvers.PlayerBoosts.Skills
 			Author = "wither";
 			Description = "能够和咖喱棒平起平坐的技能!\n对一定范围内的敌对生物发动攻击";
 		}
-		public override void Release(StarverPlayer player)
+		public override void Release(StarverPlayer player, Vector vel)
 		{
 			foreach (NPC npc in Main.npc)
 			{

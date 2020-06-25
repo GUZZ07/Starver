@@ -20,7 +20,7 @@ namespace Starvers.PlayerBoosts.Skills
 			LevelNeed = 50;
 			Author = "三叶草";
 		}
-		public override void Release(StarverPlayer player)
+		public override void Release(StarverPlayer player, Vector vel)
 		{
 			Vector vel = Vector.FromPolar(player.ItemUseAngle, 16);
 			Vector vertical = vel.ToVertical(1);

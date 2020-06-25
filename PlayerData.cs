@@ -20,11 +20,13 @@ namespace Starvers
 		[Key] public int UserID { get; set; }
 		public int Level { get; set; }
 		public int Exp { get; set; }
+		public SkillStorage[] Skills { get; set; }
 		public PlayerData(int userID)
 		{
 			UserID = userID;
 			Level = 1;
 			Exp = 0;
+			Skills = new SkillStorage[Starver.MaxSkillSlot];
 		}
 
 		public string Serialize()

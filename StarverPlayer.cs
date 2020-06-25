@@ -1,8 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
+using Starvers.PlayerBoosts;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using Terraria;
@@ -14,6 +16,7 @@ namespace Starvers
 {
 	public class StarverPlayer
 	{
+		#region Types
 		#region Guest
 		private class GuestPlayer : StarverPlayer
 		{
@@ -24,7 +27,24 @@ namespace Starvers
 			{
 				Index = idx;
 			}
+			public override void SaveData()
+			{
+
+			}
+			public override void OnLeave()
+			{
+
+			}
+			public override void OnStrikeNpc(NpcStrikeEventArgs args)
+			{
+				args.Handled = true;
+			}
+			public override void Update()
+			{
+
+			}
 		}
+		#endregion
 		#endregion
 		public int Index { get; protected set; }
 		public virtual PlayerData Data { get; }
@@ -104,6 +124,9 @@ namespace Starvers
 			get => Data.Level;
 			set => OnLevelChange(Level, value);
 		}
+
+		public PlayerSkillData[] Skills { get; }
+
 #warning 还没做
 		public bool IsVip { get; set; }
 
@@ -123,7 +146,7 @@ namespace Starvers
 				};
 			}
 		}
-
+		#region Ctor
 		protected StarverPlayer()
 		{
 			
@@ -132,6 +155,7 @@ namespace Starvers
 		public StarverPlayer(int index)
 		{
 			Index = index;
+			Skills = new PlayerSkillData[Starver.MaxSkillSlot];
 			try
 			{
 				Data = Starver.Instance.PlayerDatas.GetData(TSPlayer.Account.ID);
@@ -141,17 +165,29 @@ namespace Starvers
 				Data = new PlayerData(TSPlayer.Account.ID);
 				Starver.Instance.PlayerDatas.SaveData(Data);
 			}
+			for (int i = 0; i < Starver.MaxSkillSlot; i++)
+			{
+				Skills[i] = Data.Skills[i];
+			}
 		}
-
+		#endregion
+		#region SaveData
 		public virtual void SaveData()
 		{
+			for (int i = 0; i < Starver.MaxSkillSlot; i++)
+			{
+				Data.Skills[i] = Skills[i];
+			}
 			Starver.Instance.PlayerDatas.SaveData(Data);
 		}
-		public int CalcUpgradeLevel()
+		#endregion
+		#region UpgradeExp
+		public int CalcUpgradeExp()
 		{
 			int divide = IsVip ? 3 : 1;
-			return CalcUpgradeLevel(Level) / divide;
+			return CalcUpgradeExp(Level) / divide;
 		}
+		#endregion
 		#region Projs
 		#region FromPolar
 		/// <summary>
@@ -351,12 +387,12 @@ namespace Starvers
 			{
 				int divide = IsVip ? 3 : 1;
 				var (exp, lvl) = (newValue, Level);
-				int expNeed = CalcUpgradeLevel(lvl) / divide;
+				int expNeed = CalcUpgradeExp(lvl) / divide;
 				while (exp >= expNeed)
 				{
 					exp -= expNeed;
 					lvl++;
-					expNeed = CalcUpgradeLevel(lvl) / divide;
+					expNeed = CalcUpgradeExp(lvl) / divide;
 				}
 				(Exp, Level) = (exp, lvl);
 			}
@@ -494,7 +530,7 @@ namespace Starvers
 		#endregion
 		#region Statics
 		public static StarverPlayer GetGuest(int idx) => new GuestPlayer(idx);
-		public static int CalcUpgradeLevel(int lvl)
+		public static int CalcUpgradeExp(int lvl)
 		{
 			if (lvl < 1000)
 			{
@@ -519,4 +555,45 @@ namespace Starvers
 		}
 		#endregion
 	}
+
+	#region SkillStorage
+	public struct SkillStorage
+	{
+		public byte? ID { get; set; }
+		public bool BindByProj { get; set; }
+		public short BindID { get; set; }
+
+		public static implicit operator PlayerSkillData(in SkillStorage data)
+		{
+			return new PlayerSkillData
+			{
+				ID = data.ID,
+				BindByProj = data.BindByProj,
+				BindID = data.BindID
+			};
+		}
+	}
+	#endregion
+	#region PlayerSkillData
+	public struct PlayerSkillData
+	{
+		public int CD { get; set; }
+		public byte? ID { get; set; }
+		public bool BindByProj { get; set; }
+		public short BindID { get; set; }
+
+		public StarverSkill Skill => ID.HasValue ? Starver.Instance.Skills[(byte)ID] : null;
+
+
+		public static implicit operator SkillStorage(in PlayerSkillData data)
+		{
+			return new SkillStorage
+			{
+				ID = data.ID,
+				BindByProj = data.BindByProj,
+				BindID = data.BindID
+			};
+		}
+	}
+	#endregion
 }

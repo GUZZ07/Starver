@@ -18,9 +18,8 @@ namespace Starvers.PlayerBoosts.Skills
 			Description = "三叶草制作的最强技能";
 			Author = "三叶草";
 		}
-		public override void Release(StarverPlayer player)
+		public override void Release(StarverPlayer player, Vector vel)
 		{
-			Vector vel = Vector.FromPolar(player.ItemUseAngle, 12);
 			player.ProjCircle(player.Center, 32, 16, ProjectileID.DD2SquireSonicBoom, 10, 1080);
 			player.ProjSector(player.Center, 16, 16, vel.Angle, Math.PI / 4, 1310, ProjectileID.NebulaBlaze2, 3);
 			player.ProjLine(player.Center, player.Center + player.FromPolar(vel.Angle, 48 * 20), vel.ToLenOf(24), 20, player.Level / 80 + 900, ProjectileID.SolarWhipSwordExplosion);

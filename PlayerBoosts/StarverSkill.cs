@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
 
 namespace Starvers.PlayerBoosts
 {
@@ -40,13 +41,14 @@ namespace Starvers.PlayerBoosts
 
 		protected StarverSkill()
 		{
-			ID = Count++;
+			Count++;
+			ID = (byte)(SkillIDs)Enum.Parse(typeof(SkillIDs), GetType().Name);
 			var instance = typeof(SkillInstance<>).MakeGenericType(GetType());
-			instance.GetMethod(nameof(SkillInstance<StarverSkill>.Load)).Invoke(null, new[] { this, (object)ID });
+			instance.GetMethod(nameof(SkillInstance<StarverSkill>.Load)).Invoke(null, new[] { this });
 			Rand = new Random();
 		}
 
-		public abstract void Release(StarverPlayer player);
+		public abstract void Release(StarverPlayer player, Vector direction);
 		/// <summary>
 		/// 为可能的动态更新bossban之类的做准备
 		/// </summary>

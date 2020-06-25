@@ -16,6 +16,7 @@ namespace Starvers.PlayerBoosts
 		public int Count => StarverSkill.Count;
 
 		public StarverSkill this[int id] => skills[id];
+		public StarverSkill this[SkillIDs id] => this[(int)id];
 		#endregion
 		#region Ctor
 		public SkillManager()
@@ -63,19 +64,61 @@ namespace Starvers.PlayerBoosts
 	{
 		public static SkillT Value { get; private set; }
 		public static byte ID { get; private set; }
-		public static void Load(SkillT skill, byte id)
+		public static void Load(SkillT skill)
 		{
 			if (Value != null)
 			{
 				throw new InvalidOperationException();
 			}
 			Value = skill;
-			ID = id;
+			ID = skill.ID;
 		}
 	}
 
-	public static class SkillID<T> where T : StarverSkill, new()
+	public enum SkillIDs : byte
 	{
-		public static byte Value => SkillInstance<T>.ID;
+		Avalon,
+		ExCalibur,
+		FireBall,
+		Musket,
+		GaeBolg,
+		EnderWand,
+		WindRealm,
+		Whirlwind,
+		Shuriken,
+		SpiritStrike,
+		AvalonGradation,
+		LawAias,
+		LimitlessSpark,
+		MagnetStorm,
+		FlameBurning,
+		JusticeFromSky,
+		TrackingMissile,
+		PosionFog,
+		CDLess,
+		NStrike,
+		Sacrifice,
+		TheWorld,
+		MirrorMana,
+		Chaos,
+		Cosmos,
+		ChordMana,
+		FromHell,
+		StarEruption,
+		NatureRage,
+		NatureGuard,
+		FishingRod,
+		AlcoholFeast,
+		GreenWind,
+		FrozenCraze,
+		LimitBreak,
+		MiracleMana,
+		UltimateSlash,
+		UniverseBlast,
+		NatureStorm,
+		UnstableTele,
+		GreenCrit,
+		RealmOfDefense,
+		NightMana
 	}
 }

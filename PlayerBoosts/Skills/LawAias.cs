@@ -21,7 +21,7 @@ namespace Starvers.PlayerBoosts.Skills
 以释放者为圆心制造一个由弹幕组成的逐渐缩小的圆
 强度随等级飞跃而飞跃";
 		}
-		public override void Release(StarverPlayer player)
+		public override void Release(StarverPlayer player, Vector vel)
 		{
 			int proj = ProjectileID.DemonScythe;
 			if(player.Level > 10000)

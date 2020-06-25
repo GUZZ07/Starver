@@ -23,6 +23,7 @@ namespace Starvers
 		#region Fields
 		public const string ConfigPath = "tshock//StarverConfig.json";
 		public readonly static Color DamageColor = Color.Yellow;
+		public const int MaxSkillSlot = 5;
 		#endregion
 		#region Properties
 		public static Starver Instance { get; private set; }
