@@ -14,12 +14,14 @@ namespace Starvers
 		public string SavePath { get; set; }
 		public int SaveInterval{ get; set; }
 		public int AutoUpgradeLevel { get; set; }
+		public StorageType StorageType { get; set; }
 
 		private StarverConfig()
 		{
 			SavePath = Path.Combine(Environment.CurrentDirectory, "Starvers");
 			SaveInterval = 60;
 			AutoUpgradeLevel = 100;
+			StorageType = StorageType.MySql;
 		}
 
 		public static StarverConfig Read(string path)

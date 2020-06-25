@@ -165,19 +165,21 @@ namespace Starvers
 				Data = new PlayerData(TSPlayer.Account.ID);
 				Starver.Instance.PlayerDatas.SaveData(Data);
 			}
-			for (int i = 0; i < Starver.MaxSkillSlot; i++)
-			{
-				Skills[i] = Data.Skills[i];
-			}
+			Data.GetSkillDatas(Skills);
+			//for (int i = 0; i < Starver.MaxSkillSlot; i++)
+			//{
+			//	Skills[i] = Data.Skills[i];
+			//}
 		}
 		#endregion
 		#region SaveData
 		public virtual void SaveData()
 		{
-			for (int i = 0; i < Starver.MaxSkillSlot; i++)
-			{
-				Data.Skills[i] = Skills[i];
-			}
+			//for (int i = 0; i < Starver.MaxSkillSlot; i++)
+			//{
+			//	Data.Skills[i] = Skills[i];
+			//}
+			Data.SetSkillDatas(Skills);
 			Starver.Instance.PlayerDatas.SaveData(Data);
 		}
 		#endregion

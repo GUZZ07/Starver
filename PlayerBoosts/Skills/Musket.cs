@@ -22,7 +22,6 @@ namespace Starvers.PlayerBoosts.Skills
 		}
 		public override void Release(StarverPlayer player, Vector vel)
 		{
-			Vector vel = Vector.FromPolar(player.ItemUseAngle, 16);
 			Vector vertical = vel.ToVertical(1);
 			for (int i = 0; i < 15; i++)
 			{

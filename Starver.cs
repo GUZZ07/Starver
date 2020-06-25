@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Terraria;
+using Terraria.ID;
 using TerrariaApi.Server;
 using TShockAPI;
 using TShockAPI.Hooks;
@@ -58,9 +59,23 @@ namespace Starvers
 			};
 
 			Config = StarverConfig.Read(ConfigPath);
-			PlayerDatas = new PlayerDataManager(StorageType.MySql);
-			Players = new StarverPlayer[TShock.Players.Length];
 			Skills = new SkillManager();
+			PlayerDatas = new PlayerDataManager(StorageType.MySql);
+			#region Test
+#if false
+			var data = new PlayerData(-444) { Level = 3 };
+			var skills = new PlayerSkillData[5];
+			skills[0] = new PlayerSkillData
+			{
+				ID = (byte)SkillIDs.LawAias,
+				BindByProj = true,
+				BindID = ProjectileID.Spear
+			};
+			data.SetSkillDatas(skills);
+			PlayerDatas.SaveData(data);
+#endif
+			#endregion
+			Players = new StarverPlayer[TShock.Players.Length];
 			#region Hooks
 			ServerApi.Hooks.ServerJoin.Register(this, OnJoin);
 			ServerApi.Hooks.ServerLeave.Register(this, OnLeave);
@@ -104,7 +119,7 @@ namespace Starvers
 		{
 			foreach (var player in Players)
 			{
-				if(player == null)
+				if (player == null)
 				{
 					continue;
 				}

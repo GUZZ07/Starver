@@ -20,13 +20,39 @@ namespace Starvers
 		[Key] public int UserID { get; set; }
 		public int Level { get; set; }
 		public int Exp { get; set; }
-		public SkillStorage[] Skills { get; set; }
+
+		[JsonIgnore]public string SkillDatas { get; set; }
+		[NotMapped]	public SkillStorage[] Skills { get; set; }
 		public PlayerData(int userID)
 		{
 			UserID = userID;
 			Level = 1;
 			Exp = 0;
 			Skills = new SkillStorage[Starver.MaxSkillSlot];
+		}
+
+		public void GetSkillDatas(PlayerSkillData[] skills)
+		{
+			if (Starver.Instance.Config.StorageType == StorageType.MySql)
+			{
+				Skills = JsonConvert.DeserializeObject<SkillStorage[]>(SkillDatas);
+			}
+			for (int i = 0; i < Starver.MaxSkillSlot; i++)
+			{
+				skills[i] = Skills[i];
+			}
+		}
+
+		public void SetSkillDatas(PlayerSkillData[] skills)
+		{
+			for (int i = 0; i < Starver.MaxSkillSlot; i++)
+			{
+				Skills[i] = skills[i];
+			}
+			if (Starver.Instance.Config.StorageType == StorageType.MySql)
+			{
+				SkillDatas = JsonConvert.SerializeObject(Skills);
+			}
 		}
 
 		public string Serialize()
@@ -46,7 +72,6 @@ namespace Starvers
 			public DbSet<PlayerData> Datas { get; set; }
 			public DatasContext()
 			{
-
 			}
 			protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 			{
@@ -54,6 +79,10 @@ namespace Starvers
 				var connectionString = TShock.DB.ConnectionString; 
 				optionsBuilder.UseMySQL(connectionString);
 				//optionsBuilder.Options.
+			}
+			protected override void OnModelCreating(ModelBuilder modelBuilder)
+			{
+				base.OnModelCreating(modelBuilder);
 			}
 		}
 		private string folder;
