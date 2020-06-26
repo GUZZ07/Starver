@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,10 @@ namespace Starvers
 
 		[JsonIgnore]public string SkillDatas { get; set; }
 		[NotMapped]	public SkillStorage?[] Skills { get; set; }
+		public PlayerData()
+		{
+
+		}
 		public PlayerData(int userID)
 		{
 			UserID = userID;

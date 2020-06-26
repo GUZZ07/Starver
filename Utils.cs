@@ -131,5 +131,76 @@ namespace Starvers
 			return min <= number && number <= max;
 		}
 		#endregion
+		#region SendData
+		public static void SendData(this NPC npc)
+		{
+			NetMessage.SendData((int)PacketTypes.NpcUpdate, -1, -1, null, npc.whoAmI);
+		}
+		public static void SendData(this Projectile proj)
+		{
+			NetMessage.SendData((int)PacketTypes.ProjectileNew, -1, -1, null, proj.whoAmI);
+		}
+		public static void SendData(this Player player)
+		{
+			NetMessage.SendData((int)PacketTypes.PlayerUpdate, -1, -1, null, player.whoAmI);
+		}
+		#endregion
+		#region Vector2
+		public static Vector2 FromPolar(double angle, float length)
+		{
+			return new Vector2((float)(Math.Cos(angle) * length), (float)(Math.Sin(angle) * length));
+		}
+		public static double Angle(this Vector2 vector)
+		{
+			return Math.Atan2(vector.Y, vector.X);
+		}
+		public static double Angle(ref this Vector2 vector, double rad)
+		{
+			vector = FromPolar(rad, vector.Length());
+			return rad;
+		}
+		public static double AngleAdd(ref this Vector2 vector, double rad)
+		{
+			rad += Math.Atan2(vector.Y, vector.X);
+			vector = FromPolar(rad, vector.Length());
+			return rad;
+		}
+		public static Vector2 Deflect(this Vector2 vector2, double rad)
+		{
+			Vector2 vector = vector2;
+			vector2.AngleAdd(rad);
+			return vector;
+		}
+		public static void Length(ref this Vector2 vector, float length)
+		{
+			vector = FromPolar(vector.Angle(), length);
+		}
+		public static void LengthAdd(ref this Vector2 vector, float length)
+		{
+			vector = FromPolar(vector.Angle(), length + vector.Length());
+		}
+		public static Vector2 ToLenOf(this Vector2 vector, float length)
+		{
+			vector.Normalize();
+			vector *= length;
+			return vector;
+		}
+		public static Vector2 Symmetry(this Vector2 vector, Vector2 Center)
+		{
+			return Center * 2f - vector;
+		}
+		public static Vector2 Vertical(this Vector2 vector)
+		{
+			return new Vector2(-vector.Y, vector.X);
+		}
+		public static Vector ToVector(this Vector2 value)
+		{
+			return new Vector(value.X, value.Y);
+		}
+		public static Vector2 ToVector2(this Vector value)
+		{
+			return new Vector2(value.X, value.Y);
+		}
+		#endregion
 	}
 }

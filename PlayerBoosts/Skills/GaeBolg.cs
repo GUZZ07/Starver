@@ -21,7 +21,7 @@ namespace Starvers.PlayerBoosts.Skills
 		}
 		public override void Release(StarverPlayer player, Vector vel)
 		{
-			int damage = 122 + player.Level > 10000 ? (int)(122 * Math.Log(player.Level)) : 0;
+			int damage = 142 + player.Level > 10000 ? (int)(122 * Math.Log(player.Level)) : 0;
 			player.NewProj(vel * 10, ProjectileID.Daybreak, 130, 1);
 			player.NewProj(player.Center + vel.ToLenOf(8), vel * 10, ProjectileID.Daybreak, damage, 1);
 			player.NewProj(player.Center + vel.ToLenOf(16), vel * 10, ProjectileID.Daybreak, damage / 10, 1);

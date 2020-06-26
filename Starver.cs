@@ -293,6 +293,10 @@ namespace Starvers
 								player.BindSkill(slot, skill, false, player.HeldItem.type);
 								break;
 							default:
+								if (skill.SpecialBindTo(player))
+								{
+									break;
+								}
 								args.Player.SendErrorMessage("该武器无法绑定技能");
 								return;
 						}

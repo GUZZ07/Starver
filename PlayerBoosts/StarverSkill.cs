@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using Terraria;
 
 namespace Starvers.PlayerBoosts
 {
@@ -75,6 +76,15 @@ MP消耗:       {MPCost}
 				return false;
 			}
 			return true;
+		}
+
+		/// <summary>
+		/// 给某些特殊技能使用的
+		/// </summary>
+		/// <returns></returns>
+		public virtual bool SpecialBindTo(StarverPlayer player)
+		{
+			return false;
 		}
 
 		public override string ToString()

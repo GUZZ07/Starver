@@ -113,6 +113,7 @@ namespace Starvers
 		#endregion
 
 
+		public SkillIDs LastSkill { get; set; }
 
 		public int Exp
 		{
@@ -426,6 +427,7 @@ namespace Starvers
 				BindByProj = byProj,
 				BindID = (short)bindId
 			};
+			SaveData();
 		}
 		#endregion
 		#region Events
@@ -682,6 +684,7 @@ namespace Starvers
 		{
 			Skill.Release(player, vel);
 			CD += Skill.CD;
+			player.LastSkill = (SkillIDs)ID;
 		}
 		#endregion
 		#region IsBindTo
