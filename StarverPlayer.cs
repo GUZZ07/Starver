@@ -431,8 +431,9 @@ namespace Starvers
 		#region Events
 		private void OnUseItem(Item item)
 		{
-			foreach(var skill in Skills)
+			for (int i = 0; i < Skills.Length; i++)
 			{
+				ref var skill = ref Skills[i];
 				if (skill.ID != null && skill.CD == 0)
 				{
 					if (skill.IsBindTo(item))
@@ -444,8 +445,9 @@ namespace Starvers
 		}
 		public virtual void OnNewProj(GetDataHandlers.NewProjectileEventArgs args)
 		{
-			foreach (var skill in Skills)
+			for (int i = 0; i < Skills.Length; i++)
 			{
+				ref var skill = ref Skills[i];
 				if (skill.ID != null && skill.CD == 0)
 				{
 					if (skill.IsBindTo(Main.projectile[args.Index]))
@@ -492,7 +494,7 @@ namespace Starvers
 			args.Damage = (int)(args.Damage * DamageIndex);
 			var realdamage = (int)Main.CalculateDamageNPCsTake(args.Damage, args.Npc.defense);
 			args.Npc.SendCombatText(realdamage.ToString(), Starver.DamageColor);
-			Exp += realdamage;
+			Exp += Math.Min(realdamage, args.Npc.life);
 		}
 		public virtual void Update()
 		{
