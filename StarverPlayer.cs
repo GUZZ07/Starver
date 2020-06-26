@@ -397,7 +397,7 @@ namespace Starvers
 			if (Level > Starver.Instance.Config.AutoUpgradeLevel)
 			{
 				int divide = IsVip ? 3 : 1;
-				var (exp, lvl) = (newValue, Level);
+				var (exp, lvl) = ((long)newValue, Level);
 				int expNeed = CalcUpgradeExp(lvl) / divide;
 				while (exp >= expNeed)
 				{
@@ -405,7 +405,7 @@ namespace Starvers
 					lvl++;
 					expNeed = CalcUpgradeExp(lvl) / divide;
 				}
-				Data.Exp = exp;
+				Data.Exp = (int)exp;
 				Level = lvl;
 			}
 			else
@@ -496,7 +496,11 @@ namespace Starvers
 			args.Damage = (int)(args.Damage * DamageIndex);
 			var realdamage = (int)Main.CalculateDamageNPCsTake(args.Damage, args.Npc.defense);
 			args.Npc.SendCombatText(realdamage.ToString(), Starver.DamageColor);
-			Exp += Math.Min(realdamage, args.Npc.life);
+			var expGet = Math.Min(realdamage, args.Npc.life);
+			if (expGet > 0)
+			{
+				Exp += expGet;
+			}
 		}
 		public virtual void Update()
 		{

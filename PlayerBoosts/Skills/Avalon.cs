@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.Audio;
 using Terraria.GameContent.Creative;
 using Terraria.GameContent.NetModules;
 using Terraria.ID;
@@ -16,11 +17,12 @@ namespace Starvers.PlayerBoosts.Skills
 {
 	public class Avalon : StarverSkill
 	{
+		private static Random rand = new Random();
 		public Avalon() 
 		{
 			MPCost = 30;
 			CD = 60 * 30;
-			Description = "幻想乡，这个技能可以给予你5s的伪无敌,\n随后附加多种回血buff,苟命专用";
+			Description = "幻想乡，这个技能可以给予你5s的无敌,\n随后附加多种回血buff,苟命专用";
 			Author = "三叶草";
 			LevelNeed = 10;
 		}
@@ -28,10 +30,10 @@ namespace Starvers.PlayerBoosts.Skills
 		{
 			var power = CreativePowerManager.Instance.GetPower<CreativePowers.GodmodePower>();
 			power.SetEnabledState(player.Index, true);
-			//var powerID = power.PowerId; // 5
-			//var packet = NetCreativePowersModule.PreparePacket(powerID, 1);
-			//packet.Writer.Write(true);
-			//NetManager.Instance.SendData(Netplay.Clients[player.Index].Socket, packet);
+
+			var sound = new NetMessage.NetSoundInfo(player.Center, (ushort)rand.Next(47, 56));
+			NetMessage.PlayNetSound(sound, player.Index);
+
 			AsyncRelease(player);
 		}
 		private async void AsyncRelease(StarverPlayer player)
@@ -43,8 +45,12 @@ namespace Starvers.PlayerBoosts.Skills
 					Thread.Sleep(5000);
 					var power = CreativePowerManager.Instance.GetPower<CreativePowers.GodmodePower>();
 					power.SetEnabledState(player.Index, false);
+
 					player.SetBuff(BuffID.RapidHealing, 10 * 60);
 					player.SetBuff(BuffID.NebulaUpLife3, 10 * 60);
+
+					var sound = new NetMessage.NetSoundInfo(player.Center, 19);
+					NetMessage.PlayNetSound(sound);
 				}
 				catch(Exception e)
 				{

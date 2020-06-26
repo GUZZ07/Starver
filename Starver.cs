@@ -318,6 +318,27 @@ namespace Starvers
 					args.Player.SendInfoMessage(Skills.SkillLists[page]);
 					break;
 				#endregion
+				#region Sounds
+				//case "sounds":
+				//	Task.Run(() =>
+				//	{
+				//		try
+				//		{
+				//			for (int i = 0; i < SoundID.TrackableLegacySoundCount; i++)
+				//			{
+				//				var sound = new NetMessage.NetSoundInfo(args.TPlayer.Center, (ushort)i);
+				//				NetMessage.PlayNetSound(sound);
+				//				args.Player.SendInfoMessage($"soundid: {i}");
+				//				Thread.Sleep(5000);
+				//			}
+				//		}
+				//		catch (Exception)
+				//		{
+
+				//		}
+				//	});
+				//	break;
+				#endregion
 				case "help":
 					#region Help
 					if (args.Parameters.Count < 2)
