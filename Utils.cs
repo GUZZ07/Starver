@@ -118,5 +118,18 @@ namespace Starvers
 			return list[rand.Next(list.Count)];
 		}
 		#endregion
+		#region Numbers
+		/// <summary>
+		/// 检查number是否属于[min, max]
+		/// </summary>
+		/// <param name="number"></param>
+		/// <param name="min"></param>
+		/// <param name="max"></param>
+		/// <returns></returns>
+		public static bool InRange(in this int number, int min, int max)
+		{
+			return min <= number && number <= max;
+		}
+		#endregion
 	}
 }

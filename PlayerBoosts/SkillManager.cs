@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TShockAPI;
 
 namespace Starvers.PlayerBoosts
 {
@@ -17,6 +18,8 @@ namespace Starvers.PlayerBoosts
 
 		public StarverSkill this[int id] => skills[id];
 		public StarverSkill this[SkillIDs id] => this[(int)id];
+
+		public string[] SkillLists { get; private set; }
 		#endregion
 		#region Ctor
 		public SkillManager()
@@ -27,9 +30,11 @@ namespace Starvers.PlayerBoosts
 		#region Load
 		public void Load()
 		{
+			#region LoadSkillTypes
 			var types = typeof(SkillManager).Assembly.GetTypes();
 			var skillTypes = types.Where(type => type.IsSubclassOf(typeof(StarverSkill)) && !type.IsAbstract).ToArray();
-			Array.Sort(skillTypes, (l, r) => string.Compare(l.Name, r.Name));
+			#endregion
+			#region LoadSkills
 			skills = new StarverSkill[skillTypes.Count()];
 			foreach (var type in skillTypes)
 			{
@@ -37,6 +42,31 @@ namespace Starvers.PlayerBoosts
 				skill.Load();
 				skills[skill.ID] = skill;
 			}
+			#endregion
+			#region LoadSkillList
+			{
+				SkillLists = new string[(int)Math.Ceiling(Count / 4 / 4.0)];
+				int page = 0;
+				var sb = new StringBuilder(skills.Length * 10);
+				for (int i = 0; i < skills.Length; i++)
+				{
+					var skill = skills[i];
+					sb.Append(skill);
+					sb.Append("   ");
+					if (i != Count - 1 && i % 4 == 3)
+					{
+						sb.AppendLine();
+					}
+					if (i % (4 * 4) == 4 * 4 - 1 && i != Count - 1)
+					{
+						SkillLists[page] = sb.ToString();
+						sb.Clear();
+						page++;
+					}
+				}
+				SkillLists[page] = sb.ToString();
+			}
+			#endregion
 		}
 		#endregion
 		#region GetSkill

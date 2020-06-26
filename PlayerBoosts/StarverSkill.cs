@@ -76,5 +76,10 @@ MP消耗:       {MPCost}
 			}
 			return true;
 		}
+
+		public override string ToString()
+		{
+			return Name;
+		}
 	}
 }

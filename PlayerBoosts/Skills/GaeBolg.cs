@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using Terraria;
 using Terraria.ID;
 
 namespace Starvers.PlayerBoosts.Skills
@@ -21,11 +22,11 @@ namespace Starvers.PlayerBoosts.Skills
 		public override void Release(StarverPlayer player, Vector vel)
 		{
 			int damage = 122 + player.Level > 10000 ? (int)(122 * Math.Log(player.Level)) : 0;
-			player.NewProj(vel * 10, ItemID.DayBreak, 130, 1);
-			player.NewProj(player.Center + vel.ToLenOf(8), vel * 10, ItemID.DayBreak, damage, 1);
-			player.NewProj(player.Center + vel.ToLenOf(16), vel * 10, ItemID.DayBreak, damage / 10, 1);
-			player.NewProj(Vector2.Zero, ItemID.PlatinumHelmet, damage / 2, 1);
-			player.NewProj(Vector2.Zero, ItemID.YellowStucco, damage / 2, 1);
+			player.NewProj(vel * 10, ProjectileID.Daybreak, 130, 1);
+			player.NewProj(player.Center + vel.ToLenOf(8), vel * 10, ProjectileID.Daybreak, damage, 1);
+			player.NewProj(player.Center + vel.ToLenOf(16), vel * 10, ProjectileID.Daybreak, damage / 10, 1);
+			player.NewProj(Vector2.Zero, ProjectileID.DD2ExplosiveTrapT3Explosion, damage / 2, 1);
+			player.NewProj(Vector2.Zero, ProjectileID.SolarWhipSwordExplosion, damage / 2, 1);
 		}
 	}
 }

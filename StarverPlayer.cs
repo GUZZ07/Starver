@@ -8,6 +8,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using Terraria;
+using Terraria.ID;
 using Terraria.Localization;
 using TerrariaApi.Server;
 using TShockAPI;
@@ -166,19 +167,11 @@ namespace Starvers
 				Starver.Instance.PlayerDatas.SaveData(Data);
 			}
 			Data.GetSkillDatas(Skills);
-			//for (int i = 0; i < Starver.MaxSkillSlot; i++)
-			//{
-			//	Skills[i] = Data.Skills[i];
-			//}
 		}
 		#endregion
 		#region SaveData
 		public virtual void SaveData()
 		{
-			//for (int i = 0; i < Starver.MaxSkillSlot; i++)
-			//{
-			//	Data.Skills[i] = Skills[i];
-			//}
 			Data.SetSkillDatas(Skills);
 			Starver.Instance.PlayerDatas.SaveData(Data);
 		}
@@ -188,6 +181,21 @@ namespace Starvers
 		{
 			int divide = IsVip ? 3 : 1;
 			return CalcUpgradeExp(Level) / divide;
+		}
+		#endregion
+		#region TryUpgrade
+		public void TryUpgrade()
+		{
+			int divide = IsVip ? 3 : 1;
+			var (exp, lvl) = (Exp, Level);
+			int expNeed = CalcUpgradeExp(lvl) / divide;
+			while (exp >= expNeed)
+			{
+				exp -= expNeed;
+				lvl++;
+				expNeed = CalcUpgradeExp(lvl) / divide;
+			}
+			(Exp, Level) = (exp, lvl);
 		}
 		#endregion
 		#region Projs
@@ -396,7 +404,12 @@ namespace Starvers
 					lvl++;
 					expNeed = CalcUpgradeExp(lvl) / divide;
 				}
-				(Exp, Level) = (exp, lvl);
+				Data.Exp = exp;
+				Level = lvl;
+			}
+			else
+			{
+				Data.Exp = newValue;
 			}
 		}
 		private void OnLevelChange(int oldValue,int newValue)
@@ -404,10 +417,45 @@ namespace Starvers
 			Data.Level = newValue;
 		}
 		#endregion
+		#region BindSkill
+		public void BindSkill(int slot, StarverSkill skill, bool byProj, int bindId)
+		{
+			Skills[slot] = new PlayerSkillData
+			{
+				ID = skill.ID,
+				BindByProj = byProj,
+				BindID = (short)bindId
+			};
+		}
+		#endregion
 		#region Events
 		private void OnUseItem(Item item)
 		{
-
+			foreach(var skill in Skills)
+			{
+				if (skill.ID != null && skill.CD == 0)
+				{
+					if (skill.IsBindTo(item))
+					{
+						skill.Release(this);
+					}
+				}
+			}
+		}
+		public virtual void OnNewProj(GetDataHandlers.NewProjectileEventArgs args)
+		{
+			foreach (var skill in Skills)
+			{
+				if (skill.ID != null && skill.CD == 0)
+				{
+					if (skill.IsBindTo(Main.projectile[args.Index]))
+					{
+						var vel = (Vector)args.Velocity;
+						vel.Length = Starver.SpearSpeed;
+						skill.Release(this, vel);
+					}
+				}
+			}
 		}
 		public virtual void OnGetData(GetDataEventArgs args)
 		{
@@ -437,13 +485,13 @@ namespace Starvers
 		}
 		public virtual void OnLeave()
 		{
-
+			SaveData();
 		}
 		public virtual void OnStrikeNpc(NpcStrikeEventArgs args)
 		{
 			args.Damage = (int)(args.Damage * DamageIndex);
-			args.Npc.SendCombatText(args.Damage.ToString(), Starver.DamageColor);
 			var realdamage = (int)Main.CalculateDamageNPCsTake(args.Damage, args.Npc.defense);
+			args.Npc.SendCombatText(realdamage.ToString(), Starver.DamageColor);
 			Exp += realdamage;
 		}
 		public virtual void Update()
@@ -451,11 +499,33 @@ namespace Starvers
 			Timer++;
 			if (Timer % 60 == 0)
 			{
-				SendStatusText($"Level: {Level}\nExp:{Exp}");
+				if (Timer % (60 * 6) >= 3 * 60)
+				{
+					SendStatusText($"Level: {Level}\nExp:{Exp}/{CalcUpgradeExp()}");
+				}
+				else
+				{
+					SendStatusText($@"技能状态
+    {Skills[0]}
+    {Skills[1]}
+    {Skills[2]}
+    {Skills[3]}
+    {Skills[4]}");
+				}
 			}
 			if (ItemUseDelay > 0)
 			{
 				ItemUseDelay--;
+			}
+			for (int i = 0; i < Starver.MaxSkillSlot; i++)
+			{
+				if (Skills[i].ID != null)
+				{
+					if (Skills[i].CD > 0)
+					{
+						Skills[i].CD--;
+					}
+				}
 			}
 		}
 		#endregion
@@ -522,10 +592,10 @@ namespace Starvers
 			SendText(text, 255, 0, 0);
 		}
 		private static readonly string EndLine19 = new string('\n', 19);
-		private static readonly string EndLine20 = new string('\n', 20);
+		private static readonly string EndLine5 = new string('\n', 5);
 		public void SendStatusText(string text)
 		{
-			text = EndLine19 + text + EndLine20;
+			text = EndLine19 + text + EndLine5;
 			SendData(PacketTypes.Status, text);
 		}
 		#endregion
@@ -561,7 +631,7 @@ namespace Starvers
 	#region SkillStorage
 	public struct SkillStorage
 	{
-		public byte? ID { get; set; }
+		public byte ID { get; set; }
 		public bool BindByProj { get; set; }
 		public short BindID { get; set; }
 
@@ -586,16 +656,60 @@ namespace Starvers
 
 		public StarverSkill Skill => ID.HasValue ? Starver.Instance.Skills[(byte)ID] : null;
 
-
-		public static implicit operator SkillStorage(in PlayerSkillData data)
+		#region Cast
+		public static implicit operator SkillStorage?(in PlayerSkillData data)
 		{
+			if (data.ID == null)
+			{
+				return null;
+			}
 			return new SkillStorage
 			{
-				ID = data.ID,
+				ID = (byte)data.ID,
 				BindByProj = data.BindByProj,
 				BindID = data.BindID
 			};
 		}
+		#endregion
+		#region Release
+		public void Release(StarverPlayer player)
+		{
+			Release(player, Vector.FromPolar(player.ItemUseAngle, Starver.SpearSpeed));
+		}
+		public void Release(StarverPlayer player, Vector vel)
+		{
+			Skill.Release(player, vel);
+			CD += Skill.CD;
+		}
+		#endregion
+		#region IsBindTo
+		public bool IsBindTo(Item item)
+		{
+			return !BindByProj && BindID == item.type;
+		}
+		public bool IsBindTo(Projectile proj)
+		{
+			return BindByProj && BindID == proj.type;
+		}
+		#endregion
+		#region ToString
+		public override string ToString()
+		{
+			if (ID == null)
+			{
+				return string.Empty;
+			}
+			if (Skill.Banned)
+			{
+				return $"{Skill}(已被禁用)";
+			}
+			if (CD > 0)
+			{
+				return $"{Skill}({CD / 60})";
+			}
+			return $"{Skill}(MP: {Skill.MPCost})";
+		}
+		#endregion
 	}
 	#endregion
 }

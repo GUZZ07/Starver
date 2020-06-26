@@ -22,24 +22,38 @@ namespace Starvers
 		public int Exp { get; set; }
 
 		[JsonIgnore]public string SkillDatas { get; set; }
-		[NotMapped]	public SkillStorage[] Skills { get; set; }
+		[NotMapped]	public SkillStorage?[] Skills { get; set; }
 		public PlayerData(int userID)
 		{
 			UserID = userID;
 			Level = 1;
 			Exp = 0;
-			Skills = new SkillStorage[Starver.MaxSkillSlot];
+			Skills = new SkillStorage?[Starver.MaxSkillSlot];
 		}
 
 		public void GetSkillDatas(PlayerSkillData[] skills)
 		{
-			if (Starver.Instance.Config.StorageType == StorageType.MySql)
+			if (Starver.Instance.Config.StorageType == StorageType.MySql && Skills == null)
 			{
-				Skills = JsonConvert.DeserializeObject<SkillStorage[]>(SkillDatas);
+				if (SkillDatas == null)
+				{
+					Skills = new SkillStorage?[Starver.MaxSkillSlot];
+				}
+				else
+				{
+					Skills = JsonConvert.DeserializeObject<SkillStorage?[]>(SkillDatas);
+				}
 			}
 			for (int i = 0; i < Starver.MaxSkillSlot; i++)
 			{
-				skills[i] = Skills[i];
+				if (Skills[i] == null)
+				{
+					skills[i] = default;
+				}
+				else
+				{
+					skills[i] = Skills[i].Value;
+				}
 			}
 		}
 
@@ -121,7 +135,8 @@ namespace Starvers
 					{
 						return context.Datas.Find(userID) ?? throw new KeyNotFoundException("key: " + nameof(userID));
 					}
-				default:throw new NotImplementedException();
+				default:
+					throw new NotImplementedException();
 			}
 		}
 		public void SaveData(PlayerData data)
@@ -136,7 +151,14 @@ namespace Starvers
 					}
 				case StorageType.MySql:
 					{
-						context.Datas.Add(data);
+						if (context.Datas.Find(data.UserID) == null)
+						{
+							context.Datas.Add(data);
+						}
+						else
+						{
+							context.Entry(data).State = EntityState.Modified;
+						}
 						context.SaveChanges();
 						break;
 					}
