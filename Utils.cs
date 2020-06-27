@@ -33,6 +33,11 @@ namespace Starvers
 			TSPlayer.All.SendData(PacketTypes.ProjectileNew, "", index);
 			return index;
 		}
+		public static int NewProjNoBC(Vector2 position, Vector2 velocity, int Type, int Damage, float KnockBack = 20f, int owner = 255, float ai0 = 0, float ai1 = 0)
+		{
+			int index = Projectile.NewProjectile(position, velocity, Type, Damage, KnockBack, owner, ai0, ai1);
+			return index;
+		}
 		#region Rands
 		/// <summary>
 		/// 随机返回1或-1

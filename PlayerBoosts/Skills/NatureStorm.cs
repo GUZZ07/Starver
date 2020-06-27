@@ -22,7 +22,7 @@ namespace Starvers.PlayerBoosts.Skills
 		private readonly static Vector2 UpingVel = new Vector2(0, -27);
 		#endregion
 		#region Ctor
-		public NatureStorm() 
+		public NatureStorm()
 		{
 			LevelNeed = 30000;
 			MPCost = 8000;
@@ -135,7 +135,7 @@ namespace Starvers.PlayerBoosts.Skills
 					}
 					Boom(HitPos, player);
 				}
-				catch(Exception e)
+				catch (Exception e)
 				{
 					string msg = e.ToString();
 					TSPlayer.All.SendErrorMessage(msg);
@@ -145,7 +145,7 @@ namespace Starvers.PlayerBoosts.Skills
 		}
 		#endregion
 		#region UpingGreen
-		internal static void UpingGreen(StarverPlayer player,Entity target, int timer = 50)
+		internal static void UpingGreen(StarverPlayer player, Entity target, int timer = 50)
 		{
 			UpingGreen(player, target.position, target.height, target.width, timer);
 		}
@@ -180,7 +180,7 @@ namespace Starvers.PlayerBoosts.Skills
 			#endregion
 			AsyncUpingGreen(player, target.Center, target.height, target.width);
 		}
-		internal static void UpingGreen(StarverPlayer player, Vector2 Center, int Height, int Width,int timer = 50)
+		internal static void UpingGreen(StarverPlayer player, Vector2 Center, int Height, int Width, int timer = 50)
 		{
 			int Timer = 0;
 			int speed = 18;
@@ -203,7 +203,7 @@ namespace Starvers.PlayerBoosts.Skills
 				Thread.Sleep(20);
 			}
 		}
-		internal static async void AsyncUpingGreen(StarverPlayer player, Vector2 Center, int Height,int Width)
+		internal static async void AsyncUpingGreen(StarverPlayer player, Vector2 Center, int Height, int Width)
 		{
 			await Task.Run(() =>
 			{
@@ -222,7 +222,7 @@ namespace Starvers.PlayerBoosts.Skills
 				damage += 900;
 
 
-				while (Timer++ < 5) 
+				while (Timer++ < 5)
 				{
 					player.ProjLine(StartPos + Line, StartPos - Line, velocity, Num, damage, UpingGreenID);
 					Thread.Sleep(20);
@@ -234,9 +234,9 @@ namespace Starvers.PlayerBoosts.Skills
 		private static bool CheckProjs(int[] indexes)
 		{
 			bool flag = true;
-			foreach(var idx in indexes)
+			foreach (var idx in indexes)
 			{
-				if(Main.projectile[idx].active == false || Main.projectile[idx].type != ExStrikeID)
+				if (Main.projectile[idx].active == false || Main.projectile[idx].type != ExStrikeID)
 				{
 					flag = false;
 					break;
@@ -260,9 +260,9 @@ namespace Starvers.PlayerBoosts.Skills
 		}
 		#endregion
 		#region SetTarget
-		private static void SetTarget(int[] projs,int target)
+		private static void SetTarget(int[] projs, int target)
 		{
-			foreach(var idx in projs)
+			foreach (var idx in projs)
 			{
 				Main.projectile[idx].ai[0] = target;
 				NetMessage.SendData((int)PacketTypes.ProjectileNew, -1, -1, null, idx);
@@ -270,7 +270,7 @@ namespace Starvers.PlayerBoosts.Skills
 		}
 		#endregion
 		#region Boom
-		private static void Boom(Vector2 pos,StarverPlayer player)
+		private static void Boom(Vector2 pos, StarverPlayer player)
 		{
 			int damage = (int)Math.Sqrt(player.Level);
 			damage *= 20;

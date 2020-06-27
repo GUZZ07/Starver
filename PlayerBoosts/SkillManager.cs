@@ -118,7 +118,6 @@ namespace Starvers.PlayerBoosts
 		WindRealm,
 		Avalon,
 		Whirlwind,
-		Shuriken,
 		SpiritStrike,
 		AvalonGradation,
 		LimitlessSpark,

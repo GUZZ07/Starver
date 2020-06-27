@@ -224,6 +224,21 @@ namespace Starvers
 		/// <param name="ai0"></param>
 		/// <param name="ai1"></param>
 		/// <returns></returns>
+		public int NewProjNoBC(Vector2 position, Vector2 velocity, int Type, int Damage, float KnockBack = 20f, float ai0 = 0, float ai1 = 0)
+		{
+			return Utils.NewProjNoBC(position, velocity, Type, Damage, KnockBack, Index, ai0, ai1);
+		}
+		/// <summary>
+		/// 生成弹幕
+		/// </summary>
+		/// <param name="position"></param>
+		/// <param name="velocity"></param>
+		/// <param name="Type"></param>
+		/// <param name="Damage"></param>
+		/// <param name="KnockBack"></param>
+		/// <param name="ai0"></param>
+		/// <param name="ai1"></param>
+		/// <returns></returns>
 		public int NewProj(Vector2 position, Vector2 velocity, int Type, int Damage, float KnockBack = 20f, float ai0 = 0, float ai1 = 0)
 		{
 			return Utils.NewProj(position, velocity, Type, Damage, KnockBack, Index, ai0, ai1);
@@ -268,6 +283,25 @@ namespace Starvers
 			for (int i = 0; i < number; i++)
 			{
 				NewProj(Center + FromPolar(angle + averagerad * i, r), FromPolar(angle + averagerad * i, speed), Type, Damage, 4f, ai0, ai1);
+			}
+		}
+		
+		/// <summary>
+		/// 弹幕圆
+		/// </summary>
+		/// <param name="Center"></param>
+		/// <param name="angle">偏转角</param>
+		/// <param name="r"></param>
+		/// <param name="speed">速率</param>
+		/// <param name="Type"></param>
+		/// <param name="number">弹幕总数</param>
+		public void ProjCircleExNoBC(Vector2 Center, double angle, float r, Action<Projectile> action, int Type, int number, int Damage, float ai0 = 0, float ai1 = 0)
+		{
+			double averagerad = Math.PI * 2 / number;
+			for (int i = 0; i < number; i++)
+			{
+				var idx = NewProjNoBC(Center + FromPolar(angle + averagerad * i, r), default, Type, Damage, 4f, ai0, ai1);
+				action(Main.projectile[idx]);
 			}
 		}
 
