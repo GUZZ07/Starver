@@ -5,46 +5,72 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Terraria;
+using Terraria.ID;
 
 namespace Starvers
 {
 	public abstract class StarverEnemy
 	{
+		protected NPC RealNPC
+		{
+			get
+			{
+				if (TNPC.realLife > 0)
+				{
+					return Main.npc[TNPC.realLife];
+				}
+				return null;
+			}
+		}
+
 		public int Index 
 		{
 			get;
 			protected set;
 		}
-		public NPC RealNPC
+		public NPC TNPC
 		{
 			get => Main.npc[Index];
 		}
-		public ref int Life
+		public int Life
 		{
-			get => ref RealNPC.life;
+			get => TNPC.life;
+			set => TNPC.life = value;
 		}
-		public ref int LifeMax
+		public int LifeMax
 		{
-			get => ref RealNPC.lifeMax;
+			get => TNPC.lifeMax;
+			set => TNPC.lifeMax = value;
 		}
 		public Vector2 Center
 		{
-			get => RealNPC.Center;
+			get => TNPC.Center;
 		}
 		public ref Vector2 Velocity
 		{
-			get => ref RealNPC.velocity;
+			get => ref TNPC.velocity;
+		}
+		public float KnockBackResist
+		{
+			get => TNPC.knockBackResist;
+			set => TNPC.knockBackResist = value;
+		}
+		public int Defense
+		{
+			get => TNPC.defense;
+			set => TNPC.defense = value;
 		}
 		public bool Active
 		{
-			get => RealNPC.active;
-			set => RealNPC.active = value;
+			get => TNPC.active;
+			set => TNPC.active = value;
 		}
 
 		protected StarverEnemy(int idx = -1)
 		{
 			Index = idx;
 		}
+		
 		#region Projs
 		#region Bases
 		public int NewProj(Vector2 velocity, int projID, int damage, float knockBack = 1, float ai0 = 0, float ai1 = 0)
@@ -229,6 +255,46 @@ namespace Starvers
 		public virtual void TurnToAir()
 		{
 			Active = false;
+		}
+		#endregion
+		#region Strike
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="player"></param>
+		/// <param name="damage">原始伤害</param>
+		/// <param name="knockBack"></param>
+		/// <param name="crit"></param>
+		public virtual void Strike(StarverPlayer player, int damage, double knockBack, int hitDirection, bool crit = false)
+		{
+			damage = (int)(damage * player.DamageIndex);
+			knockBack *= player.KnockBackIndex;
+			var realDamage = (int)Main.CalculateDamageNPCsTake(damage, Defense);
+			if (crit)
+			{
+				realDamage *= 2;
+			}
+			ReceiveDamage(realDamage);
+			if (Active)
+			{
+				Velocity.X += (float)(hitDirection * knockBack * KnockBackResist);
+			}
+			TNPC.HitEffect(hitDirection, realDamage);
+		}
+		public virtual void ReceiveDamage(int damage)
+		{
+			var realNPC = RealNPC ?? TNPC;
+			realNPC.life -= damage;
+			if (realNPC.life <= 0)
+			{
+				realNPC.checkDead();
+			}
+		}
+		#endregion
+		#region UpdateToClient
+		public virtual void UpdateToClient()
+		{
+			TNPC.SendData();
 		}
 		#endregion
 	}

@@ -148,6 +148,10 @@ namespace Starvers
 				};
 			}
 		}
+		public virtual double KnockBackIndex
+		{
+			get => 1 + 3 * Math.Log10(Math.Sqrt(Level));
+		}
 		#region Ctor
 		protected StarverPlayer()
 		{
