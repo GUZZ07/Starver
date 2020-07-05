@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Starvers.Enemies.Bosses;
 using Starvers.PlayerBoosts;
 using System;
 using System.Collections.Generic;
@@ -30,12 +31,37 @@ namespace Starvers
 		private int timer;
 		#endregion
 		#region Properties
-		public static Starver Instance { get; private set; }
+		public static Starver Instance 
+		{ 
+			get;
+			private set;
+		}
 
-		public StarverConfig Config { get; private set; }
-		public PlayerDataManager PlayerDatas { get; private set; }
-		public StarverPlayer[] Players { get; private set; }
-		public SkillManager Skills { get; private set; }
+		public StarverConfig Config 
+		{ 
+			get;
+			private set;
+		}
+		public PlayerDataManager PlayerDatas
+		{
+			get;
+			private set;
+		}
+		public StarverPlayer[] Players
+		{
+			get;
+			private set;
+		}
+		public SkillManager Skills
+		{
+			get;
+			private set;
+		}
+		public BossManager Bosses
+		{
+			get;
+			private set;
+		}
 		#region Plugin Infos
 		public override string Name => nameof(Starver);
 		public override string Description => nameof(Starver);
@@ -63,6 +89,7 @@ namespace Starvers
 
 			Config = StarverConfig.Read(ConfigPath);
 			Skills = new SkillManager();
+			Bosses = new BossManager();
 			PlayerDatas = new PlayerDataManager(StorageType.MySql);
 			Players = new StarverPlayer[TShock.Players.Length];
 			#region Test
@@ -149,6 +176,7 @@ namespace Starvers
 				}
 				player.Update();
 			}
+			Bosses.Update();
 			if (timer % (Config.SaveInterval * 60) == 0)
 			{
 				foreach (var player in Players)

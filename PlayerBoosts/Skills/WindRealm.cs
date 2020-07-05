@@ -12,6 +12,7 @@ namespace Starvers.PlayerBoosts.Skills
 {
 	public class WindRealm : StarverSkill
 	{
+		private const float maxDistance = 16 * 45;
 		public WindRealm()
 		{
 			MPCost = 12;
@@ -23,43 +24,59 @@ namespace Starvers.PlayerBoosts.Skills
 		}
 		public override void Release(StarverPlayer player, Vector vel)
 		{
-			const float maxDistance = 16 * 45;
-			for (int i = 0; i < Main.npc.Length; i++)
-			{
-				NPC npc = Main.npc[i];
-				if (npc == null || !npc.active)
-				{
-					continue;
-				}
-				var playerToNpc = npc.Center - player.Center;
-				var distance = playerToNpc.Length();
-				var angle = Math.Abs(playerToNpc.Angle() - vel.Angle);
-				playerToNpc.Normalize();
-				if (distance < maxDistance && angle < Math.PI / 3)
-				{
-					npc.velocity += vel * 15 + playerToNpc * 8 * (maxDistance - distance) / maxDistance;
-					npc.SendData();
-				}
-			}
-			foreach (var proj in Main.projectile)
-			{
-				if (!proj.active)
-				{
-					continue;
-				}
-				if (proj.hostile)
-				{
-					proj.velocity = player.Center - proj.Center;
-					proj.velocity.Length(30);
-					proj.SendData();
-				}
-			}
+			ProcessNPC(player, vel);
+			ProcessProj(player, vel);
 			if (player.LastSkill == SkillIDs.WindRealm)
 			{
 				var damage = Math.Max(250, player.Level / 10) + 1;
 				player.NewProj(vel * 10, ProjectileID.SwordBeam, damage, 1);
 			}
-			player.TPlayer.velocity += -vel * 2f;
+			player.Velocity += -vel;
+		}
+		#region ProcessNPC
+		private void ProcessNPC(StarverPlayer player, Vector vel)
+		{
+			foreach (var npc in Main.npc)
+			{
+				if (!npc.active)
+				{
+					return;
+				}
+				var playerToNpc = npc.Center - player.Center;
+				var distance = playerToNpc.Length();
+				var angle = Vector.AngleAbs(vel, playerToNpc);
+				if (distance < maxDistance && angle < Math.PI / 3)
+				{
+					npc.velocity += CalcKnockBack(vel, playerToNpc);
+					npc.SendData();
+				}
+			}
+		}
+		#endregion
+		#region ProcessProj
+		private void ProcessProj(StarverPlayer player, Vector vel)
+		{
+			foreach (var proj in Main.projectile)
+			{
+				if (!proj.active)
+				{
+					return;
+				}
+				var playerToProj = player.Center - proj.Center;
+				var distance = playerToProj.Length();
+				if (proj.hostile && distance < maxDistance)
+				{
+					proj.velocity += playerToProj.ToLenOf(16 * 30 / distance);
+					proj.SendData();
+				}
+			}
+		}
+		#endregion
+		private static Vector2 CalcKnockBack(Vector vel, Vector2 playerToEntity)
+		{
+			var distance = playerToEntity.Length();
+			playerToEntity.Normalize();
+			return vel * 15 + playerToEntity * 8 * (maxDistance - distance) / maxDistance;
 		}
 	}
 }

@@ -257,6 +257,7 @@ namespace Starvers
 			Active = false;
 		}
 		#endregion
+		#region DamageNPC
 		#region Strike
 		/// <summary>
 		/// 
@@ -279,8 +280,22 @@ namespace Starvers
 			{
 				Velocity.X += (float)(hitDirection * knockBack * KnockBackResist);
 			}
+			var expGet = Math.Min(realDamage, TNPC.life);
+			if (expGet > 0)
+			{
+				player.Exp += expGet;
+			}
+			Utils.SendCombatText(TNPC, realDamage.ToString(), Starver.DamageColor);
 			TNPC.HitEffect(hitDirection, realDamage);
 		}
+		#endregion
+		#region PlayerInteraction
+		public virtual void PlayerInteraction(StarverPlayer player)
+		{
+			(RealNPC ?? TNPC).PlayerInteraction(player.Index);
+		}
+		#endregion
+		#region ReceiveDamage
 		public virtual void ReceiveDamage(int damage)
 		{
 			var realNPC = RealNPC ?? TNPC;
@@ -290,6 +305,7 @@ namespace Starvers
 				realNPC.checkDead();
 			}
 		}
+		#endregion
 		#endregion
 		#region UpdateToClient
 		public virtual void UpdateToClient()

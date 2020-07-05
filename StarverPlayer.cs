@@ -319,6 +319,13 @@ namespace Starvers
 		}
 		public virtual void OnStrikeNpc(NpcStrikeEventArgs args)
 		{
+			var boss = Starver.Instance.Bosses.TryGetBoss(args.Npc);
+			if (boss != null)
+			{
+				boss.Strike(this, args.Damage, args.KnockBack, args.HitDirection, args.Critical);
+				return;
+			}
+			#region Normal
 			args.Damage = (int)(args.Damage * DamageIndex);
 			var realdamage = (int)Main.CalculateDamageNPCsTake(args.Damage, args.Npc.defense);
 			args.Npc.SendCombatText(realdamage.ToString(), Starver.DamageColor);
@@ -327,6 +334,7 @@ namespace Starvers
 			{
 				Exp += expGet;
 			}
+			#endregion
 		}
 		public virtual void Update()
 		{

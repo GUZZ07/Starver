@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using TShockAPI;
 
-namespace Starvers.PlayerBoosts
+namespace Starvers.PlayerBoosts.Skills
 {
 	public class EnderWand : StarverSkill
 	{

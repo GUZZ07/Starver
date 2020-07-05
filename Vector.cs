@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
+using Microsoft.Xna.Framework;
 
 namespace Starvers
 {
@@ -307,7 +308,7 @@ namespace Starvers
 			return string.Format("({0},{1})", X, Y);
 		}
 		#endregion
-		#region statics
+		#region Statics
 		/// <summary>
 		/// 零向量
 		/// </summary>
@@ -335,6 +336,14 @@ namespace Starvers
 			float X = left.X - right.X;
 			float Y = left.Y - right.Y;
 			return X * X + Y * Y;
+		}
+		public static double AngleAbs(Vector left, Vector right)
+		{
+			return Math.Abs(left.Angle - right.Angle);
+		}
+		public static double AngleAbs(Vector left, Vector2 right)
+		{
+			return Math.Abs(left.Angle - right.Angle());
 		}
 		#endregion
 		#region else

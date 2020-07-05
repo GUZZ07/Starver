@@ -20,14 +20,15 @@ namespace Starvers.PlayerBoosts.Skills
 		}
 		public override void Release(StarverPlayer player, Vector vel)
 		{
+			var damage = Math.Min(2000, player.Level / 80 + 900);
 			player.ProjCircle(player.Center, 32, 16, ProjectileID.DD2SquireSonicBoom, 10, 1080);
 			player.ProjSector(player.Center, 16, 16, vel.Angle, Math.PI / 4, 1310, ProjectileID.NebulaBlaze2, 3);
-			player.ProjLine(player.Center, player.Center + player.FromPolar(vel.Angle, 48 * 20), vel.ToLenOf(24), 20, player.Level / 80 + 900, ProjectileID.SolarWhipSwordExplosion);
-			Vector ver = vel.Vertical().ToLenOf(54);
-			player.ProjLine(player.Center + ver, player.Center + player.FromPolar(vel.Angle, 48 * 20) + ver, vel.ToLenOf(24), 20, player.Level / 80 + 900, ProjectileID.SolarWhipSwordExplosion);
-			player.ProjLine(player.Center - ver, player.Center + player.FromPolar(vel.Angle, 48 * 20) - ver, vel.ToLenOf(24), 20, player.Level / 80 + 900, ProjectileID.SolarWhipSwordExplosion);
-			ver.Length = 84f;
-			player.ProjLine(player.Center + ver, player.Center - ver, vel.ToLenOf(18f), 10, 2300, ProjectileID.TerraBeam);
+			player.ProjLine(player.Center, player.Center + player.FromPolar(vel.Angle, 48 * 20), vel.ToLenOf(24), 20, damage, ProjectileID.SolarWhipSwordExplosion);
+			Vector vertical = vel.ToVertical(54);
+			player.ProjLine(player.Center + vertical, player.Center + player.FromPolar(vel.Angle, 48 * 20) + vertical, vel.ToLenOf(24), 20, damage, ProjectileID.SolarWhipSwordExplosion);
+			player.ProjLine(player.Center - vertical, player.Center + player.FromPolar(vel.Angle, 48 * 20) - vertical, vel.ToLenOf(24), 20, damage, ProjectileID.SolarWhipSwordExplosion);
+			vertical.Length = 84f;
+			player.ProjLine(player.Center + vertical, player.Center - vertical, vel.ToLenOf(18f), 10, 2300, ProjectileID.TerraBeam);
 		}
 	}
 }
