@@ -34,7 +34,7 @@ namespace Starvers
 		public float Y;
 		#endregion
 		#region Properties
-		private float PolarRadius
+		public float PolarRadius
 		{
 			get => Length;
 			set => Length = value;

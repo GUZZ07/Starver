@@ -13,7 +13,7 @@ using TShockAPI;
 
 namespace Starvers.Enemies.Bosses
 {
-	public abstract class StarverBoss : StarverEnemy
+	public abstract partial class StarverBoss : StarverEnemy
 	{
 		public const int DefaultLevel = 2000;
 		public string Name 
@@ -178,106 +178,16 @@ namespace Starvers.Enemies.Bosses
 
 		}
 
+		public override void TurnToAir()
+		{
+			base.TurnToAir();
+			Lifes = 0;
+			Index = -1;
+		}
+
 		public override string ToString()
 		{
 			return Name ?? GetType().Name;
 		}
-		#region States
-		#region Machines
-		protected class EvilTridentMachine : BossStateMachine
-		{
-			private int created;
-			private int launched;
-			private ProjLaunchTask[] projs;
-
-			public int Damage { get; set; }
-			public int TridentCount { get; set; }
-			public int CreateInterval { get; set; }
-			public int LaunchDelay { get; set; }
-			public int TridentHitPlayerTime { get; set; }
-			public EvilTridentMachine(StarverBoss boss) : base(BossState.EvilTrident, boss)
-			{
-				Damage = 100;
-				TridentCount = 28;
-				CreateInterval = 5;
-				LaunchDelay = 30;
-				TridentHitPlayerTime = 20;
-			}
-			public override void Begin()
-			{
-				projs = new ProjLaunchTask[TridentCount];
-				base.Begin();
-			}
-			public override void Update()
-			{
-				Timer++;
-				if (created < TridentCount)
-				{
-					if (Timer % CreateInterval == 0)
-					{
-						var source = GetLaunchSource();
-						var velocity = -source / TridentHitPlayerTime;
-						var index = Boss.NewProj(Boss.TargetPlayer.Center + source, Vector2.Zero, ProjectileID.UnholyTridentHostile, Damage);
-						projs[created++] = new ProjLaunchTask(index, velocity, LaunchDelay);
-					}
-				}
-				if (launched < TridentCount)
-				{
-					for (int i = launched; i < created; i++)
-					{
-						if (projs[i].CheckLaunch())
-						{
-							launched++;
-						}
-					}
-				}
-				else
-				{
-					IsEnd = true;
-					return;
-				}
-			}
-			public override void Abort()
-			{
-				for (int i = 0; i < created; i++)
-				{
-					projs[i].Cancel();
-				}
-				base.Abort();
-			}
-
-			private Vector2 GetLaunchSource()
-			{
-				var dir = Boss.Rand.NextDirection();
-				var Y = Boss.Rand.NextFloat(-16 * 7.5f, 16 * 7.5f);
-				return new Vector2(dir * 16 * 25, Y);
-			}
-		}
-		#endregion
-		#region Base
-		protected abstract class BossStateMachine
-		{
-			public BossState State { get; }
-			public StarverBoss Boss { get; }
-			public int Timer { get; protected set; }
-			public bool IsEnd { get; protected set; }
-			protected BossStateMachine(BossState state, StarverBoss boss)
-			{
-				State = state;
-				Boss = boss;
-			}
-			public virtual void Begin() { }
-			public abstract void Update();
-			public virtual void Abort() { }
-		}
-
-		protected enum BossState
-		{
-			EyeRush,
-			EyeSummon,
-			EvilTrident
-		}
-		#endregion
-		#endregion
 	}
 }

@@ -40,10 +40,7 @@ namespace Starvers.Enemies.Bosses
 		{
 			foreach (var boss in bosses)
 			{
-				if (boss.Active)
-				{
-					boss.AI();
-				}
+				boss.AI();
 			}
 		}
 

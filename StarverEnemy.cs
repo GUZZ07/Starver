@@ -45,6 +45,7 @@ namespace Starvers
 		public Vector2 Center
 		{
 			get => TNPC.Center;
+			set { TNPC.Center = value;TNPC.netUpdate = true; }
 		}
 		public ref Vector2 Velocity
 		{

@@ -16,75 +16,72 @@ namespace Starvers.Enemies.Bosses
 
 		private int timer;
 		private int rushTime;
-		private BossStateMachine machine;
+
+
+		private BossStateMachine ProjController;
+
+		private PlayerTracker PositionController;
 
 		public EyeEx() : base(NPCID.EyeofCthulhu)
 		{
 			defLifes = 3;
 			defLife = 45000;
 			defDefense = 1000;
+
+			PositionController = new PlayerTracker(this)
+			{
+				MaxSpeed = 10,
+				Offset = new Vector2(0, -16 * 20)
+			};
 		}
 
 		public override void Spawn(Vector2 position, int level = 2000)
 		{
 			base.Spawn(position, level);
-			TNPC.ai[0] = 3f;
-			TNPC.ai[1] = 5f; // 为5时是疯狗模式; 2正常状态
-			TNPC.ai[2] = 120f;
-			TNPC.ai[3] = 0f;
-			TNPC.netUpdate = true;
+			BeginRush();
 			timer = 0;
-			rushTime = 0;
-			machine = null;
+			ProjController = null;
 		}
 
 		protected override void RealAI()
 		{
+			if (Main.dayTime)
+			{
+				TurnToAir();
+				return;
+			}
 			VerifyTarget();
 			if (TargetPlayer?.Alive != true)
 			{
 				TurnToAir();
 				return;
 			}
+			if (TNPC.Distance(TargetPlayer.Center) > 16 * 600)
+			{
+				Center = TargetPlayer.Center + Rand.NextVector2(16 * 100);
+			}
 			timer++;
-			if (machine == null)
+			if (ProjController?.IsEnd != false)
 			{
 				if (rushTime++ >= maxRushTime)
 				{
-					TNPC.aiStyle = -1;
-					TNPC.ai[1] = 2f;
-					TNPC.netUpdate = true;
-					rushTime = 0;
-					machine = new EvilTridentMachine(this);
-					machine.Begin();
+					NextMachine();
 				}
 			}
 			else
 			{
-				machine.Update();
-				if (machine.IsEnd)
+				ProjController.Update();
+				PositionController.Update();
+				if (ProjController.IsEnd)
 				{
-					machine = null;
-					TNPC.aiStyle = 4;
-					TNPC.ai[1] = 5f;
-					TNPC.ai[2] = 120;
-					TNPC.ai[3] = 0;
-					TNPC.netUpdate = true;
-				}
-				else
-				{
-					Velocity = TargetPlayer.Center + new Vector2(0, -16 * 20) - Center;
-					Velocity /= 13;
-					{
-						UpdateToClient();
-					}
+					BeginRush();
 				}
 			}
 		}
 
 		public override void Kill()
 		{
-			machine?.Abort();
+			ProjController?.Abort();
 			base.Kill();
 		}
 
@@ -94,6 +91,46 @@ namespace Starvers.Enemies.Bosses
 			{
 				FindTarget();
 			}
+		}
+
+		private void NextMachine()
+		{
+			// TNPC.aiStyle = -1;
+			TNPC.ai[0] = 2f;
+			// TNPC.ai[1] = 0f;
+			// TNPC.ai[3] = 0f;
+			TNPC.netUpdate = true;
+			ProjController = GetNextMachine(ProjController?.State);
+			ProjController.Begin();
+			PositionController.IsPause = false;
+		}
+
+		private BossStateMachine GetNextMachine(BossState? last)
+		{
+			return last switch
+			{
+				BossState.FakeDuckRush => new FaithOfMountainMachine(this),
+				BossState.EvilTrident => new FakeDuckRushMachine(this),
+				_ => new EvilTridentMachine(this)
+				{
+					CreateInterval = 5,
+					TridentCount = 60,
+					Damage = 30,
+					LaunchDelay = 30
+				}
+			};
+		}
+
+		private void BeginRush()
+		{
+			PositionController.IsPause = true;
+			rushTime = 0;
+			TNPC.aiStyle = 4;
+			TNPC.ai[0] = 3f;
+			TNPC.ai[1] = 5f; // 为5时是疯狗模式; 2正常状态 0会飘在玩家头顶上
+			TNPC.ai[2] = 120f;
+			TNPC.ai[3] = 0f;
+			TNPC.netUpdate = true;
 		}
 
 		private void FindTarget()
