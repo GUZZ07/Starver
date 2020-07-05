@@ -28,7 +28,9 @@ namespace Starvers
 		public readonly static Color DamageColor = Color.Yellow;
 		public const int MaxSkillSlot = 5;
 		public const float SpearSpeed = 4.07f;
+
 		private int timer;
+		private Random rand;
 		#endregion
 		#region Properties
 		public static Starver Instance 
@@ -86,7 +88,7 @@ namespace Starvers
 				}
 				return null;
 			};
-
+			rand = new Random();
 			Config = StarverConfig.Read(ConfigPath);
 			Skills = new SkillManager();
 			Bosses = new BossManager();
@@ -118,6 +120,7 @@ namespace Starvers
 			#region Commands
 			Commands.ChatCommands.Add(new Command(Perms.Normal, MainCommand, "starver"));
 			Commands.ChatCommands.Add(new Command(Perms.Aura.Normal, AuraCommand, "aura", "au"));
+			Commands.ChatCommands.Add(new Command(Perms.Boss.Spawn, BossCommand, "stboss"));
 			#endregion
 		}
 
@@ -390,6 +393,23 @@ namespace Starvers
 					args.Player.SendInfoMessage("help  帮助");
 					break;
 			}
+		}
+		private void BossCommand(CommandArgs args)
+		{
+			if (args.Parameters.Count == 0 || !int.TryParse(args.Parameters[0], out int index))
+			{
+				for (int i = 0; i < Bosses.Count; i++)
+				{
+					args.Player.SendInfoMessage($"{i + 1} {Bosses[i]}");
+				}
+				return;
+			}
+			index--;
+			if (args.Parameters.Count < 2 || !int.TryParse(args.Parameters[1], out int level))
+			{
+				level = StarverBoss.DefaultLevel;
+			}
+			Bosses[index].Spawn(args.TPlayer.Center + rand.NextVector2(16 * 50), level);
 		}
 		#endregion
 	}

@@ -15,5 +15,9 @@ namespace Starvers
 		{
 			public static readonly string Normal = "starver.aura.normal";
 		}
+		public static class Boss
+		{
+			public static readonly string Spawn = "starver.boss.spawn";
+		}
 	}
 }

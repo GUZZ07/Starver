@@ -6,6 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Terraria;
+using Terraria.Chat;
+using Terraria.ID;
+using Terraria.Localization;
 using TShockAPI;
 
 namespace Starvers.Enemies.Bosses
@@ -31,6 +34,23 @@ namespace Starvers.Enemies.Bosses
 			protected set;
 		}
 
+		public override bool Active
+		{
+			get => 0 <= Index && Index < Main.maxNPCs && base.Active;
+		}
+		public Random Rand { get; }
+
+
+		public int Target
+		{
+			get => TNPC.target;
+			set => TNPC.target = value;
+		}
+		public StarverPlayer TargetPlayer
+		{
+			get => TNPC.HasPlayerTarget ? Starver.Instance.Players[Target] : null;
+		}
+
 		#region DefDatas
 		protected int defLifes = 1;
 		protected int defLife = 20000;
@@ -53,6 +73,7 @@ namespace Starvers.Enemies.Bosses
 		protected StarverBoss(int rawNpcType) : base(-1)
 		{
 			rawType = rawNpcType;
+			Rand = new Random();
 		}
 
 		public virtual void Spawn(Vector2 position, int level = DefaultLevel)
@@ -62,6 +83,7 @@ namespace Starvers.Enemies.Bosses
 			Index = NPC.NewNPC(x, y, rawType);
 			Level = level;
 			Lifes = defLifes;
+			LifesMax = defLifes;
 			SetNPCDatas();
 			if (Name != null)
 			{
@@ -102,11 +124,9 @@ namespace Starvers.Enemies.Bosses
 					return;
 				}
 			}
+			RealAI();
 		}
-		protected virtual void RealAI()
-		{
-
-		}
+		protected abstract void RealAI();
 		#endregion
 		#region Defeated
 		protected virtual void Defeated()
@@ -157,5 +177,107 @@ namespace Starvers.Enemies.Bosses
 		{
 
 		}
+
+		public override string ToString()
+		{
+			return Name ?? GetType().Name;
+		}
+		#region States
+		#region Machines
+		protected class EvilTridentMachine : BossStateMachine
+		{
+			private int created;
+			private int launched;
+			private ProjLaunchTask[] projs;
+
+			public int Damage { get; set; }
+			public int TridentCount { get; set; }
+			public int CreateInterval { get; set; }
+			public int LaunchDelay { get; set; }
+			public int TridentHitPlayerTime { get; set; }
+			public EvilTridentMachine(StarverBoss boss) : base(BossState.EvilTrident, boss)
+			{
+				Damage = 100;
+				TridentCount = 28;
+				CreateInterval = 5;
+				LaunchDelay = 30;
+				TridentHitPlayerTime = 20;
+			}
+			public override void Begin()
+			{
+				projs = new ProjLaunchTask[TridentCount];
+				base.Begin();
+			}
+			public override void Update()
+			{
+				Timer++;
+				if (created < TridentCount)
+				{
+					if (Timer % CreateInterval == 0)
+					{
+						var source = GetLaunchSource();
+						var velocity = -source / TridentHitPlayerTime;
+						var index = Boss.NewProj(Boss.TargetPlayer.Center + source, Vector2.Zero, ProjectileID.UnholyTridentHostile, Damage);
+						projs[created++] = new ProjLaunchTask(index, velocity, LaunchDelay);
+					}
+				}
+				if (launched < TridentCount)
+				{
+					for (int i = launched; i < created; i++)
+					{
+						if (projs[i].CheckLaunch())
+						{
+							launched++;
+						}
+					}
+				}
+				else
+				{
+					IsEnd = true;
+					return;
+				}
+			}
+			public override void Abort()
+			{
+				for (int i = 0; i < created; i++)
+				{
+					projs[i].Cancel();
+				}
+				base.Abort();
+			}
+
+			private Vector2 GetLaunchSource()
+			{
+				var dir = Boss.Rand.NextDirection();
+				var Y = Boss.Rand.NextFloat(-16 * 7.5f, 16 * 7.5f);
+				return new Vector2(dir * 16 * 25, Y);
+			}
+		}
+		#endregion
+		#region Base
+		protected abstract class BossStateMachine
+		{
+			public BossState State { get; }
+			public StarverBoss Boss { get; }
+			public int Timer { get; protected set; }
+			public bool IsEnd { get; protected set; }
+			protected BossStateMachine(BossState state, StarverBoss boss)
+			{
+				State = state;
+				Boss = boss;
+			}
+			public virtual void Begin() { }
+			public abstract void Update();
+			public virtual void Abort() { }
+		}
+
+		protected enum BossState
+		{
+			EyeRush,
+			EyeSummon,
+			EvilTrident
+		}
+		#endregion
+		#endregion
 	}
 }

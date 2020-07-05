@@ -60,7 +60,7 @@ namespace Starvers
 			get => TNPC.defense;
 			set => TNPC.defense = value;
 		}
-		public bool Active
+		public virtual bool Active
 		{
 			get => TNPC.active;
 			set => TNPC.active = value;

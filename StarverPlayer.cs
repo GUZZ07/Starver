@@ -53,6 +53,14 @@ namespace Starvers
 		public virtual TSPlayer TSPlayer => TShock.Players[Index];
 		public int Timer { get; protected set; }
 		#region From TPlayer
+		public bool Alive
+		{
+			get => !DeadOrGhost;
+		}
+		public bool DeadOrGhost
+		{
+			get => TPlayer.DeadOrGhost;
+		}
 		public int ItemUseDelay { get; set; }
 		public Item HeldItem => TPlayer.inventory[TPlayer.selectedItem];
 		public double ItemUseAngle
