@@ -51,12 +51,17 @@ namespace Starvers.Enemies.Bosses
 			{
 				new EyeEx()
 			};
+			foreach (var boss in bosses)
+			{
+				var type = typeof(BossInstance<>).MakeGenericType(new[] { boss.GetType() });
+				type.GetField("Instance").SetValue(null, boss);
+			}
 		}
 		#endregion
 		#region BossInstance
 		private class BossInstance<T> where T : StarverBoss
 		{
-			internal static T Instance;
+			public static T Instance;
 		}
 		#endregion
 	}

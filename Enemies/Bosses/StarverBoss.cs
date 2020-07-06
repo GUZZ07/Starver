@@ -33,18 +33,36 @@ namespace Starvers.Enemies.Bosses
 			get;
 			protected set;
 		}
+		public bool AfraidSun
+		{
+			get;
+			protected set;
+		}
 
 		public override bool Active
 		{
 			get => 0 <= Index && Index < Main.maxNPCs && base.Active;
 		}
 		public Random Rand { get; }
+		/// <summary>
+		/// 从boss到玩家
+		/// </summary>
+		public Vector2 RelativePos
+		{
+			get => TargetPlayer.Center - Center;
+			set => Center = TargetPlayer.Center - value;
+		}
 
 
 		public int Target
 		{
 			get => TNPC.target;
 			set => TNPC.target = value;
+		}
+		public bool DontTakeDamage
+		{
+			get => TNPC.dontTakeDamage;
+			set => TNPC.dontTakeDamage = value;
 		}
 		public StarverPlayer TargetPlayer
 		{
@@ -84,6 +102,7 @@ namespace Starvers.Enemies.Bosses
 			Level = level;
 			Lifes = defLifes;
 			LifesMax = defLifes;
+			Name ??= GetType().Name;
 			SetNPCDatas();
 			if (Name != null)
 			{
@@ -108,6 +127,7 @@ namespace Starvers.Enemies.Bosses
 			TNPC.lifeMax = defLife;
 			TNPC.life = defLife;
 			TNPC.defense = defDefense;
+			TNPC.GivenName = Name;
 		}
 		#endregion
 		#region AI
@@ -118,11 +138,17 @@ namespace Starvers.Enemies.Bosses
 				if (Lifes != 0)
 				{
 					ReSpawn();
+					LifesDown();
 				}
 				else
 				{
 					return;
 				}
+			}
+			if (AfraidSun && Main.dayTime)
+			{
+				TurnToAir();
+				return;
 			}
 			RealAI();
 		}
@@ -138,13 +164,14 @@ namespace Starvers.Enemies.Bosses
 		protected virtual void LifesDown()
 		{
 			Lifes--;
-			TSPlayer.All.SendMessage($"{Name ?? TNPC.GivenOrTypeName} 还剩[c/ff0000:{Lifes}]/[c/ffff00:{LifesMax}]条命", Color.Blue);
 			if (Lifes <= 0)
 			{
 				Kill();
+				TSPlayer.All.SendMessage($"{Name} 已被击败", Color.MediumPurple);
 			}
 			else
 			{
+				TSPlayer.All.SendMessage($"{Name ?? TNPC.GivenOrTypeName} 还剩[c/ff0000:{Lifes}]/[c/ffff00:{LifesMax}]条命", Color.Blue);
 				Life = LifeMax;
 			}
 		}
@@ -165,6 +192,13 @@ namespace Starvers.Enemies.Bosses
 			DropItems();
 			RewardExps();
 			Active = false;
+			Index = -1;
+		}
+		#endregion
+		#region DistanceToTarget()
+		public float DistanceToTarget()
+		{
+			return TNPC.Distance(TargetPlayer.Center);
 		}
 		#endregion
 
@@ -180,6 +214,10 @@ namespace Starvers.Enemies.Bosses
 
 		public override void TurnToAir()
 		{
+			if (!Active)
+			{
+				return;
+			}
 			base.TurnToAir();
 			Lifes = 0;
 			Index = -1;

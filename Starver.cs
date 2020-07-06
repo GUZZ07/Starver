@@ -1,6 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using Starvers.Enemies.Bosses;
-using Starvers.PlayerBoosts;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
@@ -20,6 +18,10 @@ namespace Starvers
 	#region Using Alias
 	using Assembly = System.Reflection.Assembly;
 	#endregion
+	#region Using Namespaces
+	using Enemies.Bosses;
+	using PlayerBoosts;
+	#endregion
 	[ApiVersion(2, 1)]
 	public class Starver : TerrariaPlugin
 	{
@@ -33,23 +35,24 @@ namespace Starvers
 		private Random rand;
 		#endregion
 		#region Properties
-		public static Starver Instance 
-		{ 
+		public static Starver Instance
+		{
 			get;
 			private set;
 		}
 
-		public StarverConfig Config 
-		{ 
+		public StarverConfig Config
+		{
 			get;
 			private set;
 		}
+		#region Managers
 		public PlayerDataManager PlayerDatas
 		{
 			get;
 			private set;
 		}
-		public StarverPlayer[] Players
+		public PlayerManager Players
 		{
 			get;
 			private set;
@@ -64,6 +67,12 @@ namespace Starvers
 			get;
 			private set;
 		}
+		public ProjLaunchTaskManager ProjTasks
+		{
+			get;
+			private set;
+		}
+		#endregion
 		#region Plugin Infos
 		public override string Name => nameof(Starver);
 		public override string Description => nameof(Starver);
@@ -90,10 +99,11 @@ namespace Starvers
 			};
 			rand = new Random();
 			Config = StarverConfig.Read(ConfigPath);
+			ProjTasks = new ProjLaunchTaskManager();
 			Skills = new SkillManager();
 			Bosses = new BossManager();
-			PlayerDatas = new PlayerDataManager(StorageType.MySql);
-			Players = new StarverPlayer[TShock.Players.Length];
+			Players = new PlayerManager(TShock.Players.Length);
+			PlayerDatas = new PlayerDataManager(Config.StorageType);
 			#region Test
 #if false
 			var data = new PlayerData(-444) { Level = 3 };
@@ -171,22 +181,10 @@ namespace Starvers
 		private void OnUpdate(EventArgs args)
 		{
 			timer++;
-			foreach (var player in Players)
-			{
-				if (player == null)
-				{
-					continue;
-				}
-				player.Update();
-			}
+			Players.Update();
 			Bosses.Update();
-			if (timer % (Config.SaveInterval * 60) == 0)
-			{
-				foreach (var player in Players)
-				{
-					player?.SaveData();
-				}
-			}
+			ProjTasks.Update();
+			Skills.Update();
 		}
 		#endregion
 		#region NPCStrike
@@ -211,11 +209,11 @@ namespace Starvers
 		private void MainCommand(CommandArgs args)
 		{
 			var option = string.Empty;
-			if(args.Parameters.Count > 0)
+			if (args.Parameters.Count > 0)
 			{
 				option = args.Parameters[0].ToLower();
 			}
-			switch(option)
+			switch (option)
 			{
 				case "exception":
 					if (!args.Player.HasPermission(Perms.Test))
@@ -225,7 +223,7 @@ namespace Starvers
 					new Thread(() => throw new Exception()).Start();
 					break;
 				case "up":
-					if(args.Player is TSServerPlayer)
+					if (args.Player is TSServerPlayer)
 					{
 						args.Player.SendInfoMessage("服务器无法使用该命令");
 					}
@@ -338,7 +336,7 @@ namespace Starvers
 					break;
 				case "list":
 					#region ListSkill
-					if (args.Parameters.Count < 2|| !int.TryParse(args.Parameters[1], out int page))
+					if (args.Parameters.Count < 2 || !int.TryParse(args.Parameters[1], out int page))
 					{
 						args.Player.SendInfoMessage("用法:  /au list [页码]");
 						break;

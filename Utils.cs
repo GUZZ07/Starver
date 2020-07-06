@@ -48,6 +48,10 @@ namespace Starvers
 		{
 			return rand.Next(2) == 1 ? 1 : -1;
 		}
+		public static bool Probability(this Random rand, double probability)
+		{
+			return rand.NextDouble() < probability;
+		}
 		public static float NextFloat(this Random rand)
 		{
 			return (float)rand.NextDouble();

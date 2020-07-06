@@ -14,13 +14,81 @@ namespace Starvers.Enemies.Bosses
 	partial class StarverBoss
 	{
 		#region Machines
+		#region EyeSharknado
+		protected class EyeSharknadoMachine : BossStateMachine
+		{
+			private double angle;
+			private Vector vector;
+			private Vector vel;
+
+			public int Damage { get; set; }
+			public EyeSharknadoMachine(StarverBoss boss) : base(BossState.EyeSharknado, boss)
+			{
+				Damage = 50;
+			}
+
+			protected override void InternalUpdate()
+			{
+				if (++Timer == 60 * 6)
+				{
+					IsEnd = true;
+					return;
+				}
+				if (Timer % 45 == 0)
+				{
+					angle += Math.PI / 14;
+					vector = (Vector)Boss.RelativePos;
+					vector.Length = 16;
+					vel = vector;
+					vel.Angle += angle;
+					vector.Angle -= angle;
+					Boss.NewProj(vector, ProjectileID.SharknadoBolt, Damage);
+					Boss.NewProj(vel, ProjectileID.SharknadoBolt, Damage);
+				}
+			}
+		}
+		#endregion
+		#region GazingYou
+		protected class GazingYouMachine : BossStateMachine
+		{
+			public int Damage { get; set; }
+			public int TotalTime { get; set; }
+			public Color MessageColor { get; set; }
+			public GazingYouMachine(StarverBoss boss) : base(BossState.GazingYou, boss)
+			{
+				Damage = 40;
+				TotalTime = 60 * 8;
+				MessageColor = Color.Magenta;
+			}
+
+			public override void Begin()
+			{
+				Boss.TargetPlayer.SendText("盯着你...", MessageColor);
+				Boss.DontTakeDamage = true;
+				base.Begin();
+			}
+
+			protected override void InternalUpdate()
+			{
+				var player = Boss.TargetPlayer;
+				player.AddBuffIfNot(BuffID.Obstructed, 90);
+				if (Timer % 60 == 0)
+				{
+					Boss.ProjCircle(player.Center, 16 * 30, -10, ProjectileID.RuneBlast, Rand.Next(4, 6), Damage);
+				}
+				if (++Timer == TotalTime)
+				{
+					IsEnd = true;
+				}
+			}
+		}
+		#endregion
 		#region FaithOfMountain
 		protected class FaithOfMountainMachine : BossStateMachine
 		{
 			#region Fields
 
 			private int cycle;
-			private Queue<ProjLaunchTask> launchTasks;
 			private int t;
 			private Vector faithCenter;
 			private static readonly Vector CenterOffset = new Vector(0, -130 - 50 * 16);
@@ -57,32 +125,13 @@ namespace Starvers.Enemies.Bosses
 			public FaithOfMountainMachine(StarverBoss boss) : base(BossState.FaithOfMountain, boss)
 			{
 				ProjType = ProjectileID.DD2DarkMageBolt;
-				launchTasks = new Queue<ProjLaunchTask>();
 				Cycle = 1;
 				Damage = 25;
 			}
 
 			protected override void InternalUpdate()
 			{
-				UpdateLaunchTasks();
 				UpdateFaithOfMountain();
-			}
-
-			private void UpdateLaunchTasks()
-			{
-				if (launchTasks == null)
-				{
-					launchTasks = new Queue<ProjLaunchTask>();
-				}
-				int count = launchTasks.Count;
-				while (count-- > 0)
-				{
-					var task = launchTasks.Dequeue();
-					if (!task.CheckLaunch())
-					{
-						launchTasks.Enqueue(task);
-					}
-				}
 			}
 
 			private void UpdateFaithOfMountain()
@@ -105,6 +154,10 @@ namespace Starvers.Enemies.Bosses
 						return;
 					}
 					t = 0;
+					faithCenter = (Vector)Main.player[target].Center + CenterOffset;
+				}
+				if (Timer == 60 * 6)
+				{
 					faithCenter = (Vector)Main.player[target].Center + CenterOffset;
 				}
 				#region Normal
@@ -135,7 +188,7 @@ namespace Starvers.Enemies.Bosses
 								NetMessage.SendData(27, -1, -1, null, idx);
 								var velocity = pos - (faithCenterTolaunchCenter + faithCenter);
 								velocity.PolarRadius = -speed;
-								launchTasks.Enqueue(new ProjLaunchTask(idx, velocity, 60 * 3 - Timer));
+								Starver.Instance.ProjTasks.Add(new ProjLaunchTask(idx, velocity, 60 * 3 - Timer));
 								faithCenterToPos.Angle += AngleBig;
 								faithCenterTolaunchCenter.Angle += AngleBig;
 							}
@@ -163,7 +216,7 @@ namespace Starvers.Enemies.Bosses
 								NetMessage.SendData(27, -1, -1, null, idx);
 								var velocity = pos - (faithCenterTolaunchCenter + faithCenter);
 								velocity.PolarRadius = -speed;
-								launchTasks.Enqueue(new ProjLaunchTask(idx, velocity, 60 * 3 - Timer + 60));
+								Starver.Instance.ProjTasks.Add(new ProjLaunchTask(idx, velocity, 60 * 3 - Timer + 60));
 								faithCenterToPos.Angle += AngleBig;
 								faithCenterTolaunchCenter.Angle += AngleBig;
 							}
@@ -191,7 +244,7 @@ namespace Starvers.Enemies.Bosses
 								NetMessage.SendData(27, -1, -1, null, idx);
 								var velocity = pos - (faithCenterTolaunchCenter + faithCenter);
 								velocity.PolarRadius = speed;
-								launchTasks.Enqueue(new ProjLaunchTask(idx, -velocity, 60 * 3 - Timer + 60 * 2));
+								Starver.Instance.ProjTasks.Add(new ProjLaunchTask(idx, -velocity, 60 * 3 - Timer + 60 * 2));
 								faithCenterToPos.Angle += AngleBig;
 								faithCenterTolaunchCenter.Angle += AngleBig;
 							}
@@ -227,7 +280,7 @@ namespace Starvers.Enemies.Bosses
 								NetMessage.SendData(27, -1, -1, null, idx);
 								Vector velocity = pos - (faithCenterTolaunchCenter + faithCenter);
 								velocity.PolarRadius = speed;
-								launchTasks.Enqueue(new ProjLaunchTask(idx, -velocity, 60 * 3 - Timer + 60 * 6));
+								Starver.Instance.ProjTasks.Add(new ProjLaunchTask(idx, -velocity, 60 * 3 - Timer + 60 * 6));
 								faithCenterToPos.Angle -= AngleBig;
 								faithCenterTolaunchCenter.Angle -= AngleBig;
 							}
@@ -255,7 +308,7 @@ namespace Starvers.Enemies.Bosses
 								NetMessage.SendData(27, -1, -1, null, idx);
 								Vector velocity = pos - (faithCenterTolaunchCenter + faithCenter);
 								velocity.PolarRadius = speed;
-								launchTasks.Enqueue(new ProjLaunchTask(idx, -velocity, 60 * 3 - Timer + 60 * 7));
+								Starver.Instance.ProjTasks.Add(new ProjLaunchTask(idx, -velocity, 60 * 3 - Timer + 60 * 7));
 								faithCenterToPos.Angle -= AngleBig;
 								faithCenterTolaunchCenter.Angle -= AngleBig;
 							}
@@ -283,7 +336,7 @@ namespace Starvers.Enemies.Bosses
 								NetMessage.SendData(27, -1, -1, null, idx);
 								var velocity = pos - (faithCenterTolaunchCenter + faithCenter);
 								velocity.PolarRadius = speed;
-								launchTasks.Enqueue(new ProjLaunchTask(idx, -velocity, 60 * 3 - Timer + 60 * 8));
+								Starver.Instance.ProjTasks.Add(new ProjLaunchTask(idx, -velocity, 60 * 3 - Timer + 60 * 8));
 								faithCenterToPos.Angle -= AngleBig;
 								faithCenterTolaunchCenter.Angle -= AngleBig;
 							}
@@ -296,22 +349,24 @@ namespace Starvers.Enemies.Bosses
 
 		}
 		#endregion
-		#region FakeDuckRush
+		#region FakeDukeRush
 		// 朱砂左右都不超过25 * 16像素
-		protected class FakeDuckRushMachine : BossStateMachine
+		protected class FakeDukeRushMachine : BossStateMachine
 		{
 			private int released;
 			private int[] useWhich;
+			private int dir;
 
 			public int Count { get; set; }
 			public int ReleaseInterval { get; set; }
-			public FakeDuckRushMachine(StarverBoss boss) : base(BossState.FakeDuckRush, boss)
+			public FakeDukeRushMachine(StarverBoss boss) : base(BossState.FakeDukeRush, boss)
 			{
-				ReleaseInterval = 30;
+				ReleaseInterval = 50;
 				Count = 6;
 			}
 			public override void Begin()
 			{
+				dir = Rand.NextDirection();
 				useWhich = new int[Count];
 				base.Begin();
 			}
@@ -319,7 +374,7 @@ namespace Starvers.Enemies.Bosses
 			{
 				if (Timer++ % (ReleaseInterval + 1) == 0)
 				{
-					ReleaseDuck();
+					ReleaseDuke();
 					if (++released == Count)
 					{
 						IsEnd = true;
@@ -340,9 +395,9 @@ namespace Starvers.Enemies.Bosses
 				return true;
 			}
 
-			private void ReleaseDuck()
+			private void ReleaseDuke()
 			{
-				int dir = Boss.Rand.NextDirection();
+				dir *= -1;
 				int index = 200;
 				for (int i = 0; i < Main.maxNPCs; i++)
 				{
@@ -373,16 +428,42 @@ namespace Starvers.Enemies.Bosses
 		protected class PlayerTracker : BossStateMachine
 		{
 			public Vector2 Offset { get; set; }
+			/// <summary>
+			/// 超过后会瞬移到玩家身边
+			/// </summary>
+			public float? MaxDistance { get; set; }
 			public float? MaxSpeed { get; set; }
 			public float SlowDownFactor { get; set; }
-			public bool IsPause { get; set; }
+			public bool DontMove { get; set; }
+			public bool TrackingEveryWhere { get; set; }
 			public PlayerTracker(StarverBoss boss) : base(BossState.TrackingPlayer, boss)
 			{
 				SlowDownFactor = 20;
+				TrackingEveryWhere = true;
 			}
 			protected override void InternalUpdate()
 			{
-				if (IsPause)
+				#region EnsureTarget
+				VerifyTarget();
+				if (!Boss.TNPC.HasValidTarget)
+				{
+					Boss.TurnToAir();
+					return;
+				}
+				if (MaxDistance != null && Boss.DistanceToTarget() > MaxDistance)
+				{
+					if (TrackingEveryWhere)
+					{
+						Boss.Center = Boss.TargetPlayer.Center + Rand.NextVector2(16 * 100);
+					}
+					else
+					{
+						Boss.TurnToAir();
+						return;
+					}
+				}
+				#endregion
+				if (DontMove)
 				{
 					return;
 				}
@@ -397,14 +478,27 @@ namespace Starvers.Enemies.Bosses
 					Boss.UpdateToClient();
 				}
 			}
+
+			private void VerifyTarget()
+			{
+				if (Boss.TargetPlayer?.Alive != true)
+				{
+					FindTarget();
+				}
+			}
+
+			private void FindTarget()
+			{
+				StarverPlayer target = Starver.Instance.Players.FindPlayerClosestTo(Boss.Center);
+				Boss.Target = target?.Index ?? -1;
+			}
 		}
 		#endregion
 		#region EvilTrident
 		protected class EvilTridentMachine : BossStateMachine
 		{
 			private int created;
-			private int launched;
-			private ProjLaunchTask[] projs;
+			private int[] projs;
 
 			public int Damage { get; set; }
 			public int TridentCount { get; set; }
@@ -421,7 +515,7 @@ namespace Starvers.Enemies.Bosses
 			}
 			public override void Begin()
 			{
-				projs = new ProjLaunchTask[TridentCount];
+				projs = new int[TridentCount];
 				base.Begin();
 			}
 			protected override void InternalUpdate()
@@ -434,20 +528,11 @@ namespace Starvers.Enemies.Bosses
 						var source = GetLaunchSource();
 						var velocity = -source / TridentHitPlayerTime;
 						var index = Boss.NewProj(Boss.TargetPlayer.Center + source, source.ToLenOf(-1f), ProjectileID.UnholyTridentHostile, Damage);
-						projs[created++] = new ProjLaunchTask(index, velocity, LaunchDelay);
+						projs[created++] = index;
+						Starver.Instance.ProjTasks.Add(new ProjLaunchTask(index, velocity, LaunchDelay));
 					}
 				}
-				if (launched < TridentCount)
-				{
-					for (int i = launched; i < created; i++)
-					{
-						if (projs[i].CheckLaunch())
-						{
-							launched++;
-						}
-					}
-				}
-				else
+				else if (Timer > CreateInterval * TridentCount + LaunchDelay * 3)
 				{
 					IsEnd = true;
 					return;
@@ -457,15 +542,15 @@ namespace Starvers.Enemies.Bosses
 			{
 				for (int i = 0; i < created; i++)
 				{
-					projs[i].Cancel();
+					Starver.Instance.ProjTasks.Cancel(projs[i]);
 				}
 				base.Abort();
 			}
 
 			private Vector2 GetLaunchSource()
 			{
-				var dir = Boss.Rand.NextDirection();
-				var Y = Boss.Rand.NextFloat(-16 * 7.5f, 16 * 7.5f);
+				var dir = Rand.NextDirection();
+				var Y = Rand.NextFloat(-16 * 7.5f, 16 * 7.5f);
 				return new Vector2(dir * 16 * 30, Y);
 			}
 		}
@@ -478,6 +563,12 @@ namespace Starvers.Enemies.Bosses
 			public StarverBoss Boss { get; }
 			public int Timer { get; protected set; }
 			public bool IsEnd { get; protected set; }
+			public bool IsPause { get; set; }
+
+			public event Action OnEnd;
+
+			protected Random Rand => Boss.Rand;
+
 			protected BossStateMachine(BossState state, StarverBoss boss)
 			{
 				State = state;
@@ -492,10 +583,22 @@ namespace Starvers.Enemies.Bosses
 #endif
 					return;
 				}
+				if (IsPause || !Boss.Active)
+				{
+					return;
+				}
 				InternalUpdate();
+				if (IsEnd)
+				{
+					End();
+				}
 			}
 			public virtual void Begin() { }
 			public virtual void Abort() { }
+			private void End()
+			{
+				OnEnd?.Invoke();
+			}
 			protected abstract void InternalUpdate();
 		}
 		#endregion
@@ -506,8 +609,10 @@ namespace Starvers.Enemies.Bosses
 			EyeSummon,
 			EvilTrident,
 			TrackingPlayer,
-			FakeDuckRush,
-			FaithOfMountain
+			FakeDukeRush,
+			FaithOfMountain,
+			GazingYou,
+			EyeSharknado
 		}
 	}
 }

@@ -269,6 +269,10 @@ namespace Starvers
 		/// <param name="crit"></param>
 		public virtual void Strike(StarverPlayer player, int damage, double knockBack, int hitDirection, bool crit = false)
 		{
+			if (!Active)
+			{
+				return;
+			}
 			damage = (int)(damage * player.DamageIndex);
 			knockBack *= player.KnockBackIndex;
 			var realDamage = (int)Main.CalculateDamageNPCsTake(damage, Defense);
@@ -276,7 +280,14 @@ namespace Starvers
 			{
 				realDamage *= 2;
 			}
-			ReceiveDamage(realDamage);
+			if (TNPC.dontTakeDamage)
+			{
+				realDamage = 0;
+			}
+			else
+			{
+				ReceiveDamage(realDamage);
+			}
 			if (Active)
 			{
 				Velocity.X += (float)(hitDirection * knockBack * KnockBackResist);

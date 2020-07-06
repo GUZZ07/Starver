@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -14,6 +15,7 @@ namespace Starvers
 		public string SavePath { get; set; }
 		public int SaveInterval{ get; set; }
 		public int AutoUpgradeLevel { get; set; }
+		[JsonConverter(typeof(StringEnumConverter))]
 		public StorageType StorageType { get; set; }
 
 		private StarverConfig()
