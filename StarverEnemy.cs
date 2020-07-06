@@ -283,9 +283,11 @@ namespace Starvers
 			if (TNPC.dontTakeDamage)
 			{
 				realDamage = 0;
+				TNPC.HitEffect(hitDirection, realDamage);
 			}
 			else
 			{
+				TNPC.HitEffect(hitDirection, realDamage);
 				ReceiveDamage(realDamage);
 			}
 			if (Active)
@@ -298,7 +300,6 @@ namespace Starvers
 				player.Exp += expGet;
 			}
 			Utils.SendCombatText(TNPC, realDamage.ToString(), Starver.DamageColor);
-			TNPC.HitEffect(hitDirection, realDamage);
 		}
 		#endregion
 		#region PlayerInteraction
