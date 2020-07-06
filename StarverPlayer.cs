@@ -253,6 +253,10 @@ namespace Starvers
 		}
 		#endregion
 		#region BindSkill
+		public void UnBind(int slot)
+		{
+			Skills[slot] = default;
+		}
 		public void BindSkill(int slot, StarverSkill skill, bool byProj, int bindId)
 		{
 			Skills[slot] = new PlayerSkillData

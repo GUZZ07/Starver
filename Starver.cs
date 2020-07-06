@@ -275,6 +275,27 @@ namespace Starvers
 			#endregion
 			switch (option)
 			{
+				case "unbind":
+					{
+						#region CheckParamsCount
+						if (args.Parameters.Count < 2)
+						{
+							goto default;
+						}
+						#endregion
+						#region CheckSlotValid
+						if (!int.TryParse(args.Parameters[1], out int slot) || !slot.InRange(1, MaxSkillSlot))
+						{
+							args.Player.SendErrorMessage($"无效的slot: {args.Parameters[1]}");
+							args.Player.SendErrorMessage("应为1/2/3/4/5");
+							break;
+						}
+						slot--;
+						#endregion
+						var player = Players[args.Player.Index];
+						player.UnBind(slot);
+					}
+					break;
 				case "bind":
 					{
 						#region CheckParamsCount
@@ -304,6 +325,11 @@ namespace Starvers
 						if (!skill.CanSet(player))
 						{
 							break;
+						}
+						if (skill.ID != player.Skills[slot].ID && player.Skills.Count(skill => skill.ID == skill.ID) != 0)
+						{
+							player.SendErrorText("你已经绑定了该技能");
+							return;
 						}
 						#endregion
 						#region CheckBinding
@@ -391,6 +417,7 @@ namespace Starvers
 				#endregion
 				default:
 					args.Player.SendInfoMessage("bind <slot> <skill> 将制定技能绑定到手中的武器上");
+					args.Player.SendInfoMessage("unbind <slot> 技能解绑");
 					args.Player.SendInfoMessage("list  查看技能列表");
 					args.Player.SendInfoMessage("help [技能id]  查看技能介绍");
 					args.Player.SendInfoMessage("help  帮助");

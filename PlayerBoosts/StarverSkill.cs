@@ -75,11 +75,6 @@ MP消耗:       {MPCost}
 				player.SendErrorText("你的等级不足, 所需等级: " + levelNeed);
 				return false;
 			}
-			if (player.Skills.Count(skill => skill.ID == ID) != 0)
-			{
-				player.SendErrorText("无法将同一个技能绑定到多个槽位");
-				return false;
-			}
 			return true;
 		}
 
