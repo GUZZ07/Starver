@@ -256,6 +256,7 @@ namespace Starvers
 		public void UnBind(int slot)
 		{
 			Skills[slot] = default;
+			SaveData();
 		}
 		public void BindSkill(int slot, StarverSkill skill, bool byProj, int bindId)
 		{

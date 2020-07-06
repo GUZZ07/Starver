@@ -326,7 +326,7 @@ namespace Starvers
 						{
 							break;
 						}
-						if (skill.ID != player.Skills[slot].ID && player.Skills.Count(skill => skill.ID == skill.ID) != 0)
+						if (skill.ID != player.Skills[slot].ID && player.Skills.Count(skl => skl.ID == skill.ID) != 0)
 						{
 							player.SendErrorText("你已经绑定了该技能");
 							return;
