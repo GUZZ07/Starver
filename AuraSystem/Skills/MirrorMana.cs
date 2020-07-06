@@ -24,7 +24,7 @@ namespace Starvers.AuraSystem.Skills
 		}
 		public override void Release(StarverPlayer player, Vector2 vel)
 		{
-			player.TSPlayer.Spawn();
+			player.TSPlayer.Spawn(Terraria.PlayerSpawnContext.RecallFromItem, 0);
 			player.MP += player.MaxMP / 3;
 			player.Heal(player.LifeMax / 3);
 		}

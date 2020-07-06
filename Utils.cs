@@ -42,7 +42,7 @@ namespace Starvers
 			{
 				return;
 			}
-			Main.itemLockoutTime[num] = 54000;
+			// Main.itemLockTime[num] = 54000;
 			Main.item[num].instanced = true;
 			for (int i = 0; i < Starver.Players.Length; i++)
 			{
@@ -237,7 +237,7 @@ namespace Starvers
 		#region NewProj
 		public static int NewProj(Vector2 position, Vector2 velocity, int Type, int Damage = 0, float KnockBack = 0, int Owner = 255, float ai0 = 0, float ai1 = 0)
 		{
-			if(Type >= Main.projectileTexture.Length)
+			if(Type >= Main.maxProjectileTypes)
 			{
 				Type = 0;
 			}
@@ -595,11 +595,11 @@ namespace Starvers
 		#region TSPlayer
 		public static int GetUserID(this TSPlayer player)
 		{
-			return player.User.ID;
+			return player.Account.ID;
 		}
 		public static string GetUserName(this TSPlayer player)
 		{
-			return player.User.Name;
+			return player.Account.Name;
 		}
 		#endregion
 		#region else

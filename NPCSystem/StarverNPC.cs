@@ -501,7 +501,7 @@ namespace Starvers.NPCSystem
 							NPCs[i].OnCollide(ply, ref Handled);
 						}
 						int damage = RealNPC.damage;
-						if (ply.TPlayer.NPCBannerBuff[Terraria.Item.NPCtoBanner(RealNPC.type)])
+						if (ply.TPlayer.HasNPCBannerBuff(Terraria.Item.NPCtoBanner(RealNPC.type)))
 						{
 							damage /= 2;
 						}

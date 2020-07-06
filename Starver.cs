@@ -114,7 +114,7 @@ namespace Starvers
 					FolderBacking = Path.Combine(FolderForTransfer, "Backings");
 					FolderSending = Path.Combine(FolderForTransfer, "Sendings");
 				}
-				IsUserAccount = typeof(TSPlayer).GetProperty(nameof(TSPlayer.User)) == null;
+				IsUserAccount = true;
 				IsPE = curRelease != Main.curRelease;
 				CombatTextPacket = IsPE ? (int)PacketTypes.CreateCombatText : (int)PacketTypes.CreateCombatTextExtended;
 				Rand = new Random();
@@ -444,7 +444,7 @@ namespace Starvers
 			float interdamage;
 			interdamage = args.Damage * damageindex;
 			int divide = 2;
-			if (player.TPlayer.NPCBannerBuff[Item.NPCtoBanner(args.Npc.type)])
+			if (player.TPlayer.HasNPCBannerBuff(Item.NPCtoBanner(args.Npc.type)))
 			{
 				divide *= 2;
 			}

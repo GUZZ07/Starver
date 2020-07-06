@@ -45,28 +45,28 @@ namespace Starvers.TaskSystem
 		static MainLineTask()
 		{
 			var two = 2;
-			if (WorldGen.oreTier1 == -1)
+			if (WorldGen.SavedOreTiers.Cobalt == -1)
 			{
-				WorldGen.oreTier1 = 107;
+				WorldGen.SavedOreTiers.Cobalt = 107;
 				if (Starver.Rand.Next(two) == 0)
 				{
-					WorldGen.oreTier1 = 221;
+					WorldGen.SavedOreTiers.Cobalt = 221;
 				}
 			}
-			if (WorldGen.oreTier2 == -1)
+			if (WorldGen.SavedOreTiers.Mythril == -1)
 			{
-				WorldGen.oreTier2 = 108;
+				WorldGen.SavedOreTiers.Mythril = 108;
 				if (Starver.Rand.Next(two) == 0)
 				{
-					WorldGen.oreTier2 = 222;
+					WorldGen.SavedOreTiers.Mythril = 222;
 				}
 			}
-			if (WorldGen.oreTier3 == -1)
+			if (WorldGen.SavedOreTiers.Adamantite == -1)
 			{
-				WorldGen.oreTier3 = 111;
+				WorldGen.SavedOreTiers.Adamantite = 111;
 				if (Starver.Rand.Next(two) == 0)
 				{
-					WorldGen.oreTier3 = 223;
+					WorldGen.SavedOreTiers.Adamantite = 223;
 				}
 			}
 		}
@@ -2315,7 +2315,7 @@ namespace Starvers.TaskSystem
 			for (int i = 0; i < Rewards.Length && i < chest.item.Length; i++)
 			{
 				int num = Utils.NewItem(Rewards[i].ID, Rewards[i].Stack, Rewards[i].Prefix);
-				chest.AddShop(Main.item[num]);
+				chest.AddItemToShop(Main.item[num]);
 			}
 		}
 		#endregion

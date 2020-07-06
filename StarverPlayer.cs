@@ -406,7 +406,7 @@ namespace Starvers
 		#region Spawn
 		public void Spawn()
 		{
-			TSPlayer.Spawn();
+			TSPlayer.Spawn(PlayerSpawnContext.ReviveFromDeath, 0);
 		}
 		#endregion
 		#region Teleport
@@ -595,7 +595,7 @@ namespace Starvers
 				Grass = false;
 				biome |= NPCSystem.BiomeType.Dessert;
 			}
-			if (TPlayer.ZoneHoly)
+			if (TPlayer.ZoneHallow)
 			{
 				Grass = false;
 				biome |= NPCSystem.BiomeType.Holy;

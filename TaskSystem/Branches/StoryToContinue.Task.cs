@@ -1107,15 +1107,15 @@ namespace Starvers.TaskSystem.Branches
 					for (int i = 1; i < 200; i++)
 					{
 						PlaceTileAt(point.X, point.Y + i, TileID.LihzahrdBrick);
-						PlaceWallAt(point.X, point.Y + i, WallID.LihzahrdBrickUnsafe);
+						PlaceWallAt(point.X, point.Y + i, (byte)WallID.LihzahrdBrickUnsafe);
 						Main.tile[point.X, point.Y + i].color(Paint);
 						Main.tile[point.X, point.Y + i].wallColor(Paint);
 						for (int j = 0; j < i - 1; j++)
 						{
 							PlaceTileAt(point.X + j, point.Y + i, TileID.LihzahrdBrick);
 							PlaceTileAt(point.X - j, point.Y + i, TileID.LihzahrdBrick);
-							PlaceWallAt(point.X + j, point.Y + i, WallID.LihzahrdBrickUnsafe);
-							PlaceWallAt(point.X - j, point.Y + i, WallID.LihzahrdBrickUnsafe);
+							PlaceWallAt(point.X + j, point.Y + i, (byte)WallID.LihzahrdBrickUnsafe);
+							PlaceWallAt(point.X - j, point.Y + i, (byte)WallID.LihzahrdBrickUnsafe);
 							Main.tile[point.X + j, point.Y + i].color(Paint);
 							Main.tile[point.X - j, point.Y + i].color(Paint);
 							Main.tile[point.X + j, point.Y + i].wallColor(Paint);
