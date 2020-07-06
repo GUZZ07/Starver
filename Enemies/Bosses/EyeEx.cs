@@ -86,6 +86,10 @@ namespace Starvers.Enemies.Bosses
 		{
 			timer++;
 			TargetTracker.Update();
+			if (!Active)
+			{
+				return;
+			}
 			if (ProjController?.IsEnd != false)
 			{
 				if (rushTime++ >= maxRushTime)

@@ -74,6 +74,14 @@ namespace Starvers.PlayerBoosts
 		{
 			return SkillInstance<SkillT>.Value;
 		}
+		public StarverSkill GetSkill(string nameOrId)
+		{
+			if (int.TryParse(nameOrId, out int index) && index.InRange(0, Count - 1))
+			{
+				return skills[index];
+			}
+			return skills.FirstOrDefault(skill => skill.Name.StartsWith(nameOrId, StringComparison.OrdinalIgnoreCase));
+		}
 		#endregion
 		#region Update
 		public void Update()

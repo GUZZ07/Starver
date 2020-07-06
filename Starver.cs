@@ -321,6 +321,10 @@ namespace Starvers
 							case ItemUseStyleID.Rapier:
 								player.BindSkill(slot, skill, false, player.HeldItem.type);
 								break;
+							// 剑气啊火花魔杖啊什么的
+							case ItemUseStyleID.Swing when player.HeldItem.shoot != 0:
+								player.BindSkill(slot, skill, true, player.HeldItem.shoot);
+								break;
 							default:
 								if (skill.SpecialBindTo(player))
 								{
@@ -370,18 +374,19 @@ namespace Starvers
 				#endregion
 				case "help":
 					#region Help
-					if (args.Parameters.Count < 2)
 					{
-						goto default;
+						if (args.Parameters.Count < 2)
+						{
+							goto default;
+						}
+						var skill = FindSkill(args.Parameters[1]);
+						if (skill == null)
+						{
+							goto default;
+						}
+						args.Player.SendMessage(skill.Name, Color.Aqua);
+						args.Player.SendMessage(skill.Introduction, Color.Aqua);
 					}
-					if (!int.TryParse(args.Parameters[1], out int skillID))
-					{
-						goto default;
-					}
-					skillID = Math.Min(0, skillID);
-					skillID = Math.Max(skillID, Skills.Count - 1);
-					args.Player.SendMessage(Skills[skillID].Name, Color.Aqua);
-					args.Player.SendMessage(Skills[skillID].Introduction, Color.Aqua);
 					break;
 				#endregion
 				default:

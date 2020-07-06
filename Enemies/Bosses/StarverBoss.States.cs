@@ -59,13 +59,30 @@ namespace Starvers.Enemies.Bosses
 				Damage = 40;
 				TotalTime = 60 * 8;
 				MessageColor = Color.Magenta;
+
+				OnEnd += delegate
+				{
+					if (Boss.Active)
+					{
+						Boss.DontTakeDamage = false;
+					}
+				};
 			}
 
 			public override void Begin()
 			{
-				Boss.TargetPlayer.SendText("盯着你...", MessageColor);
+				Boss.TargetPlayer?.SendText("盯着你...", MessageColor);
 				Boss.DontTakeDamage = true;
 				base.Begin();
+			}
+
+			public override void Abort()
+			{
+				if (Boss.Active)
+				{
+					Boss.DontTakeDamage = false;
+				}
+				base.Abort();
 			}
 
 			protected override void InternalUpdate()
