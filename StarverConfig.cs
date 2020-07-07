@@ -43,10 +43,6 @@ namespace Starvers
 		{
 			
 		}
-		~StarverConfig()
-		{
-			Write();
-		}
 		#endregion
 		#region Read & Write
 		internal static StarverConfig Read()
@@ -65,7 +61,8 @@ namespace Starvers
 		}
 		internal void Write()
 		{
-			File.WriteAllText(ConfigPath,JsonConvert.SerializeObject(this, Formatting.Indented));
+			var text = JsonConvert.SerializeObject(this, Formatting.Indented);
+			File.WriteAllText(ConfigPath, text);
 		}
 		internal static string ConfigPath =  "tshock//StarverConfig.json";
 		#endregion

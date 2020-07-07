@@ -38,6 +38,9 @@ namespace Starvers
 	using System.Text.RegularExpressions;
 	using Starvers.NetTricks;
 	using System.Diagnostics;
+	using Terraria.Chat;
+	using Terraria.Localization;
+	using Terraria.UI.Chat;
 
 	[ApiVersion(2, 1)]
 	public class Starver : TerrariaPlugin
@@ -591,31 +594,19 @@ namespace Starvers
 		#region OnChat
 		private static void OnChat(ServerChatEventArgs args)
 		{
-			var hCount = args.Text.Count(c => c switch
+			var text = args.Text;
+			foreach (KeyValuePair<LocalizedText, ChatCommandId> item in ChatManager.Commands._localizedCommands)
 			{
-				'哼' => true,
-				'亨' => true,
-				_ => false
-			});
-			var aCount = args.Text.Count(c => c switch
-			{
-				'啊' => true,
-				'阿' => true,
-				_ => false
-			});
-			var stench = hCount > 2 || aCount > 2;
-			if (stench) 
-			{
-				StarverPlayer.All.SendMessage(Players[args.Who].Name + "因试图恶臭而被口球", Color.Blue);
-				args.Handled = true;
-				return;
-			}
-			if (args.Text.StartsWith(TShock.Config.CommandSilentSpecifier) || args.Text.StartsWith(TShock.Config.CommandSpecifier))
-			{
-				if (args.Text.Length > 1)
+				if (item.Value._name == args.CommandId._name)
 				{
-					return;
+					text = (string.IsNullOrEmpty(text) ? item.Key.Value : (item.Key.Value + " " + text));
+					break;
 				}
+			}
+			if ((text.StartsWith(Commands.Specifier) || text.StartsWith(Commands.SilentSpecifier)) && !string.IsNullOrWhiteSpace(text.Substring(1)))
+			// if (args.Text.StartsWith(Commands.SilentSpecifier) || args.Text.StartsWith(Commands.Specifier))
+			{
+				return;
 			}
 			if (TShock.Players[args.Who].mute)
 			{
