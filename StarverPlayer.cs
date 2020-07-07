@@ -479,7 +479,7 @@ namespace Starvers
 					var rawdamage = Starver.Instance.RecalcDamage(npc);
 					var factor = (double)rawdamage / npc.damage;
 					var damage = (int)Main.CalculateDamagePlayersTake(rawdamage, (int)(TPlayer.statDefense * factor)) - npc.damage;
-					Hurt(damage, PlayerDeathReason.ByNPC(npc.whoAmI), Math.Sign(Center.X - npc.Center.X));
+					Hurt(damage, PlayerDeathReason.ByNPC(npc.whoAmI), 0);
 				}
 			}
 		}

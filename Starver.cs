@@ -311,7 +311,7 @@ namespace Starvers
 						return 250;
 					}
 				default:
-					return (int)(raw * (1 + DifficultyIndex * 3.5 / 40.0));
+					return (int)(raw * (1 + DifficultyIndex * 1.75 / 40.0));
 			}
 		}
 		private int RecalcLife(int raw)

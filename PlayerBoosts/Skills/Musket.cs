@@ -23,13 +23,15 @@ namespace Starvers.PlayerBoosts.Skills
 		public override void Release(StarverPlayer player, Vector vel)
 		{
 			Vector vertical = vel.ToVertical(1);
-			for (int i = 0; i < 15; i++)
+			int count = 6 + 2 * (int)Math.Log(player.Level);
+			int damage = player.Level > 2000 ? 28 : 40;
+			for (int i = 0; i < count; i++)
 			{
 				player.NewProj
 				(
 					vel + vertical * Rand.NextFloat(-3, 3),
 					ProjectileID.GoldenBullet,
-					45,
+					damage,
 					1
 				);
 			}
