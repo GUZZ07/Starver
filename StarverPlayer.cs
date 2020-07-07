@@ -167,7 +167,9 @@ namespace Starvers
 		}
 		#endregion
 		#endregion
-
+		#region Private Fields
+		private int skillCheckDelay;
+		#endregion
 		public bool IgnoreCD { get; set; }
 
 		public int AvalonGradationTime { get; set; }
@@ -326,17 +328,6 @@ namespace Starvers
 		#region Events
 		private void OnUseItem(Item item)
 		{
-			for (int i = 0; i < Skills.Length; i++)
-			{
-				ref var skill = ref Skills[i];
-				if (skill.ID != null && skill.CD == 0)
-				{
-					if (skill.IsBindTo(item))
-					{
-						skill.Release(this);
-					}
-				}
-			}
 			if (400 <= LifeMax && LifeMax < 3000)
 			{
 				var slot = Inventory[TPlayer.selectedItem];
@@ -352,9 +343,29 @@ namespace Starvers
 						break;
 				}
 			}
+			if (skillCheckDelay != 0)
+			{
+				return;
+			}
+			for (int i = 0; i < Skills.Length; i++)
+			{
+				ref var skill = ref Skills[i];
+				if (skill.ID != null && skill.CD == 0)
+				{
+					if (skill.IsBindTo(item))
+					{
+						skill.Release(this);
+						skillCheckDelay += 20;
+					}
+				}
+			}
 		}
 		public virtual void OnNewProj(GetDataHandlers.NewProjectileEventArgs args)
 		{
+			if (skillCheckDelay != 0)
+			{
+				return;
+			}
 			for (int i = 0; i < Skills.Length; i++)
 			{
 				ref var skill = ref Skills[i];
@@ -365,6 +376,7 @@ namespace Starvers
 						var vel = (Vector)args.Velocity;
 						vel.Length = Starver.SpearSpeed;
 						skill.Release(this, vel);
+						skillCheckDelay += 20;
 					}
 				}
 			}
@@ -444,6 +456,10 @@ namespace Starvers
 			if (ItemUseDelay > 0)
 			{
 				ItemUseDelay--;
+			}
+			if (skillCheckDelay > 0)
+			{
+				skillCheckDelay--;
 			}
 			if (HeldItem.useStyle == ItemUseStyleID.HoldUp)
 			{
