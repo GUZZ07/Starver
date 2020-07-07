@@ -136,7 +136,6 @@ namespace Starvers.PlayerBoosts
 		PosionFog,
 		CDLess,
 		Sacrifice,
-		TheWorld,
 		MirrorMana,
 		Chaos,
 		Cosmos,
@@ -154,7 +153,6 @@ namespace Starvers.PlayerBoosts
 		UltimateSlash,
 		UniverseBlast,
 		UnstableTele,
-		GreenCrit,
 		RealmOfDefense,
 		NightMana
 	}

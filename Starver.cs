@@ -371,10 +371,10 @@ namespace Starvers
 						args.Player.SendInfoMessage("用法:  /au list [页码]");
 						break;
 					}
-					page = Math.Min(1, page);
-					page = Math.Max(page, Skills.SkillLists.Length);
-					page--;
-					args.Player.SendInfoMessage(Skills.SkillLists[page]);
+					page = Math.Max(1, page);
+					page = Math.Min(page, Skills.SkillLists.Length);
+					args.Player.SendSuccessMessage("当前页: {0}/{1}", page, Skills.SkillLists.Length);
+					args.Player.SendInfoMessage(Skills.SkillLists[page - 1]);
 					break;
 				#endregion
 				#region Sounds

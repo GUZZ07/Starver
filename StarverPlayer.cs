@@ -47,11 +47,27 @@ namespace Starvers
 		}
 		#endregion
 		#endregion
-		public int Index { get; protected set; }
+		#region RawDatas
+		public int Index
+		{ 
+			get; 
+			protected set;
+		}
 		public virtual PlayerData Data { get; }
-		public virtual Player TPlayer => Main.player[Index];
-		public virtual TSPlayer TSPlayer => TShock.Players[Index];
-		public int Timer { get; protected set; }
+		public virtual Player TPlayer
+		{
+			get => Main.player[Index];
+		}
+		public virtual TSPlayer TSPlayer
+		{
+			get => TShock.Players[Index];
+		}
+		public int Timer 
+		{ 
+			get; 
+			protected set;
+		}
+		#endregion
 		#region From TPlayer
 		public bool Alive
 		{
@@ -76,6 +92,32 @@ namespace Starvers
 			}
 		}
 		public bool ControlUseItem => TPlayer.controlUseItem;
+		#region Life
+		public int Life
+		{
+			get
+			{
+				return TPlayer.statLife;
+			}
+			set
+			{
+				TPlayer.statLife = value;
+				SendData(PacketTypes.PlayerHp, string.Empty, Index);
+			}
+		}
+		public int LifeMax
+		{
+			get
+			{
+				return TPlayer.statLifeMax;
+			}
+			set
+			{
+				TPlayer.statLifeMax = value;
+				SendData(PacketTypes.PlayerHp, string.Empty, Index);
+			}
+		}
+		#endregion
 		#region Center
 		public Vector2 Center
 		{
@@ -120,6 +162,9 @@ namespace Starvers
 		#endregion
 		#endregion
 
+		public bool IgnoreCD { get; set; }
+
+		public int AvalonGradationTime { get; set; }
 
 		public SkillIDs LastSkill { get; set; }
 
@@ -372,14 +417,20 @@ namespace Starvers
 			{
 				ItemUseDelay--;
 			}
+			PlayerBoosts.Skills.AvalonGradation.Update(this);
 			for (int i = 0; i < Starver.MaxSkillSlot; i++)
 			{
-				if (Skills[i].ID != null)
+				if (Skills[i].ID == null)
 				{
-					if (Skills[i].CD > 0)
-					{
-						Skills[i].CD--;
-					}
+					continue;
+				}
+				if (!Skills[i].Skill.ForceCD && IgnoreCD)
+				{
+					Skills[i].CD = 0;
+				}
+				else if (Skills[i].CD > 0)
+				{
+					Skills[i].CD--;
 				}
 			}
 		}
@@ -630,6 +681,10 @@ namespace Starvers
 		{
 			TSPlayer.SendMessage(text, color);
 		}
+		public void SendCombatText(string text, Color color, bool visableToOthers = true)
+		{
+			TPlayer.SendCombatText(text, color, visableToOthers ? -1 : Index);
+		}
 		public void SendText(string text, byte r, byte g, byte b)
 		{
 			TSPlayer.SendMessage(text, r, g, b);
@@ -648,6 +703,12 @@ namespace Starvers
 		{
 			text = EndLine19 + text + EndLine5;
 			SendData(PacketTypes.Status, text);
+		}
+		#endregion
+		#region Heal
+		public void Heal(int health)
+		{
+			TSPlayer.Heal(health);
 		}
 		#endregion
 		#endregion
