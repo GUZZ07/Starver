@@ -308,7 +308,7 @@ namespace Starvers
 		#region BindSkill
 		public void UnBind(int slot)
 		{
-			Skills[slot] = default;
+			Skills[slot].ID = null;
 			SaveData();
 		}
 		public void BindSkill(int slot, StarverSkill skill, bool byProj, int bindId)
@@ -317,7 +317,8 @@ namespace Starvers
 			{
 				ID = skill.ID,
 				BindByProj = byProj,
-				BindID = (short)bindId
+				BindID = (short)bindId,
+				CD = Skills[slot].CD
 			};
 			SaveData();
 		}

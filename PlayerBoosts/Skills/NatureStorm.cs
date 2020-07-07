@@ -11,7 +11,7 @@ using TShockAPI;
 
 namespace Starvers.PlayerBoosts.Skills
 {
-	public class NatureStorm : StarverSkill
+	public class NatureStorm : UltimateSkill
 	{
 		#region Fields
 		private const float XDistance = 16 * 65;

@@ -8,7 +8,7 @@ using Terraria.ID;
 
 namespace Starvers.PlayerBoosts.Skills
 {
-	public class ExCalibur : StarverSkill
+	public class ExCalibur : UltimateSkill
 	{
 		public ExCalibur()
 		{

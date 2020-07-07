@@ -10,7 +10,7 @@ namespace Starvers.PlayerBoosts.Skills
 	using Microsoft.Xna.Framework;
 	using System.Threading;
 	using Terraria.ID;
-	public class UltimateSlash : StarverSkill
+	public class UltimateSlash : UltimateSkill
 	{
 		#region Fields
 		private const int Max = 4;

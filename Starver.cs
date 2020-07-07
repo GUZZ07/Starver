@@ -311,7 +311,7 @@ namespace Starvers
 						return 250;
 					}
 				default:
-					return (int)(raw * (1 + DifficultyIndex * 1.75 / 40.0));
+					return (int)(raw * (1 + DifficultyIndex * 2.25 / 40.0));
 			}
 		}
 		private int RecalcLife(int raw)
@@ -354,7 +354,7 @@ namespace Starvers
 					break;
 				case NPCID.QueenBee:
 					{
-						int life = 5 * npc.life;
+						int life = 7 * npc.life;
 						npc.life = npc.lifeMax = life;
 						npc.defense *= 2;
 						npc.defDefense *= 2;
@@ -363,7 +363,7 @@ namespace Starvers
 				case NPCID.SkeletronHead:
 				case NPCID.SkeletronHand:
 					{
-						int life = 5 * npc.life;
+						int life = 8 * npc.life;
 						npc.life = npc.lifeMax = life;
 						npc.defense *= 2;
 						npc.defDefense *= 2;
@@ -371,7 +371,7 @@ namespace Starvers
 					break;
 				case NPCID.QueenSlimeBoss:
 					{
-						int life = (int)(4.5 * npc.life);
+						int life = (int)(10 * npc.life);
 						npc.life = npc.lifeMax = life;
 						npc.defense *= 2;
 						npc.defDefense *= 2;
@@ -379,7 +379,7 @@ namespace Starvers
 					break;
 				case NPCID.WallofFlesh:
 					{
-						int life = 6 * npc.life;
+						int life = 10 * npc.life;
 						npc.life = npc.lifeMax = life;
 						npc.defense *= 2;
 						npc.defDefense *= 2;
@@ -387,7 +387,7 @@ namespace Starvers
 					break;
 				case NPCID.DukeFishron:
 					{
-						int life = 9 * npc.life;
+						int life = 16 * npc.life;
 						npc.life = npc.lifeMax = life;
 						npc.defense *= 5;
 						npc.defDefense *= 5;
@@ -398,7 +398,7 @@ namespace Starvers
 				case NPCID.SkeletronPrime:
 				case NPCID.TheDestroyer:
 					{
-						int life = (int)(7.5 * npc.life);
+						int life = (int)(12 * npc.life);
 						npc.life = npc.lifeMax = life;
 						npc.defense *= 3;
 						npc.defDefense *= 3;
@@ -406,7 +406,7 @@ namespace Starvers
 					break;
 				case NPCID.Plantera:
 					{
-						int life = (int)(8.25 * npc.life);
+						int life = (int)(14 * npc.life);
 						npc.life = npc.lifeMax = life;
 						npc.defense *= 3;
 						npc.defDefense *= 3;
@@ -414,7 +414,7 @@ namespace Starvers
 					break;
 				case NPCID.Golem:
 					{
-						int life = (int)(9 * npc.life);
+						int life = (int)(16 * npc.life);
 						npc.life = npc.lifeMax = life;
 						npc.defense *= 5;
 						npc.defDefense *= 4;
@@ -422,7 +422,7 @@ namespace Starvers
 					break;
 				case NPCID.MartianSaucer:
 					{
-						int life = (int)(4 * npc.life);
+						int life = (int)(10 * npc.life);
 						npc.life = npc.lifeMax = life;
 						npc.defense *= 3;
 						npc.defDefense *= 3;
@@ -430,7 +430,15 @@ namespace Starvers
 					break;
 				case NPCID.HallowBoss:
 					{
-						int life = (int)(9 * npc.life);
+						int life = (int)(16 * npc.life);
+						npc.life = npc.lifeMax = life;
+						npc.defense *= 3;
+						npc.defDefense *= 3;
+					}
+					break;
+				case NPCID.MoonLordCore:
+					{
+						int life = (int)(30 * npc.life);
 						npc.life = npc.lifeMax = life;
 						npc.defense *= 3;
 						npc.defDefense *= 3;

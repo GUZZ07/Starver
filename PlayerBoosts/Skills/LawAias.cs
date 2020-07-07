@@ -8,7 +8,7 @@ using Terraria.ID;
 
 namespace Starvers.PlayerBoosts.Skills
 {
-	public class LawAias : StarverSkill
+	public class LawAias : UltimateSkill
 	{
 		public LawAias() 
 		{

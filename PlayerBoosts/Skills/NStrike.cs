@@ -9,7 +9,7 @@ using Terraria.ID;
 
 namespace Starvers.PlayerBoosts.Skills
 {
-	public class NStrike : StarverSkill
+	public class NStrike : UltimateSkill
 	{
 		private const float rec = 16 * 30;
 		public NStrike()
