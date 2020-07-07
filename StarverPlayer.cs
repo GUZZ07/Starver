@@ -8,6 +8,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.Localization;
 using TerrariaApi.Server;
@@ -92,6 +93,11 @@ namespace Starvers
 			}
 		}
 		public bool ControlUseItem => TPlayer.controlUseItem;
+		public NetInventory Inventory
+		{
+			get;
+			private set;
+		}
 		#region Life
 		public int Life
 		{
@@ -199,7 +205,7 @@ namespace Starvers
 					_ when 10000 <= level && level < 100000 => 11.131501539689296 + Math.Pow(Math.Log10(level) - 3.7, Math.Log(level / 1000, 2) + 1),
 					_ => 20
 				};
-				return Math.Sqrt(value);
+				return value;
 			}
 		}
 		public virtual double KnockBackIndex
@@ -216,11 +222,12 @@ namespace Starvers
 		{
 			Index = index;
 			Skills = new PlayerSkillData[Starver.MaxSkillSlot];
+			Inventory = new NetInventory(this);
 			try
 			{
 				Data = Starver.Instance.PlayerDatas.GetData(TSPlayer.Account.ID);
 			}
-			catch(KeyNotFoundException)
+			catch (KeyNotFoundException)
 			{
 				Data = new PlayerData(TSPlayer.Account.ID);
 				Starver.Instance.PlayerDatas.SaveData(Data);
@@ -329,6 +336,21 @@ namespace Starvers
 					}
 				}
 			}
+			if (400 <= LifeMax && LifeMax < 3000)
+			{
+				var slot = Inventory[TPlayer.selectedItem];
+				switch (item.type)
+				{
+					case ItemID.LifeFruit:
+						LifeMax = Math.Min(3000, LifeMax + 100);
+						slot.Stack--;
+						break;
+					case ItemID.LifeCrystal:
+						LifeMax = Math.Min(3000, LifeMax + 20);
+						slot.Stack--;
+						break;
+				}
+			}
 		}
 		public virtual void OnNewProj(GetDataHandlers.NewProjectileEventArgs args)
 		{
@@ -395,6 +417,10 @@ namespace Starvers
 			}
 			#endregion
 		}
+		public virtual void PostUpdate()
+		{
+
+		}
 		public virtual void Update()
 		{
 			Timer++;
@@ -418,6 +444,14 @@ namespace Starvers
 			{
 				ItemUseDelay--;
 			}
+			if (HeldItem.useStyle == ItemUseStyleID.HoldUp)
+			{
+				if (ItemUseDelay == 0 && ControlUseItem)
+				{
+					ItemUseDelay += HeldItem.useTime;
+					OnUseItem(HeldItem);
+				}
+			}
 			PlayerBoosts.Skills.AvalonGradation.Update(this);
 			for (int i = 0; i < Starver.MaxSkillSlot; i++)
 			{
@@ -432,6 +466,20 @@ namespace Starvers
 				else if (Skills[i].CD > 0)
 				{
 					Skills[i].CD--;
+				}
+			}
+			foreach (var npc in Main.npc)
+			{
+				if (!npc.active || npc.friendly || npc.damage <= 0)
+				{
+					continue;
+				}
+				if (TPlayer.getRect().Intersects(npc.getRect()))
+				{
+					var rawdamage = Starver.Instance.RecalcDamage(npc);
+					var factor = (double)rawdamage / npc.damage;
+					var damage = (int)Main.CalculateDamagePlayersTake(rawdamage, (int)(TPlayer.statDefense * factor)) - npc.damage;
+					Hurt(damage, PlayerDeathReason.ByNPC(npc.whoAmI), Math.Sign(Center.X - npc.Center.X));
 				}
 			}
 		}
@@ -704,6 +752,12 @@ namespace Starvers
 		{
 			text = EndLine19 + text + EndLine5;
 			SendData(PacketTypes.Status, text);
+		}
+		#endregion
+		#region Hurt
+		public void Hurt(int damage, PlayerDeathReason deathreason, int dir = 0)
+		{
+			NetMessage.SendPlayerHurt(Index, deathreason, damage, dir, false, false, 0);
 		}
 		#endregion
 		#region Heal

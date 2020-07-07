@@ -31,6 +31,7 @@ namespace Starvers
 		public const int MaxSkillSlot = 5;
 		public const float SpearSpeed = 4.07f;
 
+		private List<(Func<bool> predicate,int addition)> difficultyCheckers;
 		private int timer;
 		private Random rand;
 		#endregion
@@ -40,7 +41,11 @@ namespace Starvers
 			get;
 			private set;
 		}
-
+		public int DifficultyIndex
+		{
+			get;
+			private set;
+		}
 		public StarverConfig Config
 		{
 			get;
@@ -104,6 +109,30 @@ namespace Starvers
 			Bosses = new BossManager();
 			Players = new PlayerManager(TShock.Players.Length);
 			PlayerDatas = new PlayerDataManager(Config.StorageType);
+
+			difficultyCheckers = new List<(Func<bool> predicate, int addition)>
+			{
+				(() => NPC.downedSlimeKing, 1),
+				(() => NPC.downedBoss1, 1),
+				(() => NPC.downedBoss2, 1),
+				(() => NPC.downedBoss3, 2),
+				(() => NPC.downedQueenBee, 2),
+				(() => NPC.downedGoblins, 1),
+				(() => Main.hardMode, 4),
+				(() => Main.getGoodWorld, 3),
+				(() => NPC.downedMechBoss1, 2),
+				(() => NPC.downedMechBoss2, 2),
+				(() => NPC.downedMechBoss3, 2),
+				(() => NPC.downedPirates, 2),
+				(() => NPC.downedQueenSlime, 2),
+				(() => NPC.downedFishron, 4),
+				(() => NPC.downedPlantBoss, 3),
+				(() => NPC.downedEmpressOfLight, 3),
+				(() => NPC.downedGolemBoss, 4),
+				(() => NPC.TowerActiveNebula | NPC.TowerActiveSolar | NPC.TowerActiveStardust | NPC.TowerActiveVortex, 5),
+				(() => NPC.downedMoonlord, 5)
+			};
+
 			#region Test
 #if false
 			var data = new PlayerData(-444) { Level = 3 };
@@ -122,7 +151,9 @@ namespace Starvers
 			ServerApi.Hooks.ServerJoin.Register(this, OnJoin);
 			ServerApi.Hooks.ServerLeave.Register(this, OnLeave);
 			ServerApi.Hooks.NpcStrike.Register(this, OnNpcStrike);
+			ServerApi.Hooks.NpcSpawn.Register(this, OnNpcSpawn);
 			ServerApi.Hooks.GameUpdate.Register(this, OnUpdate);
+			ServerApi.Hooks.GamePostUpdate.Register(this, PostUpdate);
 			ServerApi.Hooks.NetGetData.Register(this, OnGetData);
 			TShockAPI.Hooks.PlayerHooks.PlayerPostLogin += OnPostLogin;
 			GetDataHandlers.NewProjectile += OnNewProjectile;
@@ -141,7 +172,9 @@ namespace Starvers
 			ServerApi.Hooks.ServerJoin.Deregister(this, OnJoin);
 			ServerApi.Hooks.ServerLeave.Deregister(this, OnLeave);
 			ServerApi.Hooks.NpcStrike.Deregister(this, OnNpcStrike);
+			ServerApi.Hooks.NpcSpawn.Deregister(this, OnNpcSpawn);
 			ServerApi.Hooks.GameUpdate.Deregister(this, OnUpdate);
+			ServerApi.Hooks.GamePostUpdate.Deregister(this, PostUpdate);
 			ServerApi.Hooks.NetGetData.Deregister(this, OnGetData);
 			TShockAPI.Hooks.PlayerHooks.PlayerPostLogin -= OnPostLogin;
 			GetDataHandlers.NewProjectile -= OnNewProjectile;
@@ -178,6 +211,10 @@ namespace Starvers
 		}
 		#endregion
 		#region Update
+		private void PostUpdate(object args)
+		{
+			Players.PostUpdate();
+		}
 		private void OnUpdate(EventArgs args)
 		{
 			timer++;
@@ -185,6 +222,14 @@ namespace Starvers
 			Bosses.Update();
 			ProjTasks.Update();
 			Skills.Update();
+			DifficultyIndex = 0;
+			foreach (var checker in difficultyCheckers)
+			{
+				if (checker.predicate())
+				{
+					DifficultyIndex += checker.addition;
+				}
+			}
 		}
 		#endregion
 		#region NPCStrike
@@ -192,6 +237,229 @@ namespace Starvers
 		{
 			var player = Players[args.Player.whoAmI];
 			player.OnStrikeNpc(args);
+		}
+		#endregion
+		#region NPCSpawn
+		public int RecalcDamage(NPC npc)
+		{
+			int raw = npc.damage;
+			switch (npc.type)
+			{
+				case NPCID.EyeofCthulhu:
+					{
+						return npc.life < npc.lifeMax / 3 ? 166 : 70;
+					}
+				case NPCID.BrainofCthulhu:
+				case NPCID.EaterofWorldsHead:
+				case NPCID.EaterofWorldsBody:
+				case NPCID.Creeper:
+					{
+						return 143;
+					}
+				case NPCID.QueenBee:
+					{
+						return 166;
+					}
+				case NPCID.SkeletronHead:
+				case NPCID.SkeletronHand:
+					{
+						return 180;
+					}
+				case NPCID.QueenSlimeBoss:
+					{
+						return 213;
+					}
+				case NPCID.DukeFishron:
+					{
+						return 650;
+					}
+				case NPCID.Spazmatism:
+				case NPCID.Retinazer:
+				case NPCID.SkeletronPrime:
+				case NPCID.PrimeCannon:
+				case NPCID.PrimeSaw:
+				case NPCID.PrimeLaser:
+				case NPCID.PrimeVice:
+					{
+						return 300;
+					}
+				case NPCID.TheDestroyer:
+					{
+						return 800;
+					}
+				case NPCID.Plantera:
+					{
+						return 200;
+					}
+				case NPCID.Golem:
+					{
+						return 312;
+					}
+				case NPCID.MartianSaucer:
+					{
+						return 0;
+					}
+				case NPCID.HallowBoss:
+					{
+						return 0;
+					}
+				case NPCID.LunarTowerNebula:
+				case NPCID.LunarTowerVortex:
+				case NPCID.LunarTowerStardust:
+				case NPCID.LunarTowerSolar:
+					{
+						return 250;
+					}
+				default:
+					return (int)(raw * (1 + DifficultyIndex * 3.5 / 40.0));
+			}
+		}
+		private int RecalcLife(int raw)
+		{
+			return (int)(raw * (1 + DifficultyIndex * 18 / 40.0));
+		}
+		private int RecalcDefense(int raw)
+		{
+			return (int)(raw * (1 + DifficultyIndex * 6 / 40.0));
+		}
+		private void OnNpcSpawn(NpcSpawnEventArgs args)
+		{
+			var npc = Main.npc[args.NpcId];
+			switch (npc.type)
+			{
+				case NPCID.KingSlime:
+					{
+						int life = (int)(1.25 * npc.life);
+						npc.life = npc.lifeMax = life;
+						npc.defense *= 2;
+						npc.defDefense *= 2;
+					}
+					break;
+				case NPCID.EyeofCthulhu:
+					{
+						int life = 2 * npc.life;
+						npc.life = npc.lifeMax = life;
+						npc.defense *= 4;
+						npc.defDefense *= 4;
+					}
+					break;
+				case NPCID.BrainofCthulhu:
+				case NPCID.EaterofWorldsHead:
+					{
+						int life = 4 * npc.life;
+						npc.life = npc.lifeMax = life;
+						npc.defense *= 2;
+						npc.defDefense *= 2;
+					}
+					break;
+				case NPCID.QueenBee:
+					{
+						int life = 5 * npc.life;
+						npc.life = npc.lifeMax = life;
+						npc.defense *= 2;
+						npc.defDefense *= 2;
+					}
+					break;
+				case NPCID.SkeletronHead:
+				case NPCID.SkeletronHand:
+					{
+						int life = 5 * npc.life;
+						npc.life = npc.lifeMax = life;
+						npc.defense *= 2;
+						npc.defDefense *= 2;
+					}
+					break;
+				case NPCID.QueenSlimeBoss:
+					{
+						int life = (int)(4.5 * npc.life);
+						npc.life = npc.lifeMax = life;
+						npc.defense *= 2;
+						npc.defDefense *= 2;
+					}
+					break;
+				case NPCID.WallofFlesh:
+					{
+						int life = 6 * npc.life;
+						npc.life = npc.lifeMax = life;
+						npc.defense *= 2;
+						npc.defDefense *= 2;
+					}
+					break;
+				case NPCID.DukeFishron:
+					{
+						int life = 9 * npc.life;
+						npc.life = npc.lifeMax = life;
+						npc.defense *= 5;
+						npc.defDefense *= 5;
+					}
+					break;
+				case NPCID.Spazmatism:
+				case NPCID.Retinazer:
+				case NPCID.SkeletronPrime:
+				case NPCID.TheDestroyer:
+					{
+						int life = (int)(7.5 * npc.life);
+						npc.life = npc.lifeMax = life;
+						npc.defense *= 3;
+						npc.defDefense *= 3;
+					}
+					break;
+				case NPCID.Plantera:
+					{
+						int life = (int)(8.25 * npc.life);
+						npc.life = npc.lifeMax = life;
+						npc.defense *= 3;
+						npc.defDefense *= 3;
+					}
+					break;
+				case NPCID.Golem:
+					{
+						int life = (int)(9 * npc.life);
+						npc.life = npc.lifeMax = life;
+						npc.defense *= 5;
+						npc.defDefense *= 4;
+					}
+					break;
+				case NPCID.MartianSaucer:
+					{
+						int life = (int)(4 * npc.life);
+						npc.life = npc.lifeMax = life;
+						npc.defense *= 3;
+						npc.defDefense *= 3;
+					}
+					break;
+				case NPCID.HallowBoss:
+					{
+						int life = (int)(9 * npc.life);
+						npc.life = npc.lifeMax = life;
+						npc.defense *= 3;
+						npc.defDefense *= 3;
+					}
+					break;
+				case NPCID.LunarTowerNebula:
+				case NPCID.LunarTowerVortex:
+				case NPCID.LunarTowerStardust:
+				case NPCID.LunarTowerSolar:
+					{
+						NPC.LunarShieldPowerExpert = 600;
+						NPC.ShieldStrengthTowerNebula = 600;
+						NPC.ShieldStrengthTowerSolar = 600;
+						NPC.ShieldStrengthTowerVortex = 600;
+						NPC.ShieldStrengthTowerStardust = 600;
+						int life = (int)(30 * npc.life);
+						npc.life = npc.lifeMax = life;
+						npc.defense *= 6;
+						npc.defDefense *= 6;
+					}
+					break;
+				default:
+					{
+						int life = RecalcLife(npc.life);
+						npc.life = npc.lifeMax = life;
+						npc.defense = RecalcDefense(npc.defense);
+					}
+					break;
+			}
 		}
 		#endregion
 		#region GetData

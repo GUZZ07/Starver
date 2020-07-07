@@ -30,15 +30,18 @@ namespace Starvers
 		}
 		#endregion
 		#region Update
+		public void PostUpdate()
+		{
+			foreach (var player in Players)
+			{
+				player?.PostUpdate();
+			}
+		}
 		public void Update()
 		{
 			foreach (var player in Players)
 			{
-				if (player == null)
-				{
-					continue;
-				}
-				player.Update();
+				player?.Update();
 			}
 			timer++;
 			if (timer % (SaveInterval * 60) == 0)
