@@ -184,13 +184,13 @@ namespace Starvers
 
 #warning 还没做
 		public bool IsVip { get; set; }
-
+		#warning 在怪物强化之前得削弱一下玩家
 		public virtual double DamageIndex
 		{
 			get
 			{
 				int level = Level;
-				return level switch
+				var value = level switch
 				{
 					_ when level < 100 => 1 + 0.015 * level,
 					_ when 100 <= level && level < 1000 => 1 + 1.5 + Math.Log(level / 100, 2),
@@ -199,6 +199,7 @@ namespace Starvers
 					_ when 10000 <= level && level < 100000 => 11.131501539689296 + Math.Pow(Math.Log10(level) - 3.7, Math.Log(level / 1000, 2) + 1),
 					_ => 20
 				};
+				return Math.Sqrt(value);
 			}
 		}
 		public virtual double KnockBackIndex
