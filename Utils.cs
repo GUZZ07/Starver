@@ -266,11 +266,11 @@ namespace Starvers
 		#region SendCombatText
 		public static void SendCombatMsg(this Entity entity, string msg, Color color)
 		{
-			NetMessage.SendData(Starver.CombatTextPacket, -1, -1, NetworkText.FromLiteral(msg), (int)color.PackedValue, entity.position.X + Rand.Next(entity.width), entity.position.Y + Rand.Next(entity.height), 0.0f, 0, 0, 0);
+			NetMessage.SendData((int)PacketTypes.CreateCombatTextExtended, -1, -1, NetworkText.FromLiteral(msg), (int)color.PackedValue, entity.position.X + Rand.Next(entity.width), entity.position.Y + Rand.Next(entity.height), 0.0f, 0, 0, 0);
 		}
 		public static void SendCombatMsg(Vector2 pos, string msg, Color color)
 		{
-			NetMessage.SendData(Starver.CombatTextPacket, -1, -1, NetworkText.FromLiteral(msg), (int)color.PackedValue, pos.X, pos.Y, 0.0f, 0, 0, 0);
+			NetMessage.SendData((int)PacketTypes.CreateCombatTextExtended, -1, -1, NetworkText.FromLiteral(msg), (int)color.PackedValue, pos.X, pos.Y, 0.0f, 0, 0, 0);
 		}
 		#endregion
 		#region Vector2
