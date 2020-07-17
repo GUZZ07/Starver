@@ -8,24 +8,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="MySql.Data.EntityFrameworkCore" Version="8.0.20" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>Libs\Newtonsoft.Json.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="OTAPI">
-      <HintPath>Libs\OTAPI.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="TerrariaServer">
-      <HintPath>Libs\TerrariaServer.exe</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="TShockAPI">
-      <HintPath>Libs\TShockAPI.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
+    <PackageReference Include="TerrariaServer.TShock" Version="4.4.0.20200627-pre12" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
@@ -36,4 +19,7 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>SkillTypesGenerator.tt</DependentUpon>
     </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Libs\" />
   </ItemGroup></Project>
