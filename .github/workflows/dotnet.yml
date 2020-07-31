@@ -1,4 +1,4 @@
-name: Build
+name: Build(1.3To1.4)
 
 on: [push, pull_request]
 
@@ -27,4 +27,4 @@ jobs:
       uses: actions/upload-artifact@master
       with:
         name: Starver
-        path: .\bin\Release\net48\Starver.dll
+        path: .\bin\Release\
