@@ -151,7 +151,15 @@ namespace Starvers
 					new ExchangeItem(ItemID.GoldenKey,ItemID.LockBox),
 					new ExchangeItem(ItemID.VileMushroom,ItemID.ViciousMushroom),
 					new ExchangeItem(ItemID.ViciousMushroom,ItemID.VileMushroom),
-					new ExchangeItem(ItemID.LockBox,ItemID.Nazar),
+					new ExchangeItem(ItemID.LockBox,ItemID.Nazar),new ExchangeItem(ItemID.RichMahogany,150,ItemID.WoodenCrate),
+new ExchangeItem(ItemID.Shackle,ItemID.IronCrate),
+new ExchangeItem(ItemID.GoldCoin,25,ItemID.GoldenCrate),
+new ExchangeItem(ItemID.JungleSpores,50,ItemID.JungleFishingCrate),
+new ExchangeItem(ItemID.Feather,20,ItemID.FloatingIslandFishingCrate),
+new ExchangeItem(ItemID.RottenChunk,25,ItemID.CorruptFishingCrate),
+new ExchangeItem(ItemID.Vertebrae,25,ItemID.CrimsonFishingCrate),
+new ExchangeItem(ItemID.CrystalShard,33,ItemID.HallowedFishingCrate),
+new ExchangeItem(ItemID.Bone,200,ItemID.DungeonFishingCrate),
 					new ExchangeItem(ItemID.LunarTabletFragment,StarverBossManager.EndTrialSummoner,40,"放在背包最后一格")
 				};
 				Plugins = new IStarverPlugin[]
