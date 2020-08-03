@@ -21,6 +21,7 @@ namespace Starvers
 		[Key] public int UserID { get; set; }
 		public int Level { get; set; }
 		public int Exp { get; set; }
+		public int MP { get; set; }
 
 		[JsonIgnore]public string SkillDatas { get; set; }
 		[NotMapped]	public SkillStorage?[] Skills { get; set; }

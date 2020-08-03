@@ -18,6 +18,9 @@ namespace Starvers
 {
 	public class StarverPlayer
 	{
+		#region Constsnts
+		private const int mpCostToUseWeapon = 2;
+		#endregion
 		#region Types
 		#region Guest
 		private class GuestPlayer : StarverPlayer
@@ -169,6 +172,15 @@ namespace Starvers
 		#endregion
 		#region Private Fields
 		private int skillCheckDelay;
+		/// <summary>
+		/// mp回复速率
+		/// </summary>
+		private double mpRegen;
+		private double mpRegenFromNoMove;
+		private double mpRegenFromNoUseItem;
+
+		private int noMove;
+		private int noUseItem;
 		#endregion
 		public bool IgnoreCD { get; set; }
 
@@ -186,6 +198,18 @@ namespace Starvers
 		{
 			get => Data.Level;
 			set => OnLevelChange(Level, value);
+		}
+
+		public int MP
+		{
+			get => Data.MP;
+			set => Data.MP = value;
+		}
+
+		public int MPMax
+		{
+			get;
+			private set;
 		}
 
 		public PlayerSkillData[] Skills { get; }
@@ -305,6 +329,7 @@ namespace Starvers
 		private void OnLevelChange(int oldValue,int newValue)
 		{
 			Data.Level = newValue;
+			CalcMPMax(Level);
 		}
 		#endregion
 		#region BindSkill
@@ -328,6 +353,7 @@ namespace Starvers
 		#region Events
 		private void OnUseItem(Item item)
 		{
+			noUseItem = 0;
 			if (400 <= LifeMax && LifeMax < 3000)
 			{
 				var slot = Inventory[TPlayer.selectedItem];
@@ -342,6 +368,10 @@ namespace Starvers
 						slot.Stack--;
 						break;
 				}
+			}
+			if (item.damage > 0)
+			{
+				MP = Math.Max(0, (int)(MP - CalcMPCost(Level)));
 			}
 			if (skillCheckDelay != 0)
 			{
@@ -420,7 +450,8 @@ namespace Starvers
 				return;
 			}
 			#region Normal
-			args.Damage = (int)(args.Damage * DamageIndex);
+			var raw = args.Damage;
+			args.Damage = (int)Math.Max(raw, args.Damage * DamageIndex * ((double)MP / MPMax));
 			var realdamage = (int)Main.CalculateDamageNPCsTake(args.Damage, args.Npc.defense);
 			args.Npc.SendCombatText(realdamage.ToString(), Starver.DamageColor);
 			var expGet = Math.Min(realdamage, args.Npc.life);
@@ -437,6 +468,7 @@ namespace Starvers
 		public virtual void Update()
 		{
 			Timer++;
+			#region Status Text
 			if (Timer % 60 == 0)
 			{
 				if (Timer % (60 * 6) >= 3 * 60)
@@ -453,6 +485,8 @@ namespace Starvers
     {Skills[4]}");
 				}
 			}
+			#endregion
+			#region Timers
 			if (ItemUseDelay > 0)
 			{
 				ItemUseDelay--;
@@ -461,6 +495,30 @@ namespace Starvers
 			{
 				skillCheckDelay--;
 			}
+			noUseItem++;
+			if (Velocity.Length() < 2)
+			{
+				noMove++;
+			}
+			else
+			{
+				noMove = 0;
+			}
+			#endregion
+			#region MP Regeneration
+			if (Timer % 60 == 0)
+			{
+				mpRegenFromNoMove = Math.Min(15, noMove / 20.0);
+				mpRegenFromNoUseItem = Math.Min(15, noUseItem / 20.0);
+
+				mpRegen += CalcMPRegen(Level);
+				mpRegen += mpRegenFromNoMove;
+				mpRegen += mpRegenFromNoUseItem;
+
+				MP = (int)Math.Min(MPMax, MP + mpRegen);
+			}
+			#endregion
+			#region ItemUse
 			if (HeldItem.useStyle == ItemUseStyleID.HoldUp)
 			{
 				if (ItemUseDelay == 0 && ControlUseItem)
@@ -470,6 +528,8 @@ namespace Starvers
 				}
 			}
 			PlayerBoosts.Skills.AvalonGradation.Update(this);
+			#endregion
+			#region UpdateSkillCD
 			for (int i = 0; i < Starver.MaxSkillSlot; i++)
 			{
 				if (Skills[i].ID == null)
@@ -485,6 +545,8 @@ namespace Starvers
 					Skills[i].CD--;
 				}
 			}
+			#endregion
+			#region NPC Damage
 			foreach (var npc in Main.npc)
 			{
 				if (!npc.active || npc.friendly || npc.damage <= 0)
@@ -499,6 +561,7 @@ namespace Starvers
 					Hurt(damage, PlayerDeathReason.ByNPC(npc.whoAmI), 0);
 				}
 			}
+			#endregion
 		}
 		#endregion
 		#region Utilities
@@ -808,6 +871,34 @@ namespace Starvers
 			{
 				return 25 * 25 * 25 * 25;
 			}
+		}
+		/// <summary>
+		/// 反比例模型，f(0)=100，f(+∞) -> 2100
+		/// </summary>
+		/// <param name="lvl"></param>
+		/// <returns></returns>
+		public static int CalcMPMax(int lvl)
+		{
+			return (int)(5 * (-80000.0 / (lvl / 4.0 + 200) + 400)) + 100;
+		}
+		/// <summary>
+		/// 单位: MP每秒
+		/// </summary>
+		/// <param name="lvl"></param>
+		/// <returns></returns>
+		public static double CalcMPRegen(int lvl)
+		{
+			static double f(double x)
+			{
+				var sign = Math.Sign(x);
+				x = Math.Abs(x);
+				return sign * Math.Pow(x, 1.0 / 7);
+			}
+			return (100 * f(lvl - 3000) - 100 * f(-3000));
+		}
+		public static double CalcMPCost(int lvl)
+		{
+			return Math.Log(lvl + 1) * mpCostToUseWeapon / 4;
 		}
 		#endregion
 	}
