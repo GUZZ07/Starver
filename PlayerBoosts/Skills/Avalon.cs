@@ -42,10 +42,12 @@ namespace Starvers.PlayerBoosts.Skills
 			{
 				try
 				{
+					var life = player.Life;
 					Thread.Sleep(5000);
 					var power = CreativePowerManager.Instance.GetPower<CreativePowers.GodmodePower>();
 					power.SetEnabledState(player.Index, false);
 
+					player.Life = life;
 					player.SetBuff(BuffID.RapidHealing, 10 * 60);
 					player.SetBuff(BuffID.NebulaUpLife3, 10 * 60);
 

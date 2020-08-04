@@ -38,7 +38,7 @@ namespace Starvers.PlayerBoosts.Skills
 		public NatureRage()
 		{
 			MPCost = 110;
-			LevelNeed = 250;
+			LevelNeed = 450;
 			CD = 60 * 25;
 			Author = "zhou_Qi";
 			Description = @"[可成长]向前方发射花叶，潜藏着净化的威能

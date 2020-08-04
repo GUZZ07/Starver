@@ -42,9 +42,9 @@ namespace Starvers.PlayerBoosts.Skills
 			msg = @"我就是懒, 怎么着?
 有本事你顺着网线来打我啊";
 		}
-		protected async override void AsyncRelease(StarverPlayer player)
+		protected override void AsyncRelease(StarverPlayer player)
 		{
-			await Task.Run(() =>
+			Task.Run(() =>
 			{
 				try
 				{
@@ -67,23 +67,28 @@ namespace Starvers.PlayerBoosts.Skills
 							Indexes[i] =
 							player.NewProj(AlsoPositions[i], Rand.NextVector2(0.35f), ProjectileID.NebulaArcanum, damage + Rand.Next(50));
 						}
-						//uint Timer = 0;
+						var timer = 0;
 
-						while (Main.projectile[Indexes[0]].active && Main.projectile[Indexes[0]].owner == player)
+						while (timer < 4000)
 						{
 							for (int i = 0; i < count; i++)
 							{
-								#region Fix position
-								/*
-								Main.projectile[Indexes[i]].position = AlsoPositions[i];
-								NetMessage.SendData((int)PacketTypes.ProjectileNew, -1, -1, null, Indexes[i]);
-								*/
+								#region Fix
+								var proj = Main.projectile[Indexes[i]];
+								if (!proj.active || proj.type != ProjectileID.NebulaArcanum)
+								{
+									Indexes[i] = player.NewProj(AlsoPositions[i], Rand.NextVector2(0.35f), ProjectileID.NebulaArcanum, damage + Rand.Next(50));
+									proj = Main.projectile[Indexes[i]];
+								}
+								proj.position = AlsoPositions[i];
+								proj.SendData();
 								#endregion
 								player.NewProj(Main.projectile[Indexes[i]].Center, Rand.NextVector2(13 + Rand.Next(6)), Projs.Next(), damage / Rand.Next(2, 4) + Rand.Next(70));
 								Thread.Sleep(2);
 								player.NewProj(Main.projectile[Indexes[i]].Center, Rand.NextVector2(13 + Rand.Next(6)), Projs.Next(), damage / Rand.Next(2, 4) + Rand.Next(70));
 							}
-							Thread.Sleep(40);
+							Thread.Sleep(100);
+							timer += 100;
 						}
 						for (int i = 0; i < count; i++)
 						{

@@ -274,7 +274,8 @@ namespace Starvers
 				return;
 			}
 			var raw = damage;
-			damage = (int)Math.Max(raw, damage * player.DamageIndex * ((double)player.MP / player.MPMax));
+			var index = Math.Sqrt(Math.Sqrt((double)player.MP / player.MPMax)) * 1.2;
+			damage = (int)Math.Max(raw, damage * player.DamageIndex * index);
 			knockBack *= player.KnockBackIndex;
 			var realDamage = (int)Main.CalculateDamageNPCsTake(damage, Defense);
 			if (crit)

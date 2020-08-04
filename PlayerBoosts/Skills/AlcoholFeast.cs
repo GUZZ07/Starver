@@ -28,7 +28,7 @@ namespace Starvers.PlayerBoosts.Skills
 		public AlcoholFeast() 
 		{
 			CD = 60 * 10;
-			MPCost = 35;
+			MPCost = 85;
 			LevelNeed = 5;
 			Author = "zhou_Qi";
 			Description = @"抛射麦芽酒与鸡尾酒，获得醉酒与饱腹效果

@@ -8,13 +8,13 @@ using Terraria.ID;
 
 namespace Starvers.PlayerBoosts.Skills
 {
-	public class LawAias : UltimateSkill
+	public class LawAias : StarverSkill
 	{
 		public LawAias() 
 		{
 			MPCost = 1500;
 			CD = 60 * 50;
-			LevelNeed = 5000;
+			LevelNeed = 400;
 			Author = "三叶草";
 			Description = @"这是三叶草没做好的技能
 但是1413完成这个技能的同时偏离了三叶草的原版设计意图

@@ -35,8 +35,8 @@ namespace Starvers.PlayerBoosts.Skills
 		public StarEruption()
 		{
 			CD = 60 * 2 * 60;
-			MPCost = 130;
-			LevelNeed = 800;
+			MPCost = 430;
+			LevelNeed = 1800;
 			Author = "zhou_Qi";
 			Description = @"召唤大量陨星进行攻击
 ""引动星辰的坠落，炽热的天堂之火以其肆虐的破坏力而深受锻造师们的喜爱""
@@ -44,11 +44,11 @@ namespace Starvers.PlayerBoosts.Skills
 		}
 		public override void Release(StarverPlayer player, Vector vel)
 		{
-			Vector LaunchSource = (Vector)player.Center;
+			var LaunchSource = player.Center;
 			LaunchSource.Y -= 30 * 16;
-			Vector Unit = Vector.FromPolar(Math.PI / 4, 16 * 3);
+			var Unit = Vector.FromPolar(Math.PI / 4, 16 * 3);
 			Unit.X *= player.TPlayer.direction;
-			Vector velocity = Unit;
+			var velocity = Unit;
 			velocity.Length = 19;
 			int LoopTime;
 			for (int i = 0; i < 50; i++)

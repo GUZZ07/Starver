@@ -22,7 +22,7 @@ namespace Starvers.PlayerBoosts.Skills
 			player.AvalonGradationTime--;
 			foreach (var proj in Main.projectile)
 			{
-				if (proj == null || !proj.active)
+				if ( !proj.active)
 				{
 					continue;
 				}
@@ -30,14 +30,14 @@ namespace Starvers.PlayerBoosts.Skills
 				{
 					proj.active = false;
 					proj.type = 0;
-					NetMessage.SendData((int)PacketTypes.ProjectileNew, -1, -1, null, proj.whoAmI);
+					proj.SendData();
 				}
 			}
 		}
 		public AvalonGradation()
 		{
 			CD = 60 * 50;
-			MPCost = 180;
+			MPCost = 480;
 			LevelNeed = 1000;
 			Author = "1413";
 			Description = "消除你身边的所有敌对弹幕,持续10s";

@@ -40,28 +40,21 @@ namespace Starvers.PlayerBoosts.Skills
 			{
 				ProjectileID.EnchantedBeam,
 				ProjectileID.SwordBeam,
-				ProjectileID.FrostBlastFriendly
 			};
 		}
-		//打算让UltimateBlast直接继承这个,省点事,到时候直接重写AsyncRelease
 		protected UltimateSlash(int para)
 		{
-			CD = 60 * 70;
-			MPCost = 6000;
-			LevelNeed = 20000;
 			Author = "zhou_Qi";
-			Description = @"""我们对此一无所知""
-""蕴含着最终的力量""";
 		}
 		#endregion
 		#region Release
-		public override void Release(StarverPlayer player, Vector vel)
+		protected override void InternalRelease(StarverPlayer player, Vector vel)
 		{
 			AsyncRelease(player);
 		}
-		protected virtual async void AsyncRelease(StarverPlayer player)
+		protected virtual void AsyncRelease(StarverPlayer player)
 		{
-			await Task.Run(() =>
+			Task.Run(() =>
 			{
 				try
 				{
@@ -70,36 +63,37 @@ namespace Starvers.PlayerBoosts.Skills
 					unsafe
 					{
 						Vector* Source = stackalloc Vector[Max];
-						Vector* ReverseSource = stackalloc Vector[Max];
+						Vector* ReversedSource = stackalloc Vector[Max];
 						Vector velocity = new Vector(15, 0);
 						int damage = 1080 * 2;
 						damage += (int)(Math.Sqrt(player.Level) * 3);
 						for (int i = 0; i < Max; i++)
 						{
 							Source[i] = Vector.FromPolar(Math.PI * 2 * i / Max, RadiumMax);
-							ReverseSource[i] = Source[i];
-							ReverseSource[i].Angle += Math.PI / 4;
-							ReverseSource[i].Length = 0;
+							ReversedSource[i] = Source[i];
+							ReversedSource[i].Angle += Math.PI / 2;
 						}
 						#region First stage
-						while (Source[0].Length > RadiumMax / 2)
+						var rotation = 0.0;
+						while (rotation < 2 * Math.PI)
 						{
 							for (int i = 0; i < Max; i++)
 							{
 								#region NoReverse
 								velocity.Angle = Source[i].Angle - Math.PI / 2 - Math.PI / 12;
-								player.NewProj(player.Center + Source[i], velocity, ProjectileID.FlamingJack, damage, 20f);
-								Source[i].Length -= 16 * 2 / 3;
-								Source[i].Angle += Math.PI * 2 / 120;
+								player.NewProj(player.Center + Source[i], velocity, FromIn[0], damage, 20f);
+								// Source[i].Length -= 16 * 2 / 3;
+								Source[i].Angle += Math.PI / 2 / 30;
 								#endregion
 								#region Reverse
-								velocity.Angle = ReverseSource[i].Angle + Math.PI / 2 + Math.PI / 12;
-								player.NewProj(player.Center + ReverseSource[i], velocity, FromIn.Next(), damage * 2 / 3, 20f);
-								ReverseSource[i].Length += 16 * 2 / 3;
-								ReverseSource[i].Angle -= Math.PI * 2 / 120;
+								velocity.Angle = ReversedSource[i].Angle + Math.PI / 2 + Math.PI / 12;
+								player.NewProj(player.Center + ReversedSource[i], velocity, FromIn[1], damage, 20f);
+								// ReversedSource[i].Length += 16 * 2 / 3;
+								ReversedSource[i].Angle -= Math.PI / 2 / 30;
 								#endregion
 							}
-							Thread.Sleep(10);
+							rotation += Math.PI / 2 / 30;
+							Thread.Sleep(2000 / 30);
 						}
 						#endregion
 						#region Second stage(Beams)
@@ -107,7 +101,7 @@ namespace Starvers.PlayerBoosts.Skills
 						damage *= 3;
 						for (int i = 0; i < Beams.Length; i++)
 						{
-							player.ProjCircle(player.Center, 16 * 4 + 16 * 8 * i, 13 + 2 * i, Beams[i], 10 + 5 * i, (int)(damage * (1 + 0.1f * i)));
+							player.ProjCircle(player.Center, 16 * 4 + 16 * 8 * i, -13 - 2 * i, Beams[i], 10 + 5 * i, (int)(damage * (1 + 0.1f * i)));
 							Thread.Sleep(175 + 25 * i);
 						}
 						#endregion

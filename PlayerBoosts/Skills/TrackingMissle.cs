@@ -17,9 +17,9 @@ namespace Starvers.PlayerBoosts.Skills
 		protected Vector2 Pos;
 		public TrackingMissile()
 		{
-			LevelNeed = 30;
-			MPCost = 20;
-			CD = 60 * 20;
+			LevelNeed = 300;
+			MPCost = 220;
+			CD = 60 * 35;
 			Description = "制造若干个射向最近敌人位置的导弹";
 			Author = "Deaths";
 		}

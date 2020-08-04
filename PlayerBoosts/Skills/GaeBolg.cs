@@ -22,9 +22,9 @@ namespace Starvers.PlayerBoosts.Skills
 		public override void Release(StarverPlayer player, Vector vel)
 		{
 			int damage = 142 + player.Level > 10000 ? (int)(122 * Math.Log(player.Level)) : 0;
-			player.NewProj(vel * 10, ProjectileID.Daybreak, 130, 1);
-			player.NewProj(player.Center + vel.ToLenOf(8), vel * 10, ProjectileID.Daybreak, damage, 1);
-			player.NewProj(player.Center + vel.ToLenOf(16), vel * 10, ProjectileID.Daybreak, damage / 10, 1);
+			player.NewProj(vel, ProjectileID.Daybreak, 330, 20, extraUpdates: 10);
+			player.NewProj(player.Center + vel.ToLenOf(8), vel, ProjectileID.Daybreak, damage, 0, extraUpdates: 9);
+			player.NewProj(player.Center + vel.ToLenOf(16), vel * 10, ProjectileID.Daybreak, damage / 10, 0, extraUpdates: 7);
 			player.NewProj(Vector2.Zero, ProjectileID.DD2ExplosiveTrapT3Explosion, damage / 2, 1);
 			player.NewProj(Vector2.Zero, ProjectileID.SolarWhipSwordExplosion, damage / 2, 1);
 		}

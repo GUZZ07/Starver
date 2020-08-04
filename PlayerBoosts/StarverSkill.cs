@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using Starvers.PlayerBoosts.Skills;
 using Terraria;
 
 namespace Starvers.PlayerBoosts
@@ -59,12 +60,16 @@ namespace Starvers.PlayerBoosts
 		}
 		public void Load()
 		{
+			bool isUltimate = GetType() == typeof(UltimateSkill);
 			Name ??= GetType().Name;
 			Description ??= string.Empty;
+
+			var ultimateText = isUltimate ? "\n[c/ff0000:[终极技能][c/ff0000:]]" : string.Empty;
+
 			Introduction ??= $@"创意来源:     {Author}
 CD:           {CD / 60.0:#.##}s
 最低等级限制: {LevelNeed?.ToString() ?? "无限制"}
-MP消耗:       {MPCost}
+MP消耗:       {MPCost}{ultimateText}
 {Description}";
 		}
 		public virtual bool CanSet(StarverPlayer player)

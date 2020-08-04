@@ -13,7 +13,7 @@ namespace Starvers.PlayerBoosts.Skills
 		public Whirlwind()
 		{
 			CD = 60 * 10;
-			MPCost = 30;
+			MPCost = 130;
 			LevelNeed = 165;
 			Author = "三叶草";
 			Description = "制造一个攻击一群敌人的风暴";

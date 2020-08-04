@@ -16,7 +16,7 @@ namespace Starvers.PlayerBoosts.Skills
 	{
 		public NatureGuard()
 		{
-			MPCost = 10;
+			MPCost = 350;
 			CD = 60 * 22;
 			LevelNeed = 50;
 			Author = "zhou_Qi";

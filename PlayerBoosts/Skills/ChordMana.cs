@@ -14,7 +14,7 @@ namespace Starvers.PlayerBoosts.Skills
 		public ChordMana()
 		{
 			CD = 60 * 40;
-			MPCost = 100;
+			MPCost = 400;
 			LevelNeed = 1000;
 			Description = @"释放音符的力量
 ""和谐的音符给人以享受，而嘈杂的旋律则足以给人带来精神上的重创""
@@ -25,9 +25,9 @@ namespace Starvers.PlayerBoosts.Skills
 		{
 			AsyncRelease(player);
 		}
-		private async void AsyncRelease(StarverPlayer player)
+		private void AsyncRelease(StarverPlayer player)
 		{
-			await Task.Run(() =>
+			Task.Run(() =>
 			{
 				try
 				{

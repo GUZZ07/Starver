@@ -24,26 +24,22 @@ namespace Starvers.PlayerBoosts.Skills
 		#region Ctor
 		public NatureStorm()
 		{
-			LevelNeed = 30000;
-			MPCost = 8000;
-			CD = 60 * 100;
-			ForceCD = true;
 			Author = "至今尚未查出来源";
-			Description = @"Excalibur, NStrike, UltimateSlash与UniverseBlast———
-还有角落里的Lawaias不解的注视着它
-[c/00ed00:""无论是MP消耗, 等级要求, 还是CD, 代码量乃至bug量, 你都比我们要多""]
-[c/00ed00:""我们不明白, 同样是终极技能, 为什么你会得到如此高的待遇...""]
-[c/0000ed:""原因很简单], [c/ff0000:?***%Key?=NotFound][c/0000ed:""]";
+//			Description = @"Excalibur, NStrike, UltimateSlash与UniverseBlast———
+//还有角落里的Lawaias不解的注视着它
+//[c/00ed00:""无论是MP消耗, 等级要求, 还是CD, 代码量乃至bug量, 你都比我们要多""]
+//[c/00ed00:""我们不明白, 同样是终极技能, 为什么你会得到如此高的待遇...""]
+//[c/0000ed:""原因很简单], [c/ff0000:?***%Key?=NotFound][c/0000ed:""]";
 		}
 		#endregion
 		#region Release
-		public override void Release(StarverPlayer player, Vector vel)
+		protected override void InternalRelease(StarverPlayer player, Vector vel)
 		{
 			AsyncRelease(player, vel);
 		}
-		private async void AsyncRelease(StarverPlayer player, Vector vel)
+		private void AsyncRelease(StarverPlayer player, Vector vel)
 		{
-			await Task.Run(() =>
+			Task.Run(() =>
 			{
 				try
 				{

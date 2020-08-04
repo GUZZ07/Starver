@@ -12,7 +12,7 @@ namespace Starvers.PlayerBoosts.Skills
 	{
 		public FireBall()
 		{
-			MPCost = 18;
+			MPCost = 20;
 			CD = 60 * 3;
 			Author = "三叶草";
 			LevelNeed = 5;

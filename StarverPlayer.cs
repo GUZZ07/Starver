@@ -1,5 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Starvers.PlayerBoosts;
+using Starvers.PlayerBoosts.Skills;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -53,8 +55,8 @@ namespace Starvers
 		#endregion
 		#region RawDatas
 		public int Index
-		{ 
-			get; 
+		{
+			get;
 			protected set;
 		}
 		public virtual PlayerData Data { get; }
@@ -66,9 +68,9 @@ namespace Starvers
 		{
 			get => TShock.Players[Index];
 		}
-		public int Timer 
-		{ 
-			get; 
+		public int Timer
+		{
+			get;
 			protected set;
 		}
 		#endregion
@@ -181,6 +183,8 @@ namespace Starvers
 
 		private int noMove;
 		private int noUseItem;
+
+		private int noRegenMP;
 		#endregion
 		public bool IgnoreCD { get; set; }
 
@@ -216,7 +220,7 @@ namespace Starvers
 
 #warning 还没做
 		public bool IsVip { get; set; }
-		#warning 在怪物强化之前得削弱一下玩家
+#warning 在怪物强化之前得削弱一下玩家
 		public virtual double DamageIndex
 		{
 			get
@@ -241,7 +245,7 @@ namespace Starvers
 		#region Ctor
 		protected StarverPlayer()
 		{
-			
+
 		}
 
 		public StarverPlayer(int index)
@@ -326,7 +330,7 @@ namespace Starvers
 				Data.Exp = newValue;
 			}
 		}
-		private void OnLevelChange(int oldValue,int newValue)
+		private void OnLevelChange(int oldValue, int newValue)
 		{
 			Data.Level = newValue;
 			CalcMPMax(Level);
@@ -348,6 +352,12 @@ namespace Starvers
 				CD = Skills[slot].CD
 			};
 			SaveData();
+		}
+		#endregion
+		#region BlockMPRegen
+		public void BlockMPRegen(int timeInTick)
+		{
+			noRegenMP += timeInTick;
 		}
 		#endregion
 		#region Events
@@ -413,7 +423,7 @@ namespace Starvers
 		}
 		public virtual void OnGetData(GetDataEventArgs args)
 		{
-			switch(args.MsgID)
+			switch (args.MsgID)
 			{
 				case PacketTypes.PlayerAnimation:
 					{
@@ -451,7 +461,8 @@ namespace Starvers
 			}
 			#region Normal
 			var raw = args.Damage;
-			args.Damage = (int)Math.Max(raw, args.Damage * DamageIndex * ((double)MP / MPMax));
+			var index = Math.Sqrt(Math.Sqrt((double)MP / MPMax)) * 1.2;
+			args.Damage = (int)Math.Max(raw, args.Damage * DamageIndex * index);
 			var realdamage = (int)Main.CalculateDamageNPCsTake(args.Damage, args.Npc.defense);
 			args.Npc.SendCombatText(realdamage.ToString(), Starver.DamageColor);
 			var expGet = Math.Min(realdamage, args.Npc.life);
@@ -469,11 +480,31 @@ namespace Starvers
 		{
 			Timer++;
 			#region Status Text
+			static string CalcMPStar(int MP)
+			{
+				// ★ 200mp
+				// ◆ 50mp
+				// ▲ 5mp
+				// ● 1mp
+				var mp = MP;
+				var mp200 = mp / 200;
+				mp %= 200;
+				var mp50 = mp / 50;
+				mp %= 50;
+				var mp5 = mp / 5;
+				mp %= 5;
+				var text = new string('★', mp200)
+					+ new string('◆', mp50)
+					+ new string('▲', mp5)
+					+ new string('●', mp);
+				return text;
+			}
 			if (Timer % 60 == 0)
 			{
 				if (Timer % (60 * 6) >= 3 * 60)
 				{
-					SendStatusText($"Level: {Level}\nExp:{Exp}/{CalcUpgradeExp()}");
+					SendStatusText($@"Level: {Level}      Exp:{Exp}/{CalcUpgradeExp()}
+MP({MP}/{MPMax}): {CalcMPStar(MP)}");
 				}
 				else
 				{
@@ -506,7 +537,8 @@ namespace Starvers
 			}
 			#endregion
 			#region MP Regeneration
-			if (Timer % 60 == 0)
+			noRegenMP = Math.Max(0, noRegenMP - 1);
+			if (noRegenMP == 0 && Timer % 60 == 0)
 			{
 				mpRegenFromNoMove = Math.Min(15, noMove / 20.0);
 				mpRegenFromNoUseItem = Math.Min(15, noUseItem / 20.0);
@@ -589,16 +621,16 @@ namespace Starvers
 		/// <summary>
 		/// 生成弹幕
 		/// </summary>
-		public int NewProj(Vector2 position, Vector2 velocity, int Type, int Damage, float KnockBack = 20f, float ai0 = 0, float ai1 = 0)
+		public int NewProj(Vector2 position, Vector2 velocity, int Type, int Damage, float KnockBack = 20f, float ai0 = 0, float ai1 = 0, int extraUpdates = 0)
 		{
-			return Utils.NewProj(position, velocity, Type, Damage, KnockBack, Index, ai0, ai1);
+			return Utils.NewProj(position, velocity, Type, Damage, KnockBack, Index, ai0, ai1, extraUpdates);
 		}
 		/// <summary>
 		/// 生成弹幕
 		/// </summary>
-		public int NewProj(Vector2 velocity, int Type, int Damage, float KnockBack = 20f, float ai0 = 0, float ai1 = 0)
+		public int NewProj(Vector2 velocity, int Type, int Damage, float KnockBack = 20f, float ai0 = 0, float ai1 = 0, int extraUpdates = 0)
 		{
-			return Utils.NewProj(Center, velocity, Type, Damage, KnockBack, Index, ai0, ai1);
+			return Utils.NewProj(Center, velocity, Type, Damage, KnockBack, Index, ai0, ai1, extraUpdates);
 		}
 		#endregion
 		#region ProjCircle
@@ -953,6 +985,11 @@ namespace Starvers
 		}
 		public void Release(StarverPlayer player, Vector vel)
 		{
+			if (Skill is UltimateSkill && player.MP < player.MPMax / 2)
+			{
+				player.SendCombatText("只有在mp大于50%时才能发动终极技能", Color.Blue);
+				return;
+			}
 			Skill.Release(player, vel);
 			CD += Skill.CD;
 			player.LastSkill = (SkillIDs)ID;

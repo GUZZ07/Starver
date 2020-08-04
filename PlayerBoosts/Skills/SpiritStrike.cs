@@ -49,7 +49,7 @@ namespace Starvers.PlayerBoosts.Skills
 						{
 							if (npc.active && !npc.friendly && npc.Distance(player.Center) <= radium)
 							{
-								npc.StrikeNPC(140 + Rand.Next(10), 20, 0, true, entity: player);
+								npc.StrikeNPC(140 + Rand.Next(10), 20, 0, true, fromNet: true, entity: player);
 							}
 						}
 						Thread.Sleep(interval * 1000 / 60);

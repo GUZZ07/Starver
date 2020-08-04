@@ -15,7 +15,7 @@ namespace Starvers.PlayerBoosts.Skills
 		public FromHell()
 		{
 			LevelNeed = 90;
-			MPCost = 30;
+			MPCost = 60;
 			CD = 60 * 25;
 			Author = "zhou_Qi";
 			Description = @"释放来自地狱的亡灵力量

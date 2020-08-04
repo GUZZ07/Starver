@@ -20,9 +20,9 @@ namespace Starvers.PlayerBoosts.Skills
 		}
 		public override void Release(StarverPlayer player, Vector vel)
 		{
-			Vector2 Start = player.Center + new Vector2(-Math.Min(player.Level, 348 * 10) - 48 * 10, -16 * 40);
-			Vector2 End = player.Center + new Vector2(Math.Min(player.Level, 48 * 10) + 48 * 10, -16 * 40);
-			Vector2 down = new Vector2(0, 16);
+			var Start = player.Center + new Vector2(-Math.Min(player.Level, 348 * 10) - 48 * 10, -16 * 40);
+			var End = player.Center + new Vector2(Math.Min(player.Level, 48 * 10) + 48 * 10, -16 * 40);
+			var down = new Vector2(0, 16);
 			player.ProjLine(Start, End, down, Math.Max(Math.Min(player.Level / 48,10), 10) * 2 + 20, 400, ProjectileID.RocketSnowmanIII);
 		}
 	}
