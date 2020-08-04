@@ -311,16 +311,19 @@ namespace Starvers
 						return 250;
 					}
 				default:
-					return (int)(raw * (1 + DifficultyIndex * 2.25 / 40.0));
+//					return (int)(raw * (1 + DifficultyIndex * 2.25 / 40.0));
+					return (int)(raw * (1 + DifficultyIndex * 1.5 / 40.0));
 			}
 		}
 		private int RecalcLife(int raw)
 		{
-			return (int)(raw * (1 + DifficultyIndex * 18 / 40.0));
+//			return (int)(raw * (1 + DifficultyIndex * 18 / 40.0));
+			return (int)(raw * (1 + DifficultyIndex * 9 / 40.0));
 		}
 		private int RecalcDefense(int raw)
 		{
-			return (int)(raw * (1 + DifficultyIndex * 6 / 40.0));
+//			return (int)(raw * (1 + DifficultyIndex * 6 / 40.0));
+			return (int)(raw * (1 + DifficultyIndex * 3 / 40.0));
 		}
 		private void OnNpcSpawn(NpcSpawnEventArgs args)
 		{

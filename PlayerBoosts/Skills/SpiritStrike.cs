@@ -18,7 +18,7 @@ namespace Starvers.PlayerBoosts.Skills
 		protected double d = 0;
 		public SpiritStrike()
 		{
-			MPCost = 35;
+			MPCost = 100;
 			CD = 60 * 60;
 			LevelNeed = 80;
 			Author = "wither";

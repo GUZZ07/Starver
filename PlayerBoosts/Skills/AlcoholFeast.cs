@@ -27,7 +27,7 @@ namespace Starvers.PlayerBoosts.Skills
 		};
 		public AlcoholFeast() 
 		{
-			CD = 60 * 10;
+			CD = 60 * 36;
 			MPCost = 85;
 			LevelNeed = 5;
 			Author = "zhou_Qi";

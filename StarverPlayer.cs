@@ -364,7 +364,6 @@ namespace Starvers
 		#region Events
 		private void OnUseItem(Item item)
 		{
-			noUseItem = 0;
 			if (400 <= LifeMax && LifeMax < 3000)
 			{
 				var slot = Inventory[TPlayer.selectedItem];
@@ -382,6 +381,7 @@ namespace Starvers
 			}
 			if (item.damage > 0 && item.axe + item.pick == 0)
 			{
+				noUseItem = 0;
 				var fromUseTime = Math.Max(1, Math.Log(16.0 / item.useTime - 1 + Math.E));
 				var fromDamage =Math.Log10(10 + TPlayer.GetWeaponDamage(item) / 10.0);
 				var cost = CalcMPCost(Level) * fromDamage / fromUseTime;
@@ -466,7 +466,7 @@ namespace Starvers
 			}
 			#region Normal
 			var raw = args.Damage;
-			var index = Math.Sqrt(Math.Sqrt((double)MP / MPMax)) * 1.2;
+			var index = Math.Sqrt(Math.Sqrt(MP / 200.0)) * 1.2;
 			args.Damage = (int)Math.Max(raw, args.Damage * DamageIndex * index);
 			var realdamage = (int)Main.CalculateDamageNPCsTake(args.Damage, args.Npc.defense);
 			args.Npc.SendCombatText(realdamage.ToString(), Starver.DamageColor);
@@ -550,9 +550,9 @@ MP({MP}/{MPMax})
 				mpRegenFromNoUseItem = Math.Min(5, noUseItem / 60.0);
 
 				mpRegen = 0;
-				mpRegen += CalcMPRegen(Level);
-				mpRegen += mpRegenFromNoMove;
-				mpRegen += mpRegenFromNoUseItem;// SendBlueText($"{mpRegenFromNoMove}, {mpRegenFromNoUseItem}, {CalcMPRegen(Level)}, {mpRegen}");
+				mpRegen += CalcMPRegen(Level);// SendBlueText($"{mpRegenFromNoMove}, {mpRegenFromNoUseItem}, {CalcMPRegen(Level)}, {mpRegen}");
+				mpRegen += mpRegenFromNoMove + mpRegenFromNoUseItem;
+				mpRegen *= (1 + (mpRegenFromNoMove + mpRegenFromNoUseItem) / 5);
 
 				MP = (int)Math.Min(MPMax, MP + mpRegen);
 			}
@@ -949,7 +949,7 @@ MP({MP}/{MPMax})
 		}
 		public static double CalcMPCost(int lvl)
 		{
-			return Math.Log(lvl + Math.E) * mpCostToUseWeapon / 1.5;
+			return mpCostToUseWeapon;
 		}
 		#endregion
 	}
@@ -1012,6 +1012,7 @@ MP({MP}/{MPMax})
 			if (Skill.MPCost > player.MP)
 			{
 				player.SendCombatText("MP不足", Color.HotPink, false);
+				return;
 			}
 			Skill.Release(player, vel);
 			CD += Skill.CD;
