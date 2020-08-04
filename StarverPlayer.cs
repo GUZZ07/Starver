@@ -263,6 +263,7 @@ namespace Starvers
 				Starver.Instance.PlayerDatas.SaveData(Data);
 			}
 			Data.GetSkillDatas(Skills);
+			MPMax = CalcMPMax(Level);
 		}
 		#endregion
 		#region SaveData
@@ -333,7 +334,7 @@ namespace Starvers
 		private void OnLevelChange(int oldValue, int newValue)
 		{
 			Data.Level = newValue;
-			CalcMPMax(Level);
+			MPMax = CalcMPMax(Level);
 		}
 		#endregion
 		#region BindSkill
@@ -379,9 +380,13 @@ namespace Starvers
 						break;
 				}
 			}
-			if (item.damage > 0)
+			if (item.damage > 0 && item.axe + item.pick == 0)
 			{
-				MP = Math.Max(0, (int)(MP - CalcMPCost(Level)));
+				var fromUseTime = Math.Max(1, Math.Log(16.0 / item.useTime - 1 + Math.E));
+				var fromDamage =Math.Log10(10 + TPlayer.GetWeaponDamage(item) / 10.0);
+				var cost = CalcMPCost(Level) * fromDamage / fromUseTime;
+				// SendBlueText($"{cost}");
+				MP = Math.Max(0, (int)(MP - cost));
 			}
 			if (skillCheckDelay != 0)
 			{
@@ -494,9 +499,9 @@ namespace Starvers
 				var mp5 = mp / 5;
 				mp %= 5;
 				var text = new string('★', mp200)
-					+ new string('◆', mp50)
+					+ new string('◆', mp50) + "    \n"
 					+ new string('▲', mp5)
-					+ new string('●', mp);
+					+ new string('●', mp) + "    ";
 				return text;
 			}
 			if (Timer % 60 == 0)
@@ -504,7 +509,8 @@ namespace Starvers
 				if (Timer % (60 * 6) >= 3 * 60)
 				{
 					SendStatusText($@"Level: {Level}      Exp:{Exp}/{CalcUpgradeExp()}
-MP({MP}/{MPMax}): {CalcMPStar(MP)}");
+MP({MP}/{MPMax})
+{CalcMPStar(MP)}");
 				}
 				else
 				{
@@ -540,18 +546,31 @@ MP({MP}/{MPMax}): {CalcMPStar(MP)}");
 			noRegenMP = Math.Max(0, noRegenMP - 1);
 			if (noRegenMP == 0 && Timer % 60 == 0)
 			{
-				mpRegenFromNoMove = Math.Min(15, noMove / 20.0);
-				mpRegenFromNoUseItem = Math.Min(15, noUseItem / 20.0);
+				mpRegenFromNoMove = Math.Min(15, noMove / 60.0);
+				mpRegenFromNoUseItem = Math.Min(5, noUseItem / 60.0);
 
+				mpRegen = 0;
 				mpRegen += CalcMPRegen(Level);
 				mpRegen += mpRegenFromNoMove;
-				mpRegen += mpRegenFromNoUseItem;
+				mpRegen += mpRegenFromNoUseItem;// SendBlueText($"{mpRegenFromNoMove}, {mpRegenFromNoUseItem}, {CalcMPRegen(Level)}, {mpRegen}");
 
 				MP = (int)Math.Min(MPMax, MP + mpRegen);
 			}
 			#endregion
 			#region ItemUse
-			if (HeldItem.useStyle == ItemUseStyleID.HoldUp)
+			static bool SpecialItem(Item item)
+			{
+				switch(item.type)
+				{
+					case ItemID.Phantasm:
+					case ItemID.VortexBeater:
+					case ItemID.LaserMachinegun:
+					case ItemID.DD2PhoenixBow:
+						return true;
+				}
+				return false;
+			}
+			if (HeldItem.useStyle == ItemUseStyleID.HoldUp || HeldItem.useStyle == ItemUseStyleID.Swing || SpecialItem(HeldItem))
 			{
 				if (ItemUseDelay == 0 && ControlUseItem)
 				{
@@ -926,11 +945,11 @@ MP({MP}/{MPMax}): {CalcMPStar(MP)}");
 				x = Math.Abs(x);
 				return sign * Math.Pow(x, 1.0 / 7);
 			}
-			return (100 * f(lvl - 3000) - 100 * f(-3000));
+			return (100 * f(lvl - 3000) - 100 * f(-3000)) / 15;
 		}
 		public static double CalcMPCost(int lvl)
 		{
-			return Math.Log(lvl + 1) * mpCostToUseWeapon / 4;
+			return Math.Log(lvl + Math.E) * mpCostToUseWeapon / 1.5;
 		}
 		#endregion
 	}
@@ -990,8 +1009,13 @@ MP({MP}/{MPMax}): {CalcMPStar(MP)}");
 				player.SendCombatText("只有在mp大于50%时才能发动终极技能", Color.Blue);
 				return;
 			}
+			if (Skill.MPCost > player.MP)
+			{
+				player.SendCombatText("MP不足", Color.HotPink, false);
+			}
 			Skill.Release(player, vel);
 			CD += Skill.CD;
+			player.MP -= Skill.MPCost;
 			player.LastSkill = (SkillIDs)ID;
 		}
 		#endregion

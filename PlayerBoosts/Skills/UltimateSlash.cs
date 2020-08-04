@@ -14,7 +14,7 @@ namespace Starvers.PlayerBoosts.Skills
 	{
 		#region Fields
 		private const int Max = 4;
-		private const float RadiumMax = 16 * 55;
+		private const float RadiumMax = 16 * 45;
 		protected int[] FromOut;
 		protected int[] FromIn;
 		private int[] Beams =
