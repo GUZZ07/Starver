@@ -155,11 +155,12 @@ namespace Starvers
 			ServerApi.Hooks.GameUpdate.Register(this, OnUpdate);
 			ServerApi.Hooks.GamePostUpdate.Register(this, PostUpdate);
 			ServerApi.Hooks.NetGetData.Register(this, OnGetData);
-			TShockAPI.Hooks.PlayerHooks.PlayerPostLogin += OnPostLogin;
+			PlayerHooks.PlayerPostLogin += OnPostLogin;
 			GetDataHandlers.NewProjectile += OnNewProjectile;
 			#endregion
 			#region Commands
 			Commands.ChatCommands.Add(new Command(Perms.Normal, MainCommand, "starver"));
+			Commands.ChatCommands.Add(new Command(Perms.HotReload, HotReloadCommand, "hotreload"));
 			Commands.ChatCommands.Add(new Command(Perms.Aura.Normal, AuraCommand, "aura", "au"));
 			Commands.ChatCommands.Add(new Command(Perms.Boss.Spawn, BossCommand, "stboss"));
 			#endregion
@@ -176,13 +177,40 @@ namespace Starvers
 			ServerApi.Hooks.GameUpdate.Deregister(this, OnUpdate);
 			ServerApi.Hooks.GamePostUpdate.Deregister(this, PostUpdate);
 			ServerApi.Hooks.NetGetData.Deregister(this, OnGetData);
-			TShockAPI.Hooks.PlayerHooks.PlayerPostLogin -= OnPostLogin;
+			PlayerHooks.PlayerPostLogin -= OnPostLogin;
 			GetDataHandlers.NewProjectile -= OnNewProjectile;
+			#endregion
+			#region Commands
+			Commands.ChatCommands.RemoveAll(cmd => cmd.HasAlias("starver"));
+			Commands.ChatCommands.RemoveAll(cmd => cmd.HasAlias("hotreload"));
+			Commands.ChatCommands.RemoveAll(cmd => cmd.HasAlias("aura"));
+			Commands.ChatCommands.RemoveAll(cmd => cmd.HasAlias("stboss"));
 			#endregion
 		}
 
 		#endregion
 		#region Events
+		#region PostHotReload
+		public void PostHotReload()
+		{
+			for (int i = 0; i < TShock.Players.Length; i++)
+			{
+				var player = TShock.Players[i];
+				if (player is null)
+				{
+					continue;
+				}
+				if (!player.IsLoggedIn)
+				{
+					Players[i] = StarverPlayer.GetGuest(i);
+				}
+				else
+				{
+					Players[i] = new StarverPlayer(i);
+				}
+			}
+		}
+		#endregion
 		#region NewProj
 		private void OnNewProjectile(object sender, GetDataHandlers.NewProjectileEventArgs args)
 		{
@@ -485,6 +513,39 @@ namespace Starvers
 		#endregion
 		#endregion
 		#region Commands
+		private void HotReloadCommand(CommandArgs args)
+		{
+			Dispose();
+			#region FindContainer
+			PluginContainer Container = null;
+			foreach (var container in ServerApi.Plugins)
+			{
+				if (container.Plugin == this)
+				{
+					Container = container;
+					break;
+				}
+			}
+			#endregion
+			#region Load New
+			var path = Path.Combine(ServerApi.PluginsPath, "Starver.dll");
+			var newPlugin = Assembly.Load(File.ReadAllBytes(path));
+			var starverType = newPlugin.GetType(typeof(Starver).FullName);
+			var instance = Activator.CreateInstance(starverType, new[] { Main.instance });
+			#endregion
+			#region Replace
+			Container
+				.GetType()
+				.GetProperty(nameof(Container.Plugin))
+				.SetValue(Container, instance);
+			#endregion
+			#region Initialize
+			Container.Initialize();
+			starverType
+				.GetMethod(nameof(PostHotReload))
+				.Invoke(instance, Array.Empty<object>());
+			#endregion
+		}
 		private void MainCommand(CommandArgs args)
 		{
 			var option = string.Empty;

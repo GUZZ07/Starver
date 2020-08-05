@@ -11,6 +11,7 @@ namespace Starvers
 	{
 		public static readonly string Normal = "starver.normal";
 		public static readonly string Test = "starver.test";
+		public static readonly string HotReload = "starver.hotreload";
 		public static class Aura
 		{
 			public static readonly string Normal = "starver.aura.normal";
