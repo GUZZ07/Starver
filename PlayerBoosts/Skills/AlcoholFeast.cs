@@ -36,7 +36,7 @@ namespace Starvers.PlayerBoosts.Skills
 		}
 		public override void Release(StarverPlayer player, Vector vel)
 		{
-			int damage = 25 + (int)(80 * Math.Log(player.Level));
+			int damage = 5 + (int)(30 * Math.Log(player.Level));
 			Vector2 velocity = vel * 3.5f;
 			for (int i = 0; i < 20; i++)
 			{

@@ -467,11 +467,13 @@ namespace Starvers
 			#region Normal
 			var raw = args.Damage;
 			var index = Math.Sqrt(Math.Sqrt(MP / 200.0)) * 1.2;
+
 			args.Damage = (int)Math.Max(raw, args.Damage * DamageIndex * index);
 			var realdamage = (int)Main.CalculateDamageNPCsTake(args.Damage, args.Npc.defense);
 			args.Npc.SendCombatText(realdamage.ToString(), Starver.DamageColor);
-			var expGet = Math.Min(realdamage, args.Npc.life);
-			if (expGet > 0)
+			var realNPC = args.Npc.realLife > 0 ? Main.npc[args.Npc.realLife] : args.Npc;
+			var expGet = Math.Min(realdamage, realNPC.life);
+			if (!args.Npc.SpawnedFromStatue && args.Npc.type != NPCID.TargetDummy && expGet > 0)
 			{
 				Exp += expGet;
 			}
@@ -945,11 +947,11 @@ MP({MP}/{MPMax})
 				x = Math.Abs(x);
 				return sign * Math.Pow(x, 1.0 / 7);
 			}
-			return (100 * f(lvl - 3000) - 100 * f(-3000)) / 15;
+			return (100 * f(lvl - 3000) - 100 * f(-3000)) / 5;
 		}
 		public static double CalcMPCost(int lvl)
 		{
-			return mpCostToUseWeapon;
+			return Math.Log(lvl + Math.E) * mpCostToUseWeapon / 1.5;
 		}
 		#endregion
 	}
