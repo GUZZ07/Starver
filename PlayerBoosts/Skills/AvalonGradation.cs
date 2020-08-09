@@ -37,10 +37,11 @@ namespace Starvers.PlayerBoosts.Skills
 		public AvalonGradation()
 		{
 			CD = 60 * 50;
-			MPCost = 480;
-			LevelNeed = 1000;
+			MPCost = 520;
+			LevelNeed = 2800;
 			Author = "1413";
-			Description = "消除你身边的所有敌对弹幕,持续10s";
+			Description = "消除你身边的大部分敌对弹幕,持续10s";
+			Summary = "[2800][击败机械三王解锁]持续消除你周围的威胁";
 		}
 		public override void Release(StarverPlayer player, Vector vel)
 		{

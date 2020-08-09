@@ -756,10 +756,10 @@ namespace Starvers
 					break;
 				#endregion
 				default:
-					args.Player.SendInfoMessage("bind <slot> <skill> 将制定技能绑定到手中的武器上");
+					args.Player.SendInfoMessage("bind <slot> <skill> 将指定技能绑定到手中的武器上,slot为1~5正整数");
 					args.Player.SendInfoMessage("unbind <slot> 技能解绑");
-					args.Player.SendInfoMessage("list  查看技能列表");
-					args.Player.SendInfoMessage("help [技能id]  查看技能介绍");
+					args.Player.SendInfoMessage("list [页码] 查看技能列表、解锁等级、解锁时期及简要说明");
+					args.Player.SendInfoMessage("help [技能序号]  查看技能详细介绍");
 					args.Player.SendInfoMessage("help  帮助");
 					break;
 			}

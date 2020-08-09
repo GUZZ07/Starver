@@ -16,11 +16,12 @@ namespace Starvers.PlayerBoosts.Skills
 		public UnstableTele()
 		{
 			CD = 60 * 10;
-			MPCost = 20;
-			LevelNeed = 5;
+			MPCost = 120;
+			LevelNeed = 350;
 			Author = "zhou_Qi";
-			Description = @"抛射出一颗玻璃彩球，然后进行随机传送
+			Description = @"发射一圈弹幕，然后进行随机传送
 ""尽管深受谴责，这仍是期许着不劳而获者的最爱""";
+			Summary = "[350][击败蠕虫/大脑解锁]生成一圈滞留弹幕并短距离随机传送";
 		}
 		public override void Release(StarverPlayer player, Vector vel)
 		{
@@ -32,7 +33,7 @@ namespace Starvers.PlayerBoosts.Skills
 			{
 				try
 				{
-					int damage = 800;
+					int damage = 600;
 					Vector Velocity = (Vector)vel * 3;
 					IProjSet Projs = new ProjStack(Max + 5);
 					int[] idxes = player.ProjCircleRet(player.Center, 16 * 3.45f, 0, ProjectileID.DemonScythe, Max, damage);

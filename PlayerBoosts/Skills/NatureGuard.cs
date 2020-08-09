@@ -17,11 +17,12 @@ namespace Starvers.PlayerBoosts.Skills
 		public NatureGuard()
 		{
 			MPCost = 350;
-			CD = 60 * 22;
-			LevelNeed = 50;
+			CD = 60 * 25;
+			LevelNeed = 800;
 			Author = "zhou_Qi";
 			Description = @"生成几个纯粹由自然之力构成的哨卫
 ""稍显愚笨，不过这也应当是一名哨兵的职责""";
+			Summary = "[800][击败骷髅王解锁]生成几个移动锚点发射攻击弹幕";
 		}
 		public override void Release(StarverPlayer player, Vector vel)
 		{
@@ -39,13 +40,14 @@ namespace Starvers.PlayerBoosts.Skills
 					{
 						arr[i] = player.NewProj(player.Center, Rand.NextVector2(9), ProjectileID.SporeGas, damage, 20f);
 					}
-					while (Main.projectile[arr[0]].active && Main.projectile[arr[0]].owner == player)
+					int timer=0;
+					while (Main.projectile[arr[0]].active && Main.projectile[arr[0]].owner == player&&timer < 3000)
 					{
 						foreach (var idx in arr)
 						{
 							player.NewProj(Main.projectile[idx].Center, Rand.NextVector2(15), ProjectileID.TerrarianBeam, damage * 3 / 2, 20f);
 						}
-						Thread.Sleep(25);
+						timer+=25;Thread.Sleep(25);
 					}
 				}
 				catch

@@ -15,12 +15,13 @@ namespace Starvers.PlayerBoosts.Skills
 		public NightMana()
 		{
 			MPCost = 200;
-			CD = 60 * 35;
+			CD = 60 * 25;
 			Description = @"向前方发射黑暗能量
 ""相对应的，一些魔力甚至可以吞噬光线，因而也具有相当程度的威能""
 ""黑暗中摇曳的光明""";
 			Author = "zhou_Qi";
-			LevelNeed = 800;
+			LevelNeed = 1200;
+			Summary = "[1200][击败血肉之墙解锁]以暂时失明的代价发射强大的黑暗弹幕";
 		}
 		public override void Release(StarverPlayer player, Vector vel)
 		{

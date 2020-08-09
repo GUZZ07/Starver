@@ -13,11 +13,12 @@ namespace Starvers.PlayerBoosts.Skills
 	{
 		public MagnetStorm()
 		{
-			CD = 60 * 15;
-			MPCost = 120;
+			CD = 60 * 10;
+			MPCost = 30;
 			Author = "1413";
-			Description = "制造若干个击向周围的磁球";
-			LevelNeed = 155;
+			Description = "制造若干个击向周围的磁球射线";
+			LevelNeed = 30;
+			Summary = "[30][默认解锁]发射一圈磁球射线";
 		}
 		public override async void Release(StarverPlayer player, Vector vel)
 		{

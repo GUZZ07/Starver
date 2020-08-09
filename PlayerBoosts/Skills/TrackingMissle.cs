@@ -17,11 +17,12 @@ namespace Starvers.PlayerBoosts.Skills
 		protected Vector2 Pos;
 		public TrackingMissile()
 		{
-			LevelNeed = 300;
-			MPCost = 220;
-			CD = 60 * 35;
+			LevelNeed = 1000;
+			MPCost = 350;
+			CD = 60 * 45;
 			Description = "制造若干个射向最近敌人位置的导弹";
 			Author = "Deaths";
+			Summary = "[1000][击败血肉之墙解锁]持续生成追踪敌人的导弹";
 		}
 		public override void Release(StarverPlayer player, Vector vel)
 		{

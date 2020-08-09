@@ -13,11 +13,12 @@ namespace Starvers.PlayerBoosts.Skills
 	{
 		public FlameBurning()
 		{
-			CD = 60 * 6;
-			MPCost = 20;
+			CD = 60 * 10;
+			MPCost = 80;
 			Author = "麦克虚妄";
 			Description = "制造一片扇形的火焰";
-			LevelNeed = 20;
+			LevelNeed = 100;
+			Summary = "[100][击败克眼解锁]释放穿透火焰";
 		}
 		public override void Release(StarverPlayer player, Vector vel)
 		{

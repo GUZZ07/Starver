@@ -16,7 +16,8 @@ namespace Starvers.PlayerBoosts.Skills
 			CD = 60 * 3;
 			Author = "三叶草";
 			LevelNeed = 5;
-			Description = "发射若干个小火球"; 
+			Description = "发射若干个小火花"; 
+			Summary = "[5][默认解锁]发射火花";
 		}
 		public override void Release(StarverPlayer player, Vector vel)
 		{

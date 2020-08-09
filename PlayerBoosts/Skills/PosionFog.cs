@@ -13,11 +13,12 @@ namespace Starvers.PlayerBoosts.Skills
 	{
 		public PosionFog()
 		{
-			MPCost = 190;
-			LevelNeed = 400;
-			CD = 60 * 15;
+			MPCost = 200;
+			LevelNeed = 1500;
+			CD = 60 * 10;
 			Author = "Deaths";
 			Description = "制造一片毒雾";
+			Summary = "[1500][击败血肉之墙解锁]在身边生成大量毒雾";
 		}
 		public override async void Release(StarverPlayer player, Vector vel)
 		{

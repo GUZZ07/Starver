@@ -34,13 +34,14 @@ namespace Starvers.PlayerBoosts.Skills
 		};
 		public StarEruption()
 		{
-			CD = 60 * 2 * 60;
-			MPCost = 430;
-			LevelNeed = 1800;
+			CD = 60 * 70;
+			MPCost = 500;
+			LevelNeed = 3000;
 			Author = "zhou_Qi";
 			Description = @"召唤大量陨星进行攻击
 ""引动星辰的坠落，炽热的天堂之火以其肆虐的破坏力而深受锻造师们的喜爱""
 ""秘藏在浮空岛屿之上的星怒也不过是那个时代的一个小小缩影""";
+			Summary = "[3000][击败世纪之花解锁]引动星辰的力量发动攻击";
 		}
 		public override void Release(StarverPlayer player, Vector vel)
 		{
@@ -53,11 +54,11 @@ namespace Starvers.PlayerBoosts.Skills
 			int LoopTime;
 			for (int i = 0; i < 50; i++)
 			{
-				player.NewProj(LaunchSource + Rand.NextVector2(16 * 3.5f, 0), velocity, MainProjs[Rand.Next(MainProjs.Length)], 320, 20f);
+				player.NewProj(LaunchSource + Rand.NextVector2(16 * 3.5f, 0), velocity, MainProjs[Rand.Next(MainProjs.Length)], 560, 20f);
 				LoopTime = Rand.Next(3, 6);
 				for (int j = 0; j < LoopTime; j++)
 				{
-					player.NewProj(LaunchSource + Rand.NextVector2(16 * 8.5f,0), velocity * 0.95f + Rand.NextVector2(0, 10), LiningProjs[Rand.Next(LiningProjs.Length)], 270, 20f);
+					player.NewProj(LaunchSource + Rand.NextVector2(16 * 8.5f,0), velocity * 0.95f + Rand.NextVector2(0, 10), LiningProjs[Rand.Next(LiningProjs.Length)], 420, 20f);
 				}
 				LaunchSource -= Unit;
 			}

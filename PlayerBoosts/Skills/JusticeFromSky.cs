@@ -13,10 +13,11 @@ namespace Starvers.PlayerBoosts.Skills
 		public JusticeFromSky()
 		{
 			CD = 60 * 13;
-			MPCost = 100;
-			LevelNeed = 350;
+			MPCost = 200;
+			LevelNeed = 2000;
 			Author = "1413";
 			Description = @"""其实这只是饥饿的轰炸炸错了位置""";
+			Summary = "[2000][击败机械三王解锁]召唤导弹从天而降";
 		}
 		public override void Release(StarverPlayer player, Vector vel)
 		{

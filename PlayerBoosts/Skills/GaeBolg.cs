@@ -13,11 +13,12 @@ namespace Starvers.PlayerBoosts.Skills
 	{
 		public GaeBolg() 
 		{
-			MPCost = 45;
-			CD = 60 * 15;
-			LevelNeed = 350;
+			MPCost = 30;
+			CD = 60 * 10;
+			LevelNeed = 20;
 			Author = "三叶草";
-			Description = "发着一支速度极快的黎明";
+			Description = "发射一支速度极快的黎明";
+			Summary = "[20][默认解锁]发射一支速度极快的黎明";
 		}
 		public override void Release(StarverPlayer player, Vector vel)
 		{

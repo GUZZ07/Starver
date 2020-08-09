@@ -45,19 +45,15 @@ namespace Starvers.PlayerBoosts
 			#endregion
 			#region LoadSkillList
 			{
-				SkillLists = new string[(int)Math.Ceiling(Count / 4 / 4.0)];
+				SkillLists = new string[(int)Math.Ceiling(Count / 8.0)];
 				int page = 0;
 				var sb = new StringBuilder(skills.Length * 10);
 				for (int i = 0; i < skills.Length; i++)
 				{
 					var skill = skills[i];
-					sb.Append(skill);
-					sb.Append("   ");
-					if (i != Count - 1 && i % 4 == 3)
-					{
-						sb.AppendLine();
-					}
-					if (i % (4 * 4) == 4 * 4 - 1 && i != Count - 1)
+					sb.AppendFormat("{0}:  {1}", skill, skill.Summary);
+					sb.AppendLine();
+					if (i % (8) == 8 - 1 && i != Count - 1)
 					{
 						SkillLists[page] = sb.ToString();
 						sb.Clear();
@@ -115,45 +111,45 @@ namespace Starvers.PlayerBoosts
 
 	public enum SkillIDs : byte
 	{
-		Musket,
-		NatureStorm,
-		LawAias,
-		NStrike,
-		GaeBolg,
-		ExCalibur,
 		FireBall,
+		MirrorMana,
+		GaeBolg,
+		LimitBreak,
+		MagnetStorm,
+		Musket,
+		FlameBurning,
+		Sacrifice,
 		EnderWand,
+		SpiritStrike,
+		Whirlwind,
+		UnstableTele,
+		FishingRod,
+		FrozenCraze,
+		FromHell,
+		AlcoholFeast,
+		NatureGuard,
 		WindRealm,
 		Avalon,
-		Whirlwind,
-		SpiritStrike,
-		AvalonGradation,
-		LimitlessSpark,
-		MagnetStorm,
-		FlameBurning,
-		JusticeFromSky,
 		TrackingMissile,
+		NightMana,
+		LimitlessSpark,
 		PosionFog,
-		CDLess,
-		Sacrifice,
-		MirrorMana,
-		Chaos,
+		JusticeFromSky,
 		Cosmos,
-		ChordMana,
-		FromHell,
+		MiracleMana,
+		GreenWind,
+		AvalonGradation,
 		StarEruption,
 		NatureRage,
-		NatureGuard,
-		FishingRod,
-		AlcoholFeast,
-		GreenWind,
-		FrozenCraze,
-		LimitBreak,
-		MiracleMana,
+		ChordMana,
+		LawAias,
+		CDLess,
+		Chaos,
+		RealmOfDefense,
+		ExCalibur,
+		NStrike,
 		UltimateSlash,
 		UniverseBlast,
-		UnstableTele,
-		RealmOfDefense,
-		NightMana
+		NatureStorm
 	}
 }

@@ -30,6 +30,7 @@ namespace Starvers.PlayerBoosts.Skills
 //[c/00ed00:""无论是MP消耗, 等级要求, 还是CD, 代码量乃至bug量, 你都比我们要多""]
 //[c/00ed00:""我们不明白, 同样是终极技能, 为什么你会得到如此高的待遇...""]
 //[c/0000ed:""原因很简单], [c/ff0000:?***%Key?=NotFound][c/0000ed:""]";
+			Summary = "[20000][终极技能]让自然的风暴摧毁一切";
 		}
 		#endregion
 		#region Release

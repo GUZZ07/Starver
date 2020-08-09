@@ -15,7 +15,7 @@ namespace Starvers.PlayerBoosts.Skills
 	{
 		private int[] Projs =
 		{
-			ProjectileID.IceSpike,
+			ProjectileID.IceSickle,
 			ProjectileID.IceSickle,
 			ProjectileID.IceBlock,
 			ProjectileID.IceBlock,
@@ -30,12 +30,13 @@ namespace Starvers.PlayerBoosts.Skills
 		public FrozenCraze()
 		{
 			CD = 60 * 30;
-			LevelNeed = 50;
-			MPCost = 60;
+			LevelNeed = 600;
+			MPCost = 100;
 			Author = "zhou_Qi";
 			Description = @"生成一条冰雪构成的足迹
 ""寒冰国度流传下来的秘法，由冰雪女王所保管""
 ""在冰霜之月升起的夜晚，人们曾目睹过她的姿容""";
+			Summary = "[600][击败骷髅王解锁]留下冰雪构成的足迹";
 		}
 		public override void Release(StarverPlayer player, Vector vel)
 		{

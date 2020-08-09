@@ -15,13 +15,14 @@ namespace Starvers.PlayerBoosts.Skills
 	{
 		public FishingRod()
 		{
-			LevelNeed = 10;
+			LevelNeed = 400;
 			MPCost = 25;
 			CD = 60 * 3 * 60;
 			Author = "zhou_Qi";
 			Description = @"抛射多根随机种类的鱼竿
 ""Deaths会很喜欢这个技能的""
 ""她从未想过，她用以书写'技能'的'书页'，源自于什么""";
+			Summary = "XxXxXX";
 		}
 		public override void Release(StarverPlayer player, Vector vel)
 		{

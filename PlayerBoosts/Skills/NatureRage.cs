@@ -37,12 +37,13 @@ namespace Starvers.PlayerBoosts.Skills
 		};
 		public NatureRage()
 		{
-			MPCost = 110;
-			LevelNeed = 450;
-			CD = 60 * 25;
+			MPCost = 550;
+			LevelNeed = 3000;
+			CD = 60 * 90;
 			Author = "zhou_Qi";
-			Description = @"[可成长]向前方发射花叶，潜藏着净化的威能
+			Description = @"向前方发射花叶，潜藏着净化的威能
 ""软弱的花叶亦可以锐如刀刃，温和的自然也具有它独特的侵略性""";
+			Summary = "[3000][击败世纪之花解锁]释放大自然的愤怒";
 		}
 		public override void Release(StarverPlayer player, Vector vel)
 		{
@@ -66,11 +67,11 @@ namespace Starvers.PlayerBoosts.Skills
 					while (tag < MaxTag)
 					{
 						Line.Length = Rand.NextFloat(-16 * 5, 16 * 5);
-						player.NewProj(player.Center + Line, vel * Rand.NextFloat(4, 8), ProjsToLaunch.Next(), 200 + Rand.Next(-50, 50), 10f);
+						player.NewProj(player.Center + Line, vel * Rand.NextFloat(4, 8), ProjsToLaunch.Next(), 400 + Rand.Next(-50, 50), 10f);
 						Line.Length = Rand.NextFloat(-16 * 5, 16 * 5);
-						player.NewProj(player.Center + Line, vel * Rand.NextFloat(4, 8), ProjsToLaunch.Next(), 200 + Rand.Next(-50, 50), 10f);
+						player.NewProj(player.Center + Line, vel * Rand.NextFloat(4, 8), ProjsToLaunch.Next(), 400 + Rand.Next(-50, 50), 10f);
 						Line.Length = Rand.NextFloat(-16 * 5, 16 * 5);
-						player.NewProj(player.Center + Line, vel * Rand.NextFloat(4, 8), ProjsToLaunch.Next(), 200 + Rand.Next(-50, 50), 10f);
+						player.NewProj(player.Center + Line, vel * Rand.NextFloat(4, 8), ProjsToLaunch.Next(), 400 + Rand.Next(-50, 50), 10f);
 						Thread.Sleep(50);
 						tag++;
 					}

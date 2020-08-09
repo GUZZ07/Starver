@@ -12,11 +12,12 @@ namespace Starvers.PlayerBoosts.Skills
 	{
 		public LimitlessSpark()
 		{
-			MPCost = 20;
+			MPCost = 1000;
 			CD = 60 * 30;
 			Author = "wither";
-			LevelNeed = 500;
+			LevelNeed = 1500;
 			Description = "耗光你所有的MP,制造咒火团";
+			Summary = "[1500][击败血肉之墙解锁]用全部的MP发射咒火团";
 		}
 		public override bool CanSet(StarverPlayer player)
 		{

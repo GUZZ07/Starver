@@ -15,9 +15,10 @@ namespace Starvers.PlayerBoosts.Skills
 			Author = "1413";
 			Description = "技能CD太长了？来试试他吧!\n10s内其他技能无CD";
 			CD = 60 * 360;
-			MPCost = 20;
-			LevelNeed = 500;
+			MPCost = 1000;
+			LevelNeed = 5000;
 			ForceCD = true;
+			Summary = "[5000][击败石巨人解锁]让你使用技能后无需再等待";
 		}
 		public override void Release(StarverPlayer player, Vector vel)
 		{
