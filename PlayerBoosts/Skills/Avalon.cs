@@ -61,5 +61,14 @@ namespace Starvers.PlayerBoosts.Skills
 				}
 			});
 		}
+		public override bool CanSet(StarverPlayer player)
+		{
+			if (!NPC.downedBoss3)
+			{
+				player.SendText("该技能已被地牢的诅咒封印", 238, 232, 170);
+				return false;
+			}
+			return base.CanSet(player);
+		}
 	}
 }

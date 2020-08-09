@@ -8,7 +8,8 @@ namespace Starvers.PlayerBoosts.Skills
 {
 	
 	using Microsoft.Xna.Framework;
-	using Terraria.ID;
+    using Terraria;
+    using Terraria.ID;
 	public class StarEruption : StarverSkill
 	{
 		/// <summary>
@@ -35,7 +36,7 @@ namespace Starvers.PlayerBoosts.Skills
 		public StarEruption()
 		{
 			CD = 60 * 70;
-			MPCost = 500;
+			MPCost = 400;
 			LevelNeed = 3000;
 			Author = "zhou_Qi";
 			Description = @"召唤大量陨星进行攻击
@@ -62,6 +63,15 @@ namespace Starvers.PlayerBoosts.Skills
 				}
 				LaunchSource -= Unit;
 			}
+		}
+		public override bool CanSet(StarverPlayer player)
+		{
+			if (!NPC.downedPlantBoss)
+			{
+				player.SendText("该技能已被一株强大的植物封印", 173, 255, 47);
+				return false;
+			}
+			return base.CanSet(player);
 		}
 	}
 }

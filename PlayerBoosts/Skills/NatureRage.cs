@@ -37,7 +37,7 @@ namespace Starvers.PlayerBoosts.Skills
 		};
 		public NatureRage()
 		{
-			MPCost = 550;
+			MPCost = 450;
 			LevelNeed = 3000;
 			CD = 60 * 90;
 			Author = "zhou_Qi";
@@ -94,6 +94,15 @@ namespace Starvers.PlayerBoosts.Skills
 
 				}
 			});
+		}
+		public override bool CanSet(StarverPlayer player)
+		{
+			if (!NPC.downedPlantBoss)
+			{
+				player.SendText("该技能已被一株强大的植物封印", 173, 255, 47);
+				return false;
+			}
+			return base.CanSet(player);
 		}
 	}
 }

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using Microsoft.Xna.Framework;
 using Terraria.ID;
+using Terraria;
 
 namespace Starvers.PlayerBoosts.Skills
 {
@@ -14,7 +15,7 @@ namespace Starvers.PlayerBoosts.Skills
 		public ChordMana()
 		{
 			CD = 60 * 60;
-			MPCost = 500;
+			MPCost = 350;
 			LevelNeed = 3000;
 			Description = @"释放音符的力量
 ""和谐的音符给人以享受，而嘈杂的旋律则足以给人带来精神上的重创""
@@ -75,6 +76,15 @@ namespace Starvers.PlayerBoosts.Skills
 
 				}
 			});
+		}
+		public override bool CanSet(StarverPlayer player)
+		{
+			if (!NPC.downedPlantBoss)
+			{
+				player.SendText("该技能已被一株强大的植物封印", 173, 255, 47);
+				return false;
+			}
+			return base.CanSet(player);
 		}
 	}
 }

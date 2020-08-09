@@ -50,5 +50,14 @@ namespace Starvers.PlayerBoosts.Skills
 			int damage = (int)(10 * (1 + Math.Log(player.Level)));
 			player.ProjLine(player.Center + vertical, player.Center - vertical, velocity, 5, damage, ProjectileID.ChlorophyteBullet);
 		}
+		public override bool CanSet(StarverPlayer player)
+		{
+			if (!(NPC.downedMechBoss1 && NPC.downedMechBoss2 && NPC.downedMechBoss3))
+			{
+				player.SendText("该技能已被三位机械头目共同封印", 192, 192, 192);
+				return false;
+			}
+			return base.CanSet(player);
+		}
 	}
 }

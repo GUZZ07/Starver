@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using Terraria;
 using TShockAPI;
 
 namespace Starvers.PlayerBoosts.Skills
@@ -22,6 +23,15 @@ namespace Starvers.PlayerBoosts.Skills
 		public override void Release(StarverPlayer player, Vector vel)
 		{
 			player.Velocity += vel.ToLenOf(54);
+		}
+		public override bool CanSet(StarverPlayer player)
+		{
+			if (!NPC.downedBoss2)
+			{
+				player.SendText("该技能已被血腐的力量封印", 199, 21, 133);
+				return false;
+			}
+			return base.CanSet(player);
 		}
 	}
 }

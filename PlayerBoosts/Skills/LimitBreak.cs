@@ -15,7 +15,7 @@ namespace Starvers.PlayerBoosts.Skills
 		{
 			CD = 60 * 30;
 			LevelNeed = 20;
-			MPCost = 80;
+			MPCost = 100;
 			Author = "zhou_Qi";
 			Description = @"获得一个向上的足以直达太空的速度
 ""七点九""

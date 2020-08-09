@@ -9,14 +9,15 @@ namespace Starvers.PlayerBoosts.Skills
 	
 	using Microsoft.Xna.Framework;
 	using System.Threading;
-	using Terraria.ID;
+    using Terraria;
+    using Terraria.ID;
 	public class UnstableTele : StarverSkill
 	{
 		private const int Max = 18;
 		public UnstableTele()
 		{
 			CD = 60 * 10;
-			MPCost = 120;
+			MPCost = 100;
 			LevelNeed = 350;
 			Author = "zhou_Qi";
 			Description = @"发射一圈弹幕，然后进行随机传送
@@ -49,6 +50,15 @@ namespace Starvers.PlayerBoosts.Skills
 
 				}
 			});
+		}
+		public override bool CanSet(StarverPlayer player)
+		{
+			if (!NPC.downedBoss2)
+			{
+				player.SendText("该技能已被血腐的力量封印", 199, 21, 133);
+				return false;
+			}
+			return base.CanSet(player);
 		}
 	}
 }

@@ -37,7 +37,7 @@ namespace Starvers.PlayerBoosts.Skills
 		public AvalonGradation()
 		{
 			CD = 60 * 50;
-			MPCost = 520;
+			MPCost = 300;
 			LevelNeed = 2800;
 			Author = "1413";
 			Description = "消除你身边的大部分敌对弹幕,持续10s";
@@ -45,8 +45,17 @@ namespace Starvers.PlayerBoosts.Skills
 		}
 		public override void Release(StarverPlayer player, Vector vel)
 		{
-			player.SendText("你得到了来自幻想乡的庇护", Color.Aqua);
+			player.SendText("你得到了来自幻想乡的庇护", 115,74,18);
 			player.AvalonGradationTime += 60 * 10;
+		}
+		public override bool CanSet(StarverPlayer player)
+		{
+			if (!(NPC.downedMechBoss1 && NPC.downedMechBoss2 && NPC.downedMechBoss3))
+			{
+				player.SendText("该技能已被三位机械头目共同封印", 192, 192, 192);
+				return false;
+			}
+			return base.CanSet(player);
 		}
 	}
 }

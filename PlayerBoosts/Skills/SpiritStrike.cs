@@ -18,7 +18,7 @@ namespace Starvers.PlayerBoosts.Skills
 		protected double d = 0;
 		public SpiritStrike()
 		{
-			MPCost = 220;
+			MPCost = 170;
 			CD = 60 * 80;
 			LevelNeed = 200;
 			Author = "wither";
@@ -62,6 +62,15 @@ namespace Starvers.PlayerBoosts.Skills
 				}
 			});
 			player.SetBuff(BuffID.ShadowDodge);
+		}
+		public override bool CanSet(StarverPlayer player)
+		{
+			if (!NPC.downedBoss2)
+			{
+				player.SendText("该技能已被血腐的力量封印", 199, 21, 133);
+				return false;
+			}
+			return base.CanSet(player);
 		}
 	}
 }

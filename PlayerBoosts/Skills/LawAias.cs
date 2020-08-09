@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using Terraria;
 using Terraria.ID;
 
 namespace Starvers.PlayerBoosts.Skills
@@ -38,6 +39,15 @@ namespace Starvers.PlayerBoosts.Skills
 			{
 				player.ProjCircle(player.Center, 16 * 35, -15, proj, 10, 100 + (int)(100 * Math.Log(player.Level)));
 			}
+		}
+		public override bool CanSet(StarverPlayer player)
+		{
+			if (!NPC.downedGolemBoss)
+			{
+				player.SendText("该技能已被一尊蜥蜴石像封印", 210, 105, 30);
+				return false;
+			}
+			return base.CanSet(player);
 		}
 	}
 }

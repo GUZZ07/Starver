@@ -9,7 +9,8 @@ namespace Starvers.PlayerBoosts.Skills
 	
 	using Microsoft.Xna.Framework;
 	using System.Threading;
-	using Terraria.ID;
+    using Terraria;
+    using Terraria.ID;
 
 	public class FrozenCraze : StarverSkill
 	{
@@ -31,7 +32,7 @@ namespace Starvers.PlayerBoosts.Skills
 		{
 			CD = 60 * 30;
 			LevelNeed = 600;
-			MPCost = 100;
+			MPCost = 120;
 			Author = "zhou_Qi";
 			Description = @"生成一条冰雪构成的足迹
 ""寒冰国度流传下来的秘法，由冰雪女王所保管""
@@ -72,6 +73,15 @@ namespace Starvers.PlayerBoosts.Skills
 
 				}
 			});
+		}
+		public override bool CanSet(StarverPlayer player)
+		{
+			if (!NPC.downedBoss3)
+			{
+				player.SendText("该技能已被地牢的诅咒封印", 238, 232, 170);
+				return false;
+			}
+			return base.CanSet(player);
 		}
 	}
 }

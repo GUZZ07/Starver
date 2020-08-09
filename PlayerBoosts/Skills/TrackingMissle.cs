@@ -18,7 +18,7 @@ namespace Starvers.PlayerBoosts.Skills
 		public TrackingMissile()
 		{
 			LevelNeed = 1000;
-			MPCost = 350;
+			MPCost = 270;
 			CD = 60 * 45;
 			Description = "制造若干个射向最近敌人位置的导弹";
 			Author = "Deaths";
@@ -65,6 +65,15 @@ namespace Starvers.PlayerBoosts.Skills
 			{
 
 			}
+		}
+		public override bool CanSet(StarverPlayer player)
+		{
+			if (!Main.hardMode)
+			{
+				player.SendText("该技能已被血肉之墙封印", 220, 20, 60);
+				return false;
+			}
+			return base.CanSet(player);
 		}
 	}
 }

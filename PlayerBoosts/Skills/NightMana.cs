@@ -7,14 +7,14 @@ using Microsoft.Xna.Framework;
 
 namespace Starvers.PlayerBoosts.Skills
 {
-	
+    using Terraria;
     using Terraria.ID;
 
     public class NightMana : StarverSkill
 	{
 		public NightMana()
 		{
-			MPCost = 200;
+			MPCost = 140;
 			CD = 60 * 25;
 			Description = @"向前方发射黑暗能量
 ""相对应的，一些魔力甚至可以吞噬光线，因而也具有相当程度的威能""
@@ -36,6 +36,15 @@ namespace Starvers.PlayerBoosts.Skills
 				var offset = Vector.FromPolar(Rand.NextDouble(-Math.PI / 12, Math.PI / 12), Rand.NextFloat(16 * 0f, 16 * 3.5f));
 				player.NewProj(player.Center + offset, vel + vertical * Rand.NextFloat(0, 5), bolt, damage);
 			}
+		}
+		public override bool CanSet(StarverPlayer player)
+		{
+			if (!Main.hardMode)
+			{
+				player.SendText("该技能已被血肉之墙封印", 220, 20, 60);
+				return false;
+			}
+			return base.CanSet(player);
 		}
 	}
 }

@@ -21,7 +21,7 @@ namespace Starvers.PlayerBoosts.Skills
 		}
 		public override bool CanSet(StarverPlayer player)
 		{
-			player.SendBlueText("该技能已被神秘力量封印");
+			player.SendBlueText("该技能还没做好");
 			return false;
 		}
 		public override void Release(StarverPlayer player, Vector vel)
@@ -37,5 +37,6 @@ namespace Starvers.PlayerBoosts.Skills
 			//	player.SendData(PacketTypes.PlayerHp, "", player.Index);
 			//}
 		}
+
 	}
 }

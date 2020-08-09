@@ -8,7 +8,8 @@ namespace Starvers.PlayerBoosts.Skills
 {
 	
 	using Microsoft.Xna.Framework;
-	using Terraria.ID;
+    using Terraria;
+    using Terraria.ID;
 	public class MiracleMana : StarverSkill
 	{
 		private int[] TreasureBolts =
@@ -122,7 +123,7 @@ namespace Starvers.PlayerBoosts.Skills
 			Author = "zhou_Qi";
 			Description = @"随机发射出火花/宝石弹/星云粉拳/星云蓝拳/受到伤害
 ""风险与收益总是成正比，有时甚至会是生命的代价""";
-			Summary = "[2200][击败机械三王解锁]在几种不同的攻击方式中随机切换";
+			Summary = "[2200][击败机械三王中的任意一个解锁]在几种不同的攻击方式中随机切换";
 			RandFuns = new Action<StarverPlayer, Vector2>[]
 			{
 				#region 30%
@@ -160,6 +161,15 @@ namespace Starvers.PlayerBoosts.Skills
 		public override void Release(StarverPlayer player, Vector vel)
 		{
 			RandFuns.Next()(player, vel);
+		}
+		public override bool CanSet(StarverPlayer player)
+		{
+			if (!NPC.downedMechBossAny)
+			{
+				player.SendText("该技能已被一位机械头目封印", 220, 220, 220);
+				return false;
+			}
+			return base.CanSet(player);
 		}
 	}
 }
