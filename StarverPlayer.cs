@@ -333,8 +333,22 @@ namespace Starvers
 		}
 		private void OnLevelChange(int oldValue, int newValue)
 		{
+			if (oldValue == newValue)
+			{
+				return;
+			}
 			Data.Level = newValue;
 			MPMax = CalcMPMax(Level);
+			foreach (var skill in Starver.Instance.Skills)
+
+			{
+				if ((skill.LevelNeed ?? 0) == Data.Level)
+				{
+					SendText($"你已到达{skill}要求最低等级！", 255, 215, 0);
+				}
+			}
+
+
 		}
 		#endregion
 		#region BindSkill

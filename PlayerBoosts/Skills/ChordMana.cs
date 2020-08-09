@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using Microsoft.Xna.Framework;
 using Terraria.ID;
+using Terraria;
 
 namespace Starvers.PlayerBoosts.Skills
 {
@@ -13,13 +14,14 @@ namespace Starvers.PlayerBoosts.Skills
 	{
 		public ChordMana()
 		{
-			CD = 60 * 40;
-			MPCost = 400;
-			LevelNeed = 1000;
+			CD = 60 * 60;
+			MPCost = 350;
+			LevelNeed = 3000;
 			Description = @"释放音符的力量
 ""和谐的音符给人以享受，而嘈杂的旋律则足以给人带来精神上的重创""
-""她，他们，始终重复着相同的错误，在闭合的旋律中僵硬地起舞""";
+""他们始终重复着相同的错误，在闭合的旋律中僵硬地起舞""";
 			Author = "zhou_Qi";
+			Summary = "[3000][击败世纪之花解锁]生成一圈音符阵";
 		}
 		public override void Release(StarverPlayer player, Vector vel)
 		{
@@ -50,7 +52,7 @@ namespace Starvers.PlayerBoosts.Skills
 									vel = Block[i];
 									vel.Angle -= Math.PI * 2 / 4;
 									vel.Length = 8 - level;
-									Projs.Push(player.NewProj(player.Center + Block[i], Block[i].ToLenOf(0.4f), ProjectileID.TiedEighthNote, 420 - level * 6, 4), vel);
+									Projs.Push(player.NewProj(player.Center + Block[i], Block[i].ToLenOf(0.4f), ProjectileID.TiedEighthNote, 600 - level * 6, 4), vel);
 									if (i % 5 == 0)
 									{
 										Thread.Sleep(1);
@@ -74,6 +76,15 @@ namespace Starvers.PlayerBoosts.Skills
 
 				}
 			});
+		}
+		public override bool CanSet(StarverPlayer player)
+		{
+			if (!NPC.downedPlantBoss)
+			{
+				player.SendText("该技能已被一株强大的植物封印", 173, 255, 47);
+				return false;
+			}
+			return base.CanSet(player);
 		}
 	}
 }

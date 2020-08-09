@@ -15,12 +15,13 @@ namespace Starvers.PlayerBoosts.Skills
 		private const float maxDistance = 16 * 45;
 		public WindRealm()
 		{
-			MPCost = 12;
+			MPCost = 80;
 			CD = 60 * 10;
 			Author = "三叶草";
 			Description = @"吹飞所有怪物以及敌对弹幕
 别当着肉山的面用, 你会后悔的";
-			LevelNeed = 175;
+			LevelNeed = 800;
+			Summary = "[800][击败骷髅王解锁]吹飞指向方向上的威胁";
 		}
 		public override void Release(StarverPlayer player, Vector vel)
 		{
@@ -77,6 +78,15 @@ namespace Starvers.PlayerBoosts.Skills
 			var distance = playerToEntity.Length();
 			playerToEntity.Normalize();
 			return vel * 15 + playerToEntity * 8 * (maxDistance - distance) / maxDistance;
+		}
+		public override bool CanSet(StarverPlayer player)
+		{
+			if (!NPC.downedBoss3)
+			{
+				player.SendText("该技能已被地牢的诅咒封印", 238, 232, 170);
+				return false;
+			}
+			return base.CanSet(player);
 		}
 	}
 }

@@ -16,6 +16,7 @@ namespace Starvers.PlayerBoosts.Skills
 		{
 			Author = "wither";
 			Description = "能够和咖喱棒平起平坐的技能!\n对一定范围内的敌对生物发动攻击";
+			Summary = "[20000][终极技能]对全屏敌人造成伤害，获得闪避效果";
 		}
 		protected override void InternalRelease(StarverPlayer player, Vector vel)
 		{

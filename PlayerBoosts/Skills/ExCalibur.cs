@@ -15,6 +15,7 @@ namespace Starvers.PlayerBoosts.Skills
 		{
 			Description = "三叶草制作的最强技能";
 			Author = "三叶草";
+			Summary = "[20000][最终技能]向指向方向释放大量剑气";
 		}
 		protected override void InternalRelease(StarverPlayer player, Vector vel)
 		{

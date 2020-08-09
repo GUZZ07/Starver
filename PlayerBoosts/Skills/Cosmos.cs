@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using Terraria;
 
 namespace Starvers.PlayerBoosts.Skills
 {
@@ -11,13 +12,14 @@ namespace Starvers.PlayerBoosts.Skills
 	{
 		public Cosmos()
 		{
-			LevelNeed = 1000;
+			LevelNeed = 2000;
 			MPCost = 200;
-			CD = 60 * 60;
+			CD = 60 * 90;
 			ForceCD = true;
 			Author = "zhou_Qi";
 			Description = @"重置绝大多数技能的冷却，使用者即刻致残
 ""在死亡的时间中积攒力量，这也不失为一种'秩序'""";
+			Summary = "[2000][击败机械三王中的任意一个解锁]以血量为代价清空技能CD";
 		}
 		public override void Release(StarverPlayer player, Vector vel)
 		{
@@ -30,6 +32,15 @@ namespace Starvers.PlayerBoosts.Skills
 				player.Skills[i].CD = 0;
 			}
 			player.Life /= 3;
+		}
+		public override bool CanSet(StarverPlayer player)
+		{
+			if (!NPC.downedMechBossAny)
+			{
+				player.SendText("该技能已被一位机械头目封印", 220, 220, 220);
+				return false;
+			}
+			return base.CanSet(player);
 		}
 	}
 }

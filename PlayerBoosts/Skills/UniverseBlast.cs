@@ -41,6 +41,7 @@ namespace Starvers.PlayerBoosts.Skills
 		{
 			msg = @"我就是懒, 怎么着?
 有本事你顺着网线来打我啊";
+			Summary = "[20000][最终技能]召唤大量星云之门释放弹幕";
 		}
 		protected override void AsyncRelease(StarverPlayer player)
 		{

@@ -6,20 +6,22 @@ using System.Threading.Tasks;
 
 namespace Starvers.PlayerBoosts.Skills
 {
-	
+
 	using Microsoft.Xna.Framework;
 	using System.Threading;
-	using Terraria.ID;
+    using Terraria;
+    using Terraria.ID;
 	public class FromHell : StarverSkill
 	{
 		public FromHell()
 		{
-			LevelNeed = 90;
-			MPCost = 60;
-			CD = 60 * 25;
+			LevelNeed = 600;
+			MPCost = 120;
+			CD = 60 * 30;
 			Author = "zhou_Qi";
 			Description = @"释放来自地狱的亡灵力量
 ""弥漫岩浆与热流的灰烬之地，无数的亡灵在其中挣扎翻腾，他们呼唤着同一个名字""";
+			Summary = "[600][击败骷髅王解锁]释放大量火焰弹幕造成群攻";
 		}
 		public override void Release(StarverPlayer player, Vector vel)
 		{
@@ -76,6 +78,15 @@ namespace Starvers.PlayerBoosts.Skills
 
 				}
 			});
+		}
+		public override bool CanSet(StarverPlayer player)
+		{
+			if (!NPC.downedBoss3)
+			{
+				player.SendText("该技能已被地牢的诅咒封印", 238, 232, 170);
+				return false;
+			}
+			return base.CanSet(player);
 		}
 	}
 }

@@ -20,11 +20,12 @@ namespace Starvers.PlayerBoosts.Skills
 		private static Random rand = new Random();
 		public Avalon() 
 		{
-			MPCost = 30;
-			CD = 60 * 30;
+			MPCost = 200;
+			CD = 60 * 45;
 			Description = "幻想乡，这个技能可以给予你5s的无敌,\n随后附加多种回血buff,苟命专用";
 			Author = "三叶草";
-			LevelNeed = 10;
+			LevelNeed = 1000;
+			Summary = "[1000][击败骷髅王解锁]获得暂时的完美防御";
 		}
 		public override void Release(StarverPlayer player, Vector vel)
 		{
@@ -59,6 +60,15 @@ namespace Starvers.PlayerBoosts.Skills
 					TSPlayer.Server.SendErrorMessage(e.ToString());
 				}
 			});
+		}
+		public override bool CanSet(StarverPlayer player)
+		{
+			if (!NPC.downedBoss3)
+			{
+				player.SendText("该技能已被地牢的诅咒封印", 238, 232, 170);
+				return false;
+			}
+			return base.CanSet(player);
 		}
 	}
 }

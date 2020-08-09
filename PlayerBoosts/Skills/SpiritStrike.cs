@@ -18,11 +18,12 @@ namespace Starvers.PlayerBoosts.Skills
 		protected double d = 0;
 		public SpiritStrike()
 		{
-			MPCost = 100;
-			CD = 60 * 60;
-			LevelNeed = 80;
+			MPCost = 170;
+			CD = 60 * 80;
+			LevelNeed = 200;
 			Author = "wither";
-			Description = "对一定范围内的敌对生物发动攻击";
+			Description = "对一定范围内的敌对生物发动攻击，获得60s闪避效果";
+			Summary = "[200][击败蠕虫/大脑解锁]对近距离的敌人发起攻击，获得闪避效果";
 		}
 #warning 将来换成realm
 		public override void Release(StarverPlayer player, Vector vel)
@@ -61,6 +62,15 @@ namespace Starvers.PlayerBoosts.Skills
 				}
 			});
 			player.SetBuff(BuffID.ShadowDodge);
+		}
+		public override bool CanSet(StarverPlayer player)
+		{
+			if (!NPC.downedBoss2)
+			{
+				player.SendText("该技能已被血腐的力量封印", 199, 21, 133);
+				return false;
+			}
+			return base.CanSet(player);
 		}
 	}
 }

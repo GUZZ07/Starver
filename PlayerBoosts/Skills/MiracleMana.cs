@@ -8,7 +8,8 @@ namespace Starvers.PlayerBoosts.Skills
 {
 	
 	using Microsoft.Xna.Framework;
-	using Terraria.ID;
+    using Terraria;
+    using Terraria.ID;
 	public class MiracleMana : StarverSkill
 	{
 		private int[] TreasureBolts =
@@ -96,8 +97,8 @@ namespace Starvers.PlayerBoosts.Skills
 			Vector relativePos = new Vector(16 * 19.75f, 0);
 			int damage = (int)(Math.Log(player.Level));
 			damage *= damage;
-			damage *= 20;
-			damage += 350;
+			damage *= 15;
+			damage += 250;
 			for (int i = 0; i < Max; i++)
 			{
 				relativePos.Angle = Math.PI * 2 * i / Max;
@@ -105,23 +106,24 @@ namespace Starvers.PlayerBoosts.Skills
 			}
 		}
 		/// <summary>
-		/// 5%,降低血量为原来的1/4
+		/// 5%,降低血量为原来的1/3
 		/// </summary>
 		/// <param name="player"></param>
 		/// <param name="vel"></param>
 		private void Hurt(StarverPlayer player,Vector2 vel)
 		{
-			player.Life /= 4;
+			player.Life /= 3;
 		}
 		private Action<StarverPlayer, Vector2>[] RandFuns;
 		public MiracleMana()
 		{
-			CD = 60 * 10;
-			MPCost = 50;
-			LevelNeed = 70;
+			CD = 60 * 8;
+			MPCost = 150;
+			LevelNeed = 2200;
 			Author = "zhou_Qi";
-			Description = @"随机发射出火花/宝石弹/星云粉拳/星云蓝拳
+			Description = @"随机发射出火花/宝石弹/星云粉拳/星云蓝拳/受到伤害
 ""风险与收益总是成正比，有时甚至会是生命的代价""";
+			Summary = "[2200][击败机械三王中的任意一个解锁]在几种不同的攻击方式中随机切换";
 			RandFuns = new Action<StarverPlayer, Vector2>[]
 			{
 				#region 30%
@@ -159,6 +161,15 @@ namespace Starvers.PlayerBoosts.Skills
 		public override void Release(StarverPlayer player, Vector vel)
 		{
 			RandFuns.Next()(player, vel);
+		}
+		public override bool CanSet(StarverPlayer player)
+		{
+			if (!NPC.downedMechBossAny)
+			{
+				player.SendText("该技能已被一位机械头目封印", 220, 220, 220);
+				return false;
+			}
+			return base.CanSet(player);
 		}
 	}
 }
