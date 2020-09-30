@@ -25,7 +25,7 @@ namespace Starvers.PlayerBoosts.Realms.Shapes
 			get;
 			set;
 		}
-		public int? ProjID
+		public int? BorderProjID
 		{
 			get;
 			set;
@@ -58,7 +58,7 @@ namespace Starvers.PlayerBoosts.Realms.Shapes
 		public virtual void Begin(IRealm owner)
 		{
 			Border = new int[Max];
-			if (ProjID is not int projID)
+			if (BorderProjID is not int projID)
 			{
 				return;
 			}
@@ -75,7 +75,7 @@ namespace Starvers.PlayerBoosts.Realms.Shapes
 
 		public virtual void Kill()
 		{
-			if (ProjID is not int projID)
+			if (BorderProjID is not int projID)
 			{
 				return;
 			}
@@ -92,14 +92,14 @@ namespace Starvers.PlayerBoosts.Realms.Shapes
 
 		public virtual void Update(int timer)
 		{
-			if (ProjID is not int projID)
+			if (BorderProjID is not int projID)
 			{
 				return;
 			}
 			for (int i = 0; i < Border.Length; i++)
 			{
 				var proj = Main.projectile[Border[i]];
-				if (!proj.active || proj.type != ProjID)
+				if (!proj.active || proj.type != BorderProjID)
 				{
 					Border[i] = Utils.NewProj(Center + Vector.FromPolar(Math.PI * 2 / 60 * i, Radium), default, projID, 1, 20, Main.myPlayer);
 					proj = Main.projectile[Border[i]];
@@ -113,6 +113,14 @@ namespace Starvers.PlayerBoosts.Realms.Shapes
 			}
 		}
 
+		public void Reflect(Entity entity)
+		{
+			Vector2 Distance = entity.Center - Center;
+			Distance.Normalize();
+			// v减去v的径向分量的两倍
+			entity.velocity -= 2 * Distance * Vector2.Dot(Distance, entity.velocity);
+		}
+
 		#region Utils
 		/// <summary>
 		/// 判断是否有重叠
@@ -120,20 +128,20 @@ namespace Starvers.PlayerBoosts.Realms.Shapes
 		/// <param name="rect"></param>
 		/// <param name="circle"></param>
 		/// <returns></returns>
-		protected static bool IsOverlapping(Rectangle rect, Circle circle)
+		protected bool IsIntersect(Rectangle rect)
 		{
 			Vector h = (rect.Width / 2, rect.Height / 2);
 			Vector v = new Vector
 			{
-				X = Math.Abs(circle.X - rect.Center.X),
-				Y = Math.Abs(circle.Y - rect.Center.Y)
+				X = Math.Abs(Center.X - rect.Center.X),
+				Y = Math.Abs(Center.Y - rect.Center.Y)
 			};
 			Vector u = new Vector
 			{
 				X = Math.Max(v.X - h.X, 0),
 				Y = Math.Max(v.Y - h.Y, 0)
 			};
-			return u.Length <= circle.Radium;
+			return u.Length <= Radium;
 		}
 		/// <summary>
 		/// 判断rect是否在circle内

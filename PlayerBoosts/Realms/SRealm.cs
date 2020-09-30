@@ -8,15 +8,26 @@ using Terraria;
 namespace Starvers.PlayerBoosts.Realms
 {
 	public class SRealm<T> : StarverRealm
-		where T : IRealmShape, new()
+		where T : IRealmShape
 	{
-		private T shape;
+		protected T shape;
 
 		protected int timer;
 
 		public SRealm()
 		{
-			shape = new T();
+			shape = Activator.CreateInstance<T>();
+		}
+
+		protected SRealm(T shape)
+		{
+			this.shape = shape;
+		}
+
+		public override void Begin()
+		{
+			base.Begin();
+			shape.Begin(this);
 		}
 
 		public override bool InRange(Entity entity)
@@ -31,7 +42,6 @@ namespace Starvers.PlayerBoosts.Realms
 
 		protected override void Initialize()
 		{
-			shape.Begin(this);
 		}
 
 		protected override void InternalUpdate()

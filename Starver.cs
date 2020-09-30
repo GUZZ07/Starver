@@ -21,6 +21,7 @@ namespace Starvers
 	#region Using Namespaces
 	using Enemies.Bosses;
 	using PlayerBoosts;
+	using Starvers.PlayerBoosts.Realms;
 	#endregion
 	[ApiVersion(2, 1)]
 	public class Starver : TerrariaPlugin
@@ -72,6 +73,11 @@ namespace Starvers
 			get;
 			private set;
 		}
+		public RealmManager Realms
+		{
+			get;
+			private set;
+		}
 		public ProjLaunchTaskManager ProjTasks
 		{
 			get;
@@ -107,8 +113,9 @@ namespace Starvers
 			ProjTasks = new ProjLaunchTaskManager();
 			Skills = new SkillManager();
 			Bosses = new BossManager();
-			Players = new PlayerManager(TShock.Players.Length);
 			PlayerDatas = new PlayerDataManager(Config.StorageType);
+			Players = new PlayerManager(TShock.Players.Length);
+			Realms = new RealmManager();
 
 			difficultyCheckers = new List<(Func<bool> predicate, int addition)>
 			{
@@ -163,6 +170,7 @@ namespace Starvers
 			Commands.ChatCommands.Add(new Command(Perms.HotReload, HotReloadCommand, "hotreload"));
 			Commands.ChatCommands.Add(new Command(Perms.Aura.Normal, AuraCommand, "aura", "au"));
 			Commands.ChatCommands.Add(new Command(Perms.Boss.Spawn, BossCommand, "stboss"));
+			Commands.ChatCommands.Add(new Command(Perms.Test, Realms.TriggerByCommand, "realm"));
 			#endregion
 		}
 
@@ -185,30 +193,15 @@ namespace Starvers
 			Commands.ChatCommands.RemoveAll(cmd => cmd.HasAlias("hotreload"));
 			Commands.ChatCommands.RemoveAll(cmd => cmd.HasAlias("aura"));
 			Commands.ChatCommands.RemoveAll(cmd => cmd.HasAlias("stboss"));
+			Commands.ChatCommands.RemoveAll(cmd => cmd.HasAlias("realm"));
 			#endregion
 		}
 
 		#endregion
-		#region Events
+		#region Hooks
 		#region PostHotReload
 		public void PostHotReload()
 		{
-			for (int i = 0; i < TShock.Players.Length; i++)
-			{
-				var player = TShock.Players[i];
-				if (player is null)
-				{
-					continue;
-				}
-				if (!player.IsLoggedIn)
-				{
-					Players[i] = StarverPlayer.GetGuest(i);
-				}
-				else
-				{
-					Players[i] = new StarverPlayer(i);
-				}
-			}
 		}
 		#endregion
 		#region NewProj
@@ -250,6 +243,7 @@ namespace Starvers
 			Bosses.Update();
 			ProjTasks.Update();
 			Skills.Update();
+			Realms.Update();
 			DifficultyIndex = 0;
 			foreach (var checker in difficultyCheckers)
 			{

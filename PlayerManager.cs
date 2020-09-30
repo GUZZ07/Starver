@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using TShockAPI;
 
 namespace Starvers
 {
@@ -27,6 +27,23 @@ namespace Starvers
 		public PlayerManager(int count)
 		{
 			Players = new StarverPlayer[count];
+
+			for (int i = 0; i < TShock.Players.Length; i++)
+			{
+				var player = TShock.Players[i];
+				if (player is null)
+				{
+					continue;
+				}
+				if (!player.IsLoggedIn)
+				{
+					Players[i] = StarverPlayer.GetGuest(i);
+				}
+				else
+				{
+					Players[i] = new StarverPlayer(i);
+				}
+			}
 		}
 		#endregion
 		#region Update
