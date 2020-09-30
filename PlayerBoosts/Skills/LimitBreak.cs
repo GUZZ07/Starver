@@ -15,11 +15,12 @@ namespace Starvers.PlayerBoosts.Skills
 		{
 			CD = 60 * 30;
 			LevelNeed = 20;
-			MPCost = 80;
+			MPCost = 100;
 			Author = "zhou_Qi";
 			Description = @"获得一个向上的足以直达太空的速度
 ""七点九""
 ""与传送门搭配效果更佳""";
+			Summary = "[20][默认解锁]获得一个极大的向上的速度";
 		}
 		public override void Release(StarverPlayer player, Vector vel)
 		{

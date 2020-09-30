@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using Terraria;
 using Terraria.ID;
 
 namespace Starvers.PlayerBoosts.Skills
@@ -13,11 +14,12 @@ namespace Starvers.PlayerBoosts.Skills
 	{
 		public PosionFog()
 		{
-			MPCost = 190;
-			LevelNeed = 400;
-			CD = 60 * 15;
+			MPCost = 170;
+			LevelNeed = 1500;
+			CD = 60 * 10;
 			Author = "Deaths";
 			Description = "制造一片毒雾";
+			Summary = "[1500][击败血肉之墙解锁]在身边生成大量毒雾";
 		}
 		public override async void Release(StarverPlayer player, Vector vel)
 		{
@@ -36,6 +38,15 @@ namespace Starvers.PlayerBoosts.Skills
 
 				}
 			});
+		}
+		public override bool CanSet(StarverPlayer player)
+		{
+			if (!Main.hardMode)
+			{
+				player.SendText("该技能已被血肉之墙封印", 220, 20, 60);
+				return false;
+			}
+			return base.CanSet(player);
 		}
 	}
 }

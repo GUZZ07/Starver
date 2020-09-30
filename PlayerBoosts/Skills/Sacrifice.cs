@@ -15,12 +15,13 @@ namespace Starvers.PlayerBoosts.Skills
 			CD = 60 * 20;
 			Author = "三叶草";
 			Description = @"来源未知的古老秘术
-血量减少最大血量的一半,回复你所有的mp";
-			LevelNeed = 10;
+血量减少最大血量的一半,回复你一半的mp";
+			LevelNeed = 150;
+			Summary = "[150][击败克眼解锁]消耗HP恢复auMP";
 		}
 		public override bool CanSet(StarverPlayer player)
 		{
-			player.SendBlueText("该技能已被神秘力量封印");
+			player.SendBlueText("该技能还没做好");
 			return false;
 		}
 		public override void Release(StarverPlayer player, Vector vel)
@@ -36,5 +37,6 @@ namespace Starvers.PlayerBoosts.Skills
 			//	player.SendData(PacketTypes.PlayerHp, "", player.Index);
 			//}
 		}
+
 	}
 }

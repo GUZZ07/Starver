@@ -15,18 +15,19 @@ namespace Starvers.PlayerBoosts.Skills
 		private const float Radium = 16 * 90;
 		public GreenWind()
 		{
-			CD = 60 * 20;
+			CD = 60 * 12;
 			MPCost = 150;
-			LevelNeed = 750;
+			LevelNeed = 2400;
 			Author = "zhou_Qi";
 			Description = @"向视野中的敌人发射孢子子弹
-""子弹拥有着思维！这很奇怪，不是吗？""
-""我们需要去同情子弹在击中目标时所感受到的粉身碎骨的痛苦吗""？";
+""子弹拥有着思维！这很神奇，不是吗？""
+""我们需要去同情这些子弹在破碎时感受到的痛苦吗""？";
+			Summary = "[2400][击败机械三王解锁]向全屏敌人释放追踪弹幕";
 		}
 		public override void Release(StarverPlayer player, Vector vel)
 		{
-			int max = 10;
-			max += (int)(1.5 * Math.Log(player.Level));
+			int max = 3;
+			max += (int)(1 * Math.Log(player.Level));
 			int count = 0;
 			foreach (var npc in Main.npc)
 			{
@@ -46,8 +47,17 @@ namespace Starvers.PlayerBoosts.Skills
 			velocity.Length = 17.5f;
 			Vector vertical = velocity.Vertical();
 			vertical.Length = 16 * 2.5f;
-			int damage = (int)(100 * (1 + Math.Log(player.Level)));
+			int damage = (int)(10 * (1 + Math.Log(player.Level)));
 			player.ProjLine(player.Center + vertical, player.Center - vertical, velocity, 5, damage, ProjectileID.ChlorophyteBullet);
+		}
+		public override bool CanSet(StarverPlayer player)
+		{
+			if (!(NPC.downedMechBoss1 && NPC.downedMechBoss2 && NPC.downedMechBoss3))
+			{
+				player.SendText("该技能已被三位机械头目共同封印", 192, 192, 192);
+				return false;
+			}
+			return base.CanSet(player);
 		}
 	}
 }

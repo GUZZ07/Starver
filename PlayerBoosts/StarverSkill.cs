@@ -35,6 +35,7 @@ namespace Starvers.PlayerBoosts
 		/// <summary>
 		/// 所需最低等级(null为无等级限制)
 		/// </summary>
+		public string Summary{ get; protected set; }
 		public int? LevelNeed { get; protected set; }
 		public int CD { get; protected set; }
 		public int MPCost { get; protected set; }

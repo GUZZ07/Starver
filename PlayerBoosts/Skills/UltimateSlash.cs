@@ -45,6 +45,7 @@ namespace Starvers.PlayerBoosts.Skills
 		protected UltimateSlash(int para)
 		{
 			Author = "zhou_Qi";
+			Summary = "[20000][最终技能]释放极限的斩击";
 		}
 		#endregion
 		#region Release

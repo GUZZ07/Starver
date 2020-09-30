@@ -12,18 +12,19 @@ namespace Starvers.PlayerBoosts.Skills
 	{
 		public Chaos()
 		{
-			LevelNeed = 4000;
+			LevelNeed = 5000;
 			CD = 60 * 30;
 			MPCost = 0;
 			ForceCD = true;
 			Author = "zhou_Qi";
 			Description = @"随机释放出几个技能
 ""创造这个技能的人，恐怕只能用'懒惰'二字来形容了吧""";
+			Summary = "[5000][击败石巨人解锁]随机释放几个技能";
 		}
 
 		public override bool CanSet(StarverPlayer player)
 		{
-			player.SendBlueText("该技能已被神秘力量封印");
+			player.SendBlueText("该技能还没做好");
 			return false;
 		}
 		public unsafe override void Release(StarverPlayer player, Vector vel)

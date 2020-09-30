@@ -13,12 +13,13 @@ namespace Starvers.PlayerBoosts.Skills
 		public Musket()
 		{
 			CD = 60 * 0;
-			MPCost = 70;
+			MPCost = 60;
 			Description = @"这东西很没用?
 怎么可能
 这可是唯一一个无CD技能";
 			LevelNeed = 50;
 			Author = "三叶草";
+			Summary = "[50][默认解锁]无CD，释放激光弹幕";
 		}
 		public override void Release(StarverPlayer player, Vector vel)
 		{
