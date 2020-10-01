@@ -39,6 +39,12 @@ namespace Starvers.PlayerBoosts.Realms
 			set;
 		}
 
+
+		public double Rotation
+		{
+			get;
+			set;
+		}
 	}
 
 	public interface IReflectiveShape : IRealmShape

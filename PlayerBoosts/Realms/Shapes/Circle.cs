@@ -40,6 +40,11 @@ namespace Starvers.PlayerBoosts.Realms.Shapes
 			get;
 			set;
 		}
+		public double Rotation
+		{
+			get;
+			set;
+		}
 
 		public virtual bool AtBorder(Entity entity)
 		{

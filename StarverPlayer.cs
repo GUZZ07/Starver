@@ -576,7 +576,7 @@ MP({MP}/{MPMax})
 			#region ItemUse
 			static bool SpecialItem(Item item)
 			{
-				switch(item.type)
+				switch (item.type)
 				{
 					case ItemID.Phantasm:
 					case ItemID.VortexBeater:
@@ -961,11 +961,11 @@ MP({MP}/{MPMax})
 				x = Math.Abs(x);
 				return sign * Math.Pow(x, 1.0 / 7);
 			}
-			return (100 * f(lvl - 3000) - 100 * f(-3000)) / 5;
+			return (100 * f(lvl - 3000) - 100 * f(-3000)) / 7.5;
 		}
 		public static double CalcMPCost(int lvl)
 		{
-			return Math.Log(lvl + Math.E) * mpCostToUseWeapon / 1.5;
+			return Math.Log10(lvl + 10) * mpCostToUseWeapon / 1.5;
 		}
 		#endregion
 	}
