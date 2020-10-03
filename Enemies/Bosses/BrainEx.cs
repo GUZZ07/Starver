@@ -18,7 +18,7 @@ namespace Starvers.Enemies.Bosses
 
 		public BrainEx() : base(NPCID.BrainofCthulhu)
 		{
-			defLifes = 6;
+			defLifes = 8;
 			defLife = 45000;
 			defDefense = 1400;
 		}
@@ -62,6 +62,7 @@ namespace Starvers.Enemies.Bosses
 		{
 			t++;
 			ProjActing = GetNextProjActing(t);
+			DontTakeDamage = false;
 			ResetMovingMachine();
 			#region AdjustMoving
 			if (ProjActing.State == BossState.BrainBloodDropping)
@@ -158,7 +159,7 @@ namespace Starvers.Enemies.Bosses
 							Rotation = Rand.NextAngle(),
 							RotationSpeed = Math.PI / 6 / 60,
 							Count = 20,
-							Damage = 50,
+							Damage = 25,
 							TotalTime = 60 * 10,
 							AxisA = 16 * 6,
 							AxisB = 16 * 10,
@@ -168,7 +169,7 @@ namespace Starvers.Enemies.Bosses
 							Rotation = machine.Rotation,
 							RotationSpeed = Math.PI / 6 / 60,
 							Count = 16,
-							Damage = 70,
+							Damage = 35,
 							ShotingDelay = 30,
 							TotalTime = 60 * 10 - 30,
 							AxisA = 16 * 6,
@@ -236,11 +237,12 @@ namespace Starvers.Enemies.Bosses
 					{
 						return new BrainEx5(this)
 						{
-							ProjIDs = new int[] { ProjectileID.CursedFlameFriendly, ProjectileID.DesertDjinnCurse },
-							Damage = 75,
+							ProjIDs = new int[] { ProjectileID.DeathLaser },
+							Damage = 55,
 							AccumulationTime = 60 * 12,
 							HitDuration = 60 * 9,
-							HitRadius = 16 * 80
+							HitRadius = 16 * 80,
+							UpingSpeed = 2.4f
 						};
 					}
 			}
@@ -262,10 +264,10 @@ namespace Starvers.Enemies.Bosses
 						};
 						var data = new ProjCurveData
 						{
-							ID = ProjectileID.EyeFire,
-							Damage = 88,
-							FuncPos = t => 16 * Vector.FromPolar(t, f(t)),
-							FuncVel = t => 02 * Vector.FromPolar(t, f(t)),
+							ID = ProjectileID.CursedFlameHostile,
+							Damage = 48,
+							FuncPos = t => 010f * Vector.FromPolar(t, f(t)),
+							FuncVel = t => 0.5f * Vector.FromPolar(t, f(t)),
 							ParaBegin = 0,
 							ParaEnd = Math.PI * 2,
 							Increment = Math.PI * 2 / 20
@@ -283,7 +285,7 @@ namespace Starvers.Enemies.Bosses
 					{
 						return new BrainBloodDropping(this)
 						{
-							Damage = 95,
+							Damage = 55,
 							DroppingInterval = 6,
 							DroppingWidth = 16 * 90,
 							TotalTime = 60 * 10,
@@ -297,9 +299,9 @@ namespace Starvers.Enemies.Bosses
 							Rotation = Rand.NextAngle(),
 							RotationSpeed = Math.PI / 6 / 60,
 							Count = 20,
-							Damage = 70,
+							Damage = 35,
 							TotalTime = 60 * 10,
-							ShotingInterval = 60,
+							ShotingInterval = 120,
 							AxisA = 16 * 6,
 							AxisB = 16 * 10,
 						};
@@ -308,10 +310,10 @@ namespace Starvers.Enemies.Bosses
 							Rotation = machine.Rotation + Math.PI / 2,
 							RotationSpeed = Math.PI / 6 / 60,
 							Count = 16,
-							Damage = 70,
-							ShotingDelay = 30,
-							TotalTime = 60 * 10 - 30,
-							ShotingInterval = 60,
+							Damage = 35,
+							ShotingDelay = 60,
+							TotalTime = 60 * 10 - 60,
+							ShotingInterval = 120,
 							AxisA = 16 * 6,
 							AxisB = 16 * 10,
 						};
@@ -377,11 +379,12 @@ namespace Starvers.Enemies.Bosses
 					{
 						return new BrainEx5(this)
 						{
-							ProjIDs = new int[] { ProjectileID.CursedFlameFriendly, ProjectileID.DesertDjinnCurse },
-							Damage = 85,
+							ProjIDs = new int[] { ProjectileID.DeathLaser },
+							Damage = 55,
 							AccumulationTime = 60 * 12,
 							HitDuration = 60 * 9,
-							HitRadius = 16 * 80
+							HitRadius = 16 * 80,
+							UpingSpeed = 2.4f
 						};
 					}
 			}

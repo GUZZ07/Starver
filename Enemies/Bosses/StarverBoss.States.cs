@@ -27,6 +27,7 @@ namespace Starvers.Enemies.Bosses
 				Main.npc[idx].life = LifeMax;
 				Main.npc[idx].defense = Defense;
 				Main.npc[idx].velocity = velocity;
+				Main.npc[idx].SpawnedFromStatue = true;
 				Main.npc[idx].SendData();
 				return idx;
 			}
@@ -524,7 +525,12 @@ namespace Starvers.Enemies.Bosses
 				{
 					if (TrackingEveryWhere)
 					{
-						Boss.Center = Boss.TargetPlayer.Center + Rand.NextVector2(16 * 100);
+						var distance = 16 * 100f;
+						if (MaxDistance is float md)
+						{
+							distance = Math.Min(distance, md);
+						}
+						Boss.Center = Boss.TargetPlayer.Center + Rand.NextVector2(distance);
 					}
 					else
 					{
@@ -545,7 +551,12 @@ namespace Starvers.Enemies.Bosses
 				}
 				if (Timer % WarpingInterval == 0)
 				{
-					Boss.Center = Boss.TargetPlayer.Center + Rand.NextVector2(WarpingDistance);
+					var distance = WarpingDistance;
+					if (MaxDistance is float md)
+					{
+						distance = Math.Min(distance, md);
+					}
+					Boss.Center = Boss.TargetPlayer.Center + Rand.NextVector2(distance);
 				}
 				if (Timer % 3 == 0)
 				{
@@ -803,7 +814,7 @@ namespace Starvers.Enemies.Bosses
 			{
 				TotalTime = 10 * 60;
 				DroppingInterval = 10;
-				Damage = 70;
+				Damage = 35;
 				DroppingWidth = 16 * 90;
 				DroppingSpeed = 9;
 			}
@@ -1008,7 +1019,7 @@ namespace Starvers.Enemies.Bosses
 		#endregion
 		#region BrainEx5
 		/// <summary>
-		/// 蓄力后从玩家脚下放出大量弹幕
+		/// 
 		/// </summary>
 		protected class BrainEx5 : BossStateMachine
 		{
@@ -1039,6 +1050,11 @@ namespace Starvers.Enemies.Bosses
 				get;
 				set;
 			}
+			public float UpingSpeed
+			{
+				get;
+				set;
+			}
 
 			public BrainEx5(StarverBoss boss) : base(BossState.BrainEx5, boss)
 			{
@@ -1054,10 +1070,10 @@ namespace Starvers.Enemies.Bosses
 			{
 				if (Timer < AccumulationTime)
 				{
-					// int time = AccumulationTime - Timer;
-					// time = (int)(time / (float)AccumulationTime * 30);
-					// time = (int)MathHelper.Clamp(time, 1, 30);
-					if (Timer % 15 == 0)
+					int time = AccumulationTime - Timer;
+					time = (int)(time / (float)AccumulationTime * 10);
+					time = (int)MathHelper.Clamp(time, 1, 10);
+					if (Timer % (30 / time) == 0)
 					{
 						AccumulationEffect();
 						AccumulationEffect();
@@ -1078,16 +1094,17 @@ namespace Starvers.Enemies.Bosses
 					}
 					for (int i = 0; i < hitPoints.Length; i++)
 					{
-						Boss.ProjCircle(hitPoints[i], 16 * 10, 0.1f, ProjectileID.EyeFire, 8, 65);
+						Boss.ProjCircle(hitPoints[i], 16 * 10, 0.1f, ProjectileID.DesertDjinnCurse, 8, 65);
 					}
 					Boss.ProjCircle(Boss.Center, 16 * 25, 0.1f, ProjectileID.BloodNautilusTears, 16, -1);
+					Boss.ProjCircle(Boss.Center, 16 * 01, 4.5f, ProjectileID.DeathLaser, 120, 120);
 				}
 				else if (Timer - AccumulationTime < HitDuration)
 				{
-					if (Timer % 12 == 0)
+					if (Timer % 15 == 0)
 					{
 						Vector halfWidth = (16 * 5.5, 0);
-						Vector vel = (0, -16);
+						Vector vel = (0, -UpingSpeed);
 						for (int i = 0; i < hitPoints.Length; i++)
 						{
 							Boss.ProjLine(hitPoints[i] - halfWidth, hitPoints[i] + halfWidth, vel, 5, Damage, hitTypes[i]);
@@ -1103,10 +1120,10 @@ namespace Starvers.Enemies.Bosses
 
 			private void AccumulationEffect()
 			{
-				var time = AccumulationTime - Timer + 1;
+				var time = AccumulationTime - Timer;
 
 				var pos = Rand.NextVector2(Rand.Next(16 * 15, 16 * 45));
-				var vel = pos.ToLenOf(-pos.Length() / time);
+				var vel = pos.ToLenOf(-pos.Length() / time / 2.5f);
 				var idx = Boss.NewProjNoBC(Boss.Center + pos, vel, ProjectileID.DeathLaser, -1, 0);
 				Main.projectile[idx].timeLeft = (int)Math.Ceiling(pos.Length() / vel.Length());
 				Main.projectile[idx].SendData();

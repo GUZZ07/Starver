@@ -485,6 +485,8 @@ namespace Starvers
 						npc.defDefense *= 6;
 					}
 					break;
+				case NPCID.BloodSquid:
+					break;
 				default:
 					{
 						int life = RecalcLife(npc.life);
