@@ -14,11 +14,7 @@ namespace Starvers.Enemies.Bosses
 	{
 		private PlayerTracker Moving;
 		private BossStateMachine ProjActing;
-		private int Alpha
-		{
-			get => (int)TNPC.ai[3];
-			set => TNPC.ai[3] = value;
-		}
+		private int t;
 
 		public BrainEx() : base(NPCID.BrainofCthulhu)
 		{
@@ -64,9 +60,10 @@ namespace Starvers.Enemies.Bosses
 
 		private void ToNextProjActing()
 		{
-			ProjActing = GetNextProjActing(ProjActing?.State);
+			t++;
+			ProjActing = GetNextProjActing(t);
 			ResetMovingMachine();
-
+			#region AdjustMoving
 			if (ProjActing.State == BossState.BrainBloodDropping)
 			{
 				Moving.Offset = new Vector2(0, -16 * 25);
@@ -84,19 +81,77 @@ namespace Starvers.Enemies.Bosses
 				Moving.MaxSpeed = 0;
 				Moving.WarpingInterval = 60;
 			}
-
+			else if (ProjActing.State == BossState.BrainEx5)
+			{
+				Moving.MaxSpeed = 0;
+				Moving.WarpingInterval = null;
+			}
+			else if (ProjActing.State == BossState.ShotFromPlayers)
+			{
+				Moving.MaxSpeed = 0;
+				Moving.WarpingInterval = null;
+			}
+			#endregion
 			ProjActing.Begin();
 		}
 
-		private BossStateMachine GetNextProjActing(BossState? last)
+		private BossStateMachine GetNextProjActing(int t)
 		{
-			switch (last)
+			if (Lifes > LifesMax / 2)
 			{
-				case BossState.SpawnCreeper:
+				switch (t % 10 + 1)
+				{
+					case 1:
+						return GetProjActingMachine(BossState.SpawnCreeper);
+					case 2:
+					case 5:
+					case 9:
+						return GetProjActingMachine(BossState.BrainBloodDropping);
+					case 3:
+					case 8:
+						return GetProjActingMachine(BossState.SummonServants);
+					case 7:
+						return GetProjActingMachine(BossState.EllipseShot);
+					case 4:
+					case 6:
+					case 10:
+						return GetProjActingMachine(BossState.BrainEx5);
+				}
+			}
+			else if (Lifes > LifesMax / 4)
+			{
+				switch (t % 10 + 1)
+				{
+					case 1:
+						return GetProjActingMachine2(BossState.SpawnCreeper);
+					case 2:
+						return GetProjActingMachine2(BossState.BrainBloodDropping);
+					case 3:
+					case 9:
+						return GetProjActingMachine2(BossState.ShotFromPlayers);
+					case 8:
+						return GetProjActingMachine2(BossState.SummonServants);
+					case 5:
+					case 7:
+						return GetProjActingMachine2(BossState.EllipseShot);
+					case 4:
+					case 6:
+					case 10:
+						return GetProjActingMachine2(BossState.BrainEx5);
+				}
+			}
+			return GetProjActingMachine2(BossState.SpawnCreeper);
+		}
+
+		private BossStateMachine GetProjActingMachine(BossState state)
+		{
+			switch (state)
+			{
+				case BossState.BrainBloodDropping:
 					{
 						return new BrainBloodDropping(this);
 					}
-				case BossState.BrainBloodDropping:
+				case BossState.EllipseShot:
 					{
 						var machine = new EllipseShot(this, ProjectileID.DD2DrakinShot, ProjectileID.DD2DrakinShot)
 						{
@@ -121,7 +176,7 @@ namespace Starvers.Enemies.Bosses
 						};
 						return machine;
 					}
-				case BossState.EllipseShot:
+				case BossState.SummonServants:
 					{
 						double angleMid = (Center - TargetPlayer.Center).Angle();
 						var machine = new SummonServants(this)
@@ -177,10 +232,163 @@ namespace Starvers.Enemies.Bosses
 						};
 						return machine;
 					}
+				case BossState.BrainEx5:
+					{
+						return new BrainEx5(this)
+						{
+							ProjIDs = new int[] { ProjectileID.CursedFlameFriendly, ProjectileID.DesertDjinnCurse },
+							Damage = 75,
+							AccumulationTime = 60 * 12,
+							HitDuration = 60 * 9,
+							HitRadius = 16 * 80
+						};
+					}
 			}
 			return new SpawnCreeper(this)
 			{
 				DeflectionAngle = Math.PI / 10
+			};
+		}
+		private BossStateMachine GetProjActingMachine2(BossState state)
+		{
+			switch (state)
+			{
+				case BossState.ShotFromPlayers:
+					{
+						static float f(double t)
+						{
+							var sin = Math.Sin(2.5 * t + 2.5 * 4);
+							return (float)(6.5 + 5 * sin * sin * sin * sin);
+						};
+						var data = new ProjCurveData
+						{
+							ID = ProjectileID.EyeFire,
+							Damage = 88,
+							FuncPos = t => 16 * Vector.FromPolar(t, f(t)),
+							FuncVel = t => 02 * Vector.FromPolar(t, f(t)),
+							ParaBegin = 0,
+							ParaEnd = Math.PI * 2,
+							Increment = Math.PI * 2 / 20
+						};
+						return new ShotFromPlayers(this)
+						{
+							HitRadius = 16 * 100,
+							ProjData = data,
+							LaunchInterval = 90,
+							LaunchDelay = 89,
+							TotalTime = 90 * 5
+						};
+					}
+				case BossState.BrainBloodDropping:
+					{
+						return new BrainBloodDropping(this)
+						{
+							Damage = 95,
+							DroppingInterval = 6,
+							DroppingWidth = 16 * 90,
+							TotalTime = 60 * 10,
+							DroppingSpeed = 14
+						};
+					}
+				case BossState.EllipseShot:
+					{
+						var machine = new EllipseShot(this, ProjectileID.DD2DrakinShot, ProjectileID.DD2DrakinShot)
+						{
+							Rotation = Rand.NextAngle(),
+							RotationSpeed = Math.PI / 6 / 60,
+							Count = 20,
+							Damage = 70,
+							TotalTime = 60 * 10,
+							ShotingInterval = 60,
+							AxisA = 16 * 6,
+							AxisB = 16 * 10,
+						};
+						machine.Linked = new EllipseShot(this, ProjectileID.DD2DrakinShot)
+						{
+							Rotation = machine.Rotation + Math.PI / 2,
+							RotationSpeed = Math.PI / 6 / 60,
+							Count = 16,
+							Damage = 70,
+							ShotingDelay = 30,
+							TotalTime = 60 * 10 - 30,
+							ShotingInterval = 60,
+							AxisA = 16 * 6,
+							AxisB = 16 * 10,
+						};
+						return machine;
+					}
+				case BossState.SummonServants:
+					{
+						double angleMid = (Center - TargetPlayer.Center).Angle();
+						var machine = new SummonServants(this)
+						{
+							ServantData = new NPCData
+							{
+								ID = NPCID.IchorSticker,
+								Defense = 1500,
+								LifeMax = 2500
+							},
+							Radium = 16 * 7.5f,
+							Count = 5,
+							AngleBegin = angleMid - Math.PI / 4,
+							AngleEnd = angleMid + Math.PI / 4,
+							TotalTime = 60 * 3 * 2,
+							Interval = 180,
+							SummonDelay = 60 * 0,
+							ServantSpeed = 9f
+						};
+						machine.Linked = new SummonServants(this)
+						{
+							ServantData = new NPCData
+							{
+								ID = NPCID.SeekerHead,
+								Defense = 2000,
+								LifeMax = 5000
+							},
+							Radium = 16 * 7.5f,
+							Count = 5,
+							AngleBegin = angleMid - Math.PI / 4,
+							AngleEnd = angleMid + Math.PI / 4,
+							TotalTime = 60 * 3 * 2,
+							Interval = 180,
+							SummonDelay = 60 * 1,
+							ServantSpeed = 9f
+						};
+						machine.Linked.Linked = new SummonServants(this)
+						{
+							ServantData = new NPCData
+							{
+								ID = NPCID.BloodSquid,
+								Defense = 100,
+								LifeMax = 1500
+							},
+							Radium = 16 * 7.5f,
+							Count = 5,
+							AngleBegin = angleMid - Math.PI / 4,
+							AngleEnd = angleMid + Math.PI / 4,
+							TotalTime = 60 * 3 * 2,
+							Interval = 180,
+							SummonDelay = 60 * 2,
+							ServantSpeed = 9f
+						};
+						return machine;
+					}
+				case BossState.BrainEx5:
+					{
+						return new BrainEx5(this)
+						{
+							ProjIDs = new int[] { ProjectileID.CursedFlameFriendly, ProjectileID.DesertDjinnCurse },
+							Damage = 85,
+							AccumulationTime = 60 * 12,
+							HitDuration = 60 * 9,
+							HitRadius = 16 * 80
+						};
+					}
+			}
+			return new SpawnCreeper(this)
+			{
+				DeflectionAngle = Math.PI / 10,
+				Count = 10
 			};
 		}
 

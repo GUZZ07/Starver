@@ -13,7 +13,7 @@ namespace Starvers.Enemies.Bosses
 {
 	partial class StarverBoss
 	{
-		#region MyRegion
+		#region Data Structures
 		protected struct NPCData
 		{
 			public int ID;
@@ -29,6 +29,27 @@ namespace Starvers.Enemies.Bosses
 				Main.npc[idx].velocity = velocity;
 				Main.npc[idx].SendData();
 				return idx;
+			}
+		}
+		protected struct ProjCurveData
+		{
+			public int ID;
+			public double ParaBegin;
+			public double ParaEnd;
+			public double Increment;
+			public int Damage;
+			public int Knockback;
+			public Func<double, Vector2> FuncPos;
+			public Func<double, Vector2> FuncVel;
+
+			public void Apply(Vector2 Center)
+			{
+				double t = ParaBegin;
+				while (t <= ParaEnd)
+				{
+					Utils.NewProj(Center + FuncPos(t), FuncVel(t), ID, Damage, Knockback);
+					t += Increment;
+				}
 			}
 		}
 		#endregion
@@ -985,6 +1006,169 @@ namespace Starvers.Enemies.Bosses
 			}
 		}
 		#endregion
+		#region BrainEx5
+		/// <summary>
+		/// 蓄力后从玩家脚下放出大量弹幕
+		/// </summary>
+		protected class BrainEx5 : BossStateMachine
+		{
+			private int[] hitTypes;
+			private Vector2[] hitPoints;
+			public int Damage
+			{
+				get;
+				set;
+			}
+			public int[] ProjIDs
+			{
+				get;
+				set;
+			}
+			public int AccumulationTime
+			{
+				get;
+				set;
+			}
+			public int HitDuration
+			{
+				get;
+				set;
+			}
+			public float HitRadius
+			{
+				get;
+				set;
+			}
+
+			public BrainEx5(StarverBoss boss) : base(BossState.BrainEx5, boss)
+			{
+
+			}
+
+			public override void Begin()
+			{
+				base.Begin();
+				Boss.NewProj(Vector2.Zero, ProjectileID.BloodNautilusTears, -1);
+			}
+			protected override void InternalUpdate()
+			{
+				if (Timer < AccumulationTime)
+				{
+					// int time = AccumulationTime - Timer;
+					// time = (int)(time / (float)AccumulationTime * 30);
+					// time = (int)MathHelper.Clamp(time, 1, 30);
+					if (Timer % 15 == 0)
+					{
+						AccumulationEffect();
+						AccumulationEffect();
+						AccumulationEffect();
+					}
+				}
+				else if (Timer == AccumulationTime)
+				{
+					hitPoints = Starver.Instance
+						.Players
+						.Where(player => player?.Alive == true && Boss.TNPC.Distance(player.Center) < HitRadius)
+						.Select(player => player.Center + new Vector2(0, player.TPlayer.height / 2))
+						.ToArray();
+					hitTypes = new int[hitPoints.Length];
+					for (int i = 0; i < hitTypes.Length; i++)
+					{
+						hitTypes[i] = ProjIDs.Next();
+					}
+					for (int i = 0; i < hitPoints.Length; i++)
+					{
+						Boss.ProjCircle(hitPoints[i], 16 * 10, 0.1f, ProjectileID.EyeFire, 8, 65);
+					}
+					Boss.ProjCircle(Boss.Center, 16 * 25, 0.1f, ProjectileID.BloodNautilusTears, 16, -1);
+				}
+				else if (Timer - AccumulationTime < HitDuration)
+				{
+					if (Timer % 12 == 0)
+					{
+						Vector halfWidth = (16 * 5.5, 0);
+						Vector vel = (0, -16);
+						for (int i = 0; i < hitPoints.Length; i++)
+						{
+							Boss.ProjLine(hitPoints[i] - halfWidth, hitPoints[i] + halfWidth, vel, 5, Damage, hitTypes[i]);
+						}
+					}
+				}
+				else
+				{
+					IsEnd = true;
+				}
+				Timer++;
+			}
+
+			private void AccumulationEffect()
+			{
+				var time = AccumulationTime - Timer + 1;
+
+				var pos = Rand.NextVector2(Rand.Next(16 * 15, 16 * 45));
+				var vel = pos.ToLenOf(-pos.Length() / time);
+				var idx = Boss.NewProjNoBC(Boss.Center + pos, vel, ProjectileID.DeathLaser, -1, 0);
+				Main.projectile[idx].timeLeft = (int)Math.Ceiling(pos.Length() / vel.Length());
+				Main.projectile[idx].SendData();
+			}
+		}
+		#endregion
+		#region ShotFromPlayers
+		/// <summary>
+		/// 以每个玩家为中心向外发射
+		/// </summary>
+		protected class ShotFromPlayers : BossStateMachine
+		{
+			public int TotalTime
+			{
+				get;
+				set;
+			}
+			public int LaunchInterval
+			{
+				get;
+				set;
+			}
+			public int LaunchDelay
+			{
+				get;
+				set;
+			}
+			public float HitRadius
+			{
+				get;
+				set;
+			}
+			public ProjCurveData ProjData
+			{
+				get;
+				set;
+			}
+			public ShotFromPlayers(StarverBoss boss) : base(BossState.ShotFromPlayers, boss)
+			{
+
+			}
+
+			protected override void InternalUpdate()
+			{
+				if (Timer % LaunchInterval == LaunchDelay)
+				{
+					foreach (var player in Starver.Instance.Players)
+					{
+						if (player?.Alive != true || Boss.TNPC.Distance(player.Center) > HitRadius)
+						{
+							continue;
+						}
+						ProjData.Apply(player.Center);
+					}
+				}
+				if (++Timer == TotalTime)
+				{
+					IsEnd = true;
+				}
+			}
+		}
+		#endregion
 		#endregion
 		#region Base
 		protected abstract class BossStateMachine
@@ -1064,7 +1248,9 @@ namespace Starvers.Enemies.Bosses
 			SpawnCreeper,
 			BrainBloodDropping,
 			EllipseShot,
-			SummonServants
+			SummonServants,
+			BrainEx5,
+			ShotFromPlayers
 		}
 	}
 }
