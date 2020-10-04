@@ -67,7 +67,7 @@ namespace Starvers.Enemies.Bosses
 			#region AdjustMoving
 			if (ProjActing.State == BossState.BrainBloodDropping)
 			{
-				Moving.Offset = new Vector2(0, -16 * 25);
+				Moving.Offset = new Vector2(0, -16 * 50);
 				Moving.MaxSpeed = 40;
 				Moving.WarpingInterval = null;
 			}
@@ -154,7 +154,7 @@ namespace Starvers.Enemies.Bosses
 					}
 				case BossState.EllipseShot:
 					{
-						var machine = new EllipseShot(this, ProjectileID.DD2DrakinShot, ProjectileID.DD2DrakinShot)
+						var machine = new EllipseShot(this, ProjectileID.BloodShot, ProjectileID.BloodShot)
 						{
 							Rotation = Rand.NextAngle(),
 							RotationSpeed = Math.PI / 6 / 60,
@@ -164,7 +164,7 @@ namespace Starvers.Enemies.Bosses
 							AxisA = 16 * 6,
 							AxisB = 16 * 10,
 						};
-						machine.Linked = new EllipseShot(this, ProjectileID.NebulaBolt)
+						machine.Linked = new EllipseShot(this, ProjectileID.BloodNautilusShot)
 						{
 							Rotation = machine.Rotation,
 							RotationSpeed = Math.PI / 6 / 60,
@@ -188,7 +188,7 @@ namespace Starvers.Enemies.Bosses
 								Defense = 1500,
 								LifeMax = 1000
 							},
-							Radium = 16 * 7.5f,
+							Radium = 16 * 6f,
 							Count = 5,
 							AngleBegin = angleMid - Math.PI / 4,
 							AngleEnd = angleMid + Math.PI / 4,
@@ -201,34 +201,17 @@ namespace Starvers.Enemies.Bosses
 						{
 							ServantData = new NPCData
 							{
-								ID = NPCID.SeekerHead,
-								Defense = 1500,
-								LifeMax = 1000
-							},
-							Radium = 16 * 7.5f,
-							Count = 5,
-							AngleBegin = angleMid - Math.PI / 4,
-							AngleEnd = angleMid + Math.PI / 4,
-							TotalTime = 60 * 3 * 3,
-							Interval = 180,
-							SummonDelay = 60 * 1,
-							ServantSpeed = 4f
-						};
-						machine.Linked.Linked = new SummonServants(this)
-						{
-							ServantData = new NPCData
-							{
 								ID = NPCID.BloodSquid,
 								Defense = 500,
 								LifeMax = 750
 							},
-							Radium = 16 * 7.5f,
+							Radium = 16 * 6f,
 							Count = 5,
 							AngleBegin = angleMid - Math.PI / 4,
 							AngleEnd = angleMid + Math.PI / 4,
 							TotalTime = 60 * 3 * 3,
 							Interval = 180,
-							SummonDelay = 60 * 2,
+							SummonDelay = 90,
 							ServantSpeed = 4f
 						};
 						return machine;
@@ -239,8 +222,8 @@ namespace Starvers.Enemies.Bosses
 						{
 							ProjIDs = new int[] { ProjectileID.DeathLaser },
 							Damage = 55,
-							AccumulationTime = 60 * 12,
-							HitDuration = 60 * 9,
+							AccumulationTime = 60 * 6,
+							HitDuration = 60 * 2,
 							HitRadius = 16 * 80,
 							UpingSpeed = 2.4f
 						};
@@ -286,15 +269,15 @@ namespace Starvers.Enemies.Bosses
 						return new BrainBloodDropping(this)
 						{
 							Damage = 55,
-							DroppingInterval = 6,
-							DroppingWidth = 16 * 90,
+							DroppingInterval = 2,
+							DroppingWidth = 16 * 120,
 							TotalTime = 60 * 10,
 							DroppingSpeed = 14
 						};
 					}
 				case BossState.EllipseShot:
 					{
-						var machine = new EllipseShot(this, ProjectileID.DD2DrakinShot, ProjectileID.DD2DrakinShot)
+						var machine = new EllipseShot(this, ProjectileID.BloodShot, ProjectileID.BloodShot)
 						{
 							Rotation = Rand.NextAngle(),
 							RotationSpeed = Math.PI / 6 / 60,
@@ -305,7 +288,7 @@ namespace Starvers.Enemies.Bosses
 							AxisA = 16 * 6,
 							AxisB = 16 * 10,
 						};
-						machine.Linked = new EllipseShot(this, ProjectileID.DD2DrakinShot)
+						machine.Linked = new EllipseShot(this, ProjectileID.BloodNautilusShot)
 						{
 							Rotation = machine.Rotation + Math.PI / 2,
 							RotationSpeed = Math.PI / 6 / 60,
@@ -330,7 +313,7 @@ namespace Starvers.Enemies.Bosses
 								Defense = 1500,
 								LifeMax = 2500
 							},
-							Radium = 16 * 7.5f,
+							Radium = 16 * 6f,
 							Count = 5,
 							AngleBegin = angleMid - Math.PI / 4,
 							AngleEnd = angleMid + Math.PI / 4,
@@ -343,34 +326,17 @@ namespace Starvers.Enemies.Bosses
 						{
 							ServantData = new NPCData
 							{
-								ID = NPCID.SeekerHead,
-								Defense = 2000,
-								LifeMax = 5000
-							},
-							Radium = 16 * 7.5f,
-							Count = 5,
-							AngleBegin = angleMid - Math.PI / 4,
-							AngleEnd = angleMid + Math.PI / 4,
-							TotalTime = 60 * 3 * 2,
-							Interval = 180,
-							SummonDelay = 60 * 1,
-							ServantSpeed = 9f
-						};
-						machine.Linked.Linked = new SummonServants(this)
-						{
-							ServantData = new NPCData
-							{
 								ID = NPCID.BloodSquid,
 								Defense = 100,
 								LifeMax = 1500
 							},
-							Radium = 16 * 7.5f,
+							Radium = 16 * 6f,
 							Count = 5,
 							AngleBegin = angleMid - Math.PI / 4,
 							AngleEnd = angleMid + Math.PI / 4,
 							TotalTime = 60 * 3 * 2,
 							Interval = 180,
-							SummonDelay = 60 * 2,
+							SummonDelay = 90,
 							ServantSpeed = 9f
 						};
 						return machine;
@@ -381,8 +347,8 @@ namespace Starvers.Enemies.Bosses
 						{
 							ProjIDs = new int[] { ProjectileID.DeathLaser },
 							Damage = 55,
-							AccumulationTime = 60 * 12,
-							HitDuration = 60 * 9,
+							AccumulationTime = 60 * 6,
+							HitDuration = 60 * 2,
 							HitRadius = 16 * 80,
 							UpingSpeed = 2.4f
 						};
