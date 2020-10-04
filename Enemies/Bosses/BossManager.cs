@@ -47,9 +47,10 @@ namespace Starvers.Enemies.Bosses
 		#region LoadBosses
 		private void LoadBosses()
 		{
-			bosses = new[]
+			bosses = new StarverBoss[]
 			{
-				new EyeEx()
+				new EyeEx(),
+				new BrainEx()
 			};
 			foreach (var boss in bosses)
 			{

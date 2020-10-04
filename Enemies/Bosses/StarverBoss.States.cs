@@ -13,6 +13,47 @@ namespace Starvers.Enemies.Bosses
 {
 	partial class StarverBoss
 	{
+		#region Data Structures
+		protected struct NPCData
+		{
+			public int ID;
+			public int LifeMax;
+			public int Defense;
+
+			public int SummonNPC(Vector2 pos, Vector2 velocity = default)
+			{
+				int idx = NPC.NewNPC((int)pos.X, (int)pos.Y, ID);
+				Main.npc[idx].lifeMax = LifeMax;
+				Main.npc[idx].life = LifeMax;
+				Main.npc[idx].defense = Defense;
+				Main.npc[idx].velocity = velocity;
+				Main.npc[idx].SpawnedFromStatue = true;
+				Main.npc[idx].SendData();
+				return idx;
+			}
+		}
+		protected struct ProjCurveData
+		{
+			public int ID;
+			public double ParaBegin;
+			public double ParaEnd;
+			public double Increment;
+			public int Damage;
+			public int Knockback;
+			public Func<double, Vector2> FuncPos;
+			public Func<double, Vector2> FuncVel;
+
+			public void Apply(Vector2 Center)
+			{
+				double t = ParaBegin;
+				while (t <= ParaEnd)
+				{
+					Utils.NewProj(Center + FuncPos(t), FuncVel(t), ID, Damage, Knockback);
+					t += Increment;
+				}
+			}
+		}
+		#endregion
 		#region Machines
 		#region EyeSharknado
 		protected class EyeSharknadoMachine : BossStateMachine
@@ -450,7 +491,20 @@ namespace Starvers.Enemies.Bosses
 			/// </summary>
 			public float? MaxDistance { get; set; }
 			public float? MaxSpeed { get; set; }
+			/// <summary>
+			/// boss.Velocity /= SlowDownFactor
+			/// </summary>
 			public float SlowDownFactor { get; set; }
+			public int? WarpingInterval
+			{
+				get;
+				set;
+			}
+			public float WarpingDistance
+			{
+				get;
+				set;
+			}
 			public bool DontMove { get; set; }
 			public bool TrackingEveryWhere { get; set; }
 			public PlayerTracker(StarverBoss boss) : base(BossState.TrackingPlayer, boss)
@@ -471,7 +525,12 @@ namespace Starvers.Enemies.Bosses
 				{
 					if (TrackingEveryWhere)
 					{
-						Boss.Center = Boss.TargetPlayer.Center + Rand.NextVector2(16 * 100);
+						var distance = 16 * 100f;
+						if (MaxDistance is float md)
+						{
+							distance = Math.Min(distance, md);
+						}
+						Boss.Center = Boss.TargetPlayer.Center + Rand.NextVector2(distance);
 					}
 					else
 					{
@@ -485,15 +544,25 @@ namespace Starvers.Enemies.Bosses
 					return;
 				}
 				Boss.Velocity = Boss.TargetPlayer.Center + Offset - Boss.Center;
-				Boss.Velocity /= 20;
+				Boss.Velocity /= SlowDownFactor;
 				if (MaxSpeed != null && Boss.Velocity.Length() > MaxSpeed)
 				{
 					Boss.Velocity.Length((float)MaxSpeed);
 				}
-				if (Timer++ % 3 == 0)
+				if (Timer % WarpingInterval == 0)
+				{
+					var distance = WarpingDistance;
+					if (MaxDistance is float md)
+					{
+						distance = Math.Min(distance, md);
+					}
+					Boss.Center = Boss.TargetPlayer.Center + Rand.NextVector2(distance);
+				}
+				if (Timer % 3 == 0)
 				{
 					Boss.UpdateToClient();
 				}
+				Timer++;
 			}
 
 			private void VerifyTarget()
@@ -572,6 +641,551 @@ namespace Starvers.Enemies.Bosses
 			}
 		}
 		#endregion
+		#region SpawnCreeper
+		protected class SpawnCreeper : BossStateMachine
+		{
+			private NPC[] creepers;
+			private int[] shotingDelays;
+			public int LaserShotingInterval
+			{
+				get;
+				set;
+			}
+			public int Count
+			{
+				get;
+				set;
+			}
+			public int CreeperDefense
+			{
+				get;
+				set;
+			}
+			public int CreeperLifeMax
+			{
+				get;
+				set;
+			}
+			public int LaserDamage
+			{
+				get;
+				set;
+			}
+			public float LaserSpeed
+			{
+				get;
+				set;
+			}
+			/// <summary>
+			/// 实际偏转为[-θ,+θ]
+			/// </summary>
+			public double DeflectionAngle
+			{
+				get;
+				set;
+			}
+			public SpawnCreeper(StarverBoss boss) : base(BossState.SpawnCreeper, boss)
+			{
+				Count = 10;
+				CreeperDefense = 300;
+				CreeperLifeMax = 5000;
+				LaserShotingInterval = 120;
+				LaserDamage = 40;
+				LaserSpeed = 14;
+
+				OnEnd += delegate
+				{
+					Boss.DontTakeDamage = false;
+				};
+			}
+
+			public override void Begin()
+			{
+				base.Begin();
+				Boss.DontTakeDamage = true;
+
+				SummonCreepers();
+			}
+			public override void Abort()
+			{
+				base.Abort();
+				Boss.DontTakeDamage = false;
+				foreach (var creeper in creepers)
+				{
+					if (creeper.active)
+					{
+						creeper.active = false;
+						creeper.SendData();
+					}
+				}
+			}
+			protected override void InternalUpdate()
+			{
+				bool alive = UpdateCreepers();
+				if (!alive)
+				{
+					IsEnd = true;
+					return;
+				}
+				Timer++;
+			}
+
+			private bool UpdateCreepers()
+			{
+				int aliveCount = 0;
+				for (int i = 0; i < creepers.Length; i++)
+				{
+					var creeper = creepers[i];
+					if (!creeper.active)
+					{
+						continue;
+					}
+					if (Timer % LaserShotingInterval == shotingDelays[i])
+					{
+						CreeperShot(creeper);
+					}
+					aliveCount++;
+				}
+				return aliveCount > 0;
+			}
+			private void SummonCreepers()
+			{
+				shotingDelays = new int[Count];
+				for (int i = 0; i < Count; i++)
+				{
+					shotingDelays[i] = Rand.Next(LaserShotingInterval);
+				}
+				creepers = new NPC[Count];
+				for (int i = 0; i < Count; i++)
+				{
+					var pos = Boss.Center + Vector.FromPolar(2 * Math.PI / Count * i, 16 * 25);
+					int idx = NPC.NewNPC((int)pos.X, (int)pos.Y, NPCID.Creeper);
+					creepers[i] = Main.npc[idx];
+					creepers[i].velocity = (pos - Boss.Center).ToLenOf(15);
+					creepers[i].lifeMax = CreeperLifeMax;
+					creepers[i].life = CreeperLifeMax;
+					creepers[i].defense = CreeperDefense;
+					creepers[i].SpawnedFromStatue = true;
+					creepers[i].SendData();
+				}
+			}
+			private void CreeperShot(NPC creeper)
+			{
+				Vector2 direction = Boss.TargetPlayer.Center - creeper.Center;
+				direction.Length(LaserSpeed);
+				direction.AngleAdd(Rand.NextDouble(-DeflectionAngle, DeflectionAngle));
+				Boss.NewProj(creeper.Center, direction, ProjectileID.EyeLaser, LaserDamage, 0);
+			}
+		}
+		#endregion
+		#region BrainBloodShot
+		protected class BrainBloodDropping : BossStateMachine
+		{
+			public int TotalTime
+			{
+				get;
+				set;
+			}
+			public int DroppingInterval
+			{
+				get;
+				set;
+			}
+			public float DroppingSpeed
+			{
+				get;
+				set;
+			}
+			/// <summary>
+			/// 全宽度(不是半宽度)
+			/// </summary>
+			public float DroppingWidth
+			{
+				get;
+				set;
+			}
+			public int Damage
+			{
+				get;
+				set;
+			}
+
+			public BrainBloodDropping(StarverBoss boss) : base(BossState.BrainBloodDropping, boss)
+			{
+				TotalTime = 10 * 60;
+				DroppingInterval = 10;
+				Damage = 35;
+				DroppingWidth = 16 * 90;
+				DroppingSpeed = 9;
+			}
+
+			protected override void InternalUpdate()
+			{
+				if (Timer % DroppingInterval == 0)
+				{
+					var pos = Boss.Center + Rand.NextVector2(DroppingWidth, 0);
+					var vel = new Vector2(0, DroppingSpeed);
+					Boss.NewProj(pos, vel, ProjectileID.BloodShot, Damage, 0);
+				}
+				if (Timer++ == TotalTime)
+				{
+					IsEnd = true;
+				}
+			}
+		}
+		#endregion
+		#region EllipseShot
+		protected class EllipseShot : BossStateMachine
+		{
+			private int t;
+
+			public int ShotingDelay
+			{
+				get;
+				set;
+			}
+			public double RotationSpeed
+			{
+				get;
+				set;
+			}
+			public double Rotation
+			{
+				get;
+				set;
+			}
+			public float AxisA
+			{
+				get;
+				set;
+			}
+			public float AxisB
+			{
+				get;
+				set;
+			}
+			public int Count
+			{
+				get;
+				set;
+			}
+			public int[] ProjIDs
+			{
+				get;
+				set;
+			}
+			public int Damage
+			{
+				get;
+				set;
+			}
+			public float Speed
+			{
+				get;
+				set;
+			}
+			public float Knockback
+			{
+				get;
+				set;
+			}
+			public int ShotingInterval
+			{
+				get;
+				set;
+			}
+			public int TotalTime
+			{
+				get;
+				set;
+			}
+
+			public EllipseShot(StarverBoss boss, params int[] projIDs) : base(BossState.EllipseShot, boss)
+			{
+				ProjIDs = projIDs;
+				Count = 12;
+				AxisA = 16 * 06 * 1.25f;
+				AxisB = 16 * 10 * 1.25f;
+				TotalTime = 60 * 10;
+				ShotingInterval = 60;
+				Speed = 8;
+				Damage = 50;
+			}
+
+			protected override void InternalUpdate()
+			{
+				if (Timer % ShotingInterval == ShotingDelay)
+				{
+					var projID = ProjIDs[t++];
+					double angle = Rotation;
+					for (int i = 0; i < Count; i++)
+					{
+						var pos = Vector.FromPolar(Math.PI * 2 / Count * i, AxisA);
+						var velocity = pos.ToLenOf(Speed);
+
+						pos.Y *= AxisB / AxisA;
+						velocity.Y *= AxisB / AxisA;
+
+						pos.Angle += angle;
+						velocity.Angle += angle;
+
+						Boss.NewProj(Boss.Center + pos, velocity, projID, Damage, Knockback);
+					}
+
+					t %= ProjIDs.Length;
+				}
+				Rotation += RotationSpeed;
+				if (Timer++ == TotalTime)
+				{
+					IsEnd = true;
+				}
+			}
+		}
+		#endregion
+		#region SummonServants
+		protected class SummonServants : BossStateMachine
+		{
+			public int TotalTime
+			{
+				get;
+				set;
+			}
+			public int Interval
+			{
+				get;
+				set;
+			}
+			public int SummonDelay
+			{
+				get;
+				set;
+			}
+			public double AngleBegin
+			{
+				get;
+				set;
+			}
+			public double AngleEnd
+			{
+				get;
+				set;
+			}
+			public float Radium
+			{
+				get;
+				set;
+			}
+			public int Count
+			{
+				get;
+				set;
+			}
+			public NPCData ServantData
+			{
+				get;
+				set;
+			}
+			public float ServantSpeed
+			{
+				get;
+				set;
+			}
+			public SummonServants(StarverBoss boss) : base(BossState.SummonServants, boss)
+			{
+
+			}
+
+			protected override void InternalUpdate()
+			{
+				if (Timer % Interval == SummonDelay)
+				{
+					double angle = AngleBegin;
+
+					double increment = (AngleBegin - AngleEnd) * (Count + 1) / Count;
+
+					for (int i = 0; i < Count; i++)
+					{
+						var pos = Vector.FromPolar(angle, Radium);
+						ServantData.SummonNPC(Boss.Center + pos, pos.ToLenOf(ServantSpeed));
+						angle += increment;
+					}
+				}
+				if (Timer++ == TotalTime)
+				{
+					IsEnd = true;
+				}
+			}
+		}
+		#endregion
+		#region BrainEx5
+		/// <summary>
+		/// 
+		/// </summary>
+		protected class BrainEx5 : BossStateMachine
+		{
+			private int[] hitTypes;
+			private Vector2[] hitPoints;
+			public int Damage
+			{
+				get;
+				set;
+			}
+			public int[] ProjIDs
+			{
+				get;
+				set;
+			}
+			public int AccumulationTime
+			{
+				get;
+				set;
+			}
+			public int HitDuration
+			{
+				get;
+				set;
+			}
+			public float HitRadius
+			{
+				get;
+				set;
+			}
+			public float UpingSpeed
+			{
+				get;
+				set;
+			}
+
+			public BrainEx5(StarverBoss boss) : base(BossState.BrainEx5, boss)
+			{
+
+			}
+
+			public override void Begin()
+			{
+				base.Begin();
+				Boss.NewProj(Vector2.Zero, ProjectileID.BloodNautilusTears, -1);
+			}
+			protected override void InternalUpdate()
+			{
+				if (Timer < AccumulationTime)
+				{
+					int time = AccumulationTime - Timer;
+					time = (int)(time / (float)AccumulationTime * 10);
+					time = (int)MathHelper.Clamp(time, 1, 10);
+					if (Timer % (30 / time) == 0)
+					{
+						AccumulationEffect();
+						AccumulationEffect();
+						AccumulationEffect();
+					}
+				}
+				else if (Timer == AccumulationTime)
+				{
+					hitPoints = Starver.Instance
+						.Players
+						.Where(player => player?.Alive == true && Boss.TNPC.Distance(player.Center) < HitRadius)
+						.Select(player => player.Center + new Vector2(0, player.TPlayer.height / 2))
+						.ToArray();
+					hitTypes = new int[hitPoints.Length];
+					for (int i = 0; i < hitTypes.Length; i++)
+					{
+						hitTypes[i] = ProjIDs.Next();
+					}
+					for (int i = 0; i < hitPoints.Length; i++)
+					{
+						Boss.ProjCircle(hitPoints[i], 16 * 10, 0.1f, ProjectileID.DesertDjinnCurse, 8, 65);
+					}
+					Boss.ProjCircle(Boss.Center, 16 * 25, 0.1f, ProjectileID.BloodNautilusTears, 16, -1);
+					Boss.ProjCircle(Boss.Center, 16 * 01, 4.5f, ProjectileID.DeathLaser, 120, 120);
+				}
+				else if (Timer - AccumulationTime < HitDuration)
+				{
+					if (Timer % 15 == 0)
+					{
+						Vector halfWidth = (16 * 5.5, 0);
+						Vector vel = (0, -UpingSpeed);
+						for (int i = 0; i < hitPoints.Length; i++)
+						{
+							Boss.ProjLine(hitPoints[i] - halfWidth, hitPoints[i] + halfWidth, vel, 5, Damage, hitTypes[i]);
+						}
+					}
+				}
+				else
+				{
+					IsEnd = true;
+				}
+				Timer++;
+			}
+
+			private void AccumulationEffect()
+			{
+				var time = AccumulationTime - Timer;
+
+				var pos = Rand.NextVector2(Rand.Next(16 * 15, 16 * 45));
+				var vel = pos.ToLenOf(-pos.Length() / time / 2.5f);
+				var idx = Boss.NewProjNoBC(Boss.Center + pos, vel, ProjectileID.DeathLaser, -1, 0);
+				Main.projectile[idx].timeLeft = (int)Math.Ceiling(pos.Length() / vel.Length());
+				Main.projectile[idx].SendData();
+			}
+		}
+		#endregion
+		#region ShotFromPlayers
+		/// <summary>
+		/// 以每个玩家为中心向外发射
+		/// </summary>
+		protected class ShotFromPlayers : BossStateMachine
+		{
+			public int TotalTime
+			{
+				get;
+				set;
+			}
+			public int LaunchInterval
+			{
+				get;
+				set;
+			}
+			public int LaunchDelay
+			{
+				get;
+				set;
+			}
+			public float HitRadius
+			{
+				get;
+				set;
+			}
+			public ProjCurveData ProjData
+			{
+				get;
+				set;
+			}
+			public ShotFromPlayers(StarverBoss boss) : base(BossState.ShotFromPlayers, boss)
+			{
+
+			}
+
+			protected override void InternalUpdate()
+			{
+				if (Timer % LaunchInterval == LaunchDelay)
+				{
+					foreach (var player in Starver.Instance.Players)
+					{
+						if (player?.Alive != true || Boss.TNPC.Distance(player.Center) > HitRadius)
+						{
+							continue;
+						}
+						ProjData.Apply(player.Center);
+					}
+				}
+				if (++Timer == TotalTime)
+				{
+					IsEnd = true;
+				}
+			}
+		}
+		#endregion
 		#endregion
 		#region Base
 		protected abstract class BossStateMachine
@@ -581,6 +1195,14 @@ namespace Starvers.Enemies.Bosses
 			public int Timer { get; protected set; }
 			public bool IsEnd { get; protected set; }
 			public bool IsPause { get; set; }
+			/// <summary>
+			/// 在自身update完调用update
+			/// </summary>
+			public BossStateMachine Linked
+			{
+				get;
+				set;
+			}
 
 			public event Action OnEnd;
 
@@ -605,13 +1227,23 @@ namespace Starvers.Enemies.Bosses
 					return;
 				}
 				InternalUpdate();
+				if (Linked?.IsEnd == false)
+				{
+					Linked.Update();
+				}
 				if (IsEnd)
 				{
 					End();
 				}
 			}
-			public virtual void Begin() { }
-			public virtual void Abort() { }
+			public virtual void Begin()
+			{
+				Linked?.Begin();
+			}
+			public virtual void Abort()
+			{
+				Linked.Abort();
+			}
 			private void End()
 			{
 				OnEnd?.Invoke();
@@ -629,7 +1261,13 @@ namespace Starvers.Enemies.Bosses
 			FakeDukeRush,
 			FaithOfMountain,
 			GazingYou,
-			EyeSharknado
+			EyeSharknado,
+			SpawnCreeper,
+			BrainBloodDropping,
+			EllipseShot,
+			SummonServants,
+			BrainEx5,
+			ShotFromPlayers
 		}
 	}
 }
