@@ -54,7 +54,6 @@ namespace Starvers.Enemies.Bosses
 			}
 		}
 		#endregion
-		#region Machines
 		#region EyeSharknado
 		protected class EyeSharknadoMachine : BossStateMachine
 		{
@@ -812,11 +811,11 @@ namespace Starvers.Enemies.Bosses
 
 			public BrainBloodDropping(StarverBoss boss) : base(BossState.BrainBloodDropping, boss)
 			{
-				TotalTime = 10 * 60;
-				DroppingInterval = 10;
+				TotalTime = 8 * 60;
+				DroppingInterval = 3;
 				Damage = 35;
-				DroppingWidth = 16 * 90;
-				DroppingSpeed = 9;
+				DroppingWidth = 16 * 150;
+				DroppingSpeed = 12;
 			}
 
 			protected override void InternalUpdate()
@@ -1094,9 +1093,9 @@ namespace Starvers.Enemies.Bosses
 					}
 					for (int i = 0; i < hitPoints.Length; i++)
 					{
-						Boss.ProjCircle(hitPoints[i], 16 * 10, 0.1f, ProjectileID.DesertDjinnCurse, 8, 65);
+						Boss.ProjCircle(hitPoints[i], 16 * 8, 0.1f, ProjectileID.CrimsonSpray, 36, -1);
 					}
-					Boss.ProjCircle(Boss.Center, 16 * 25, 0.1f, ProjectileID.BloodNautilusTears, 16, -1);
+					Boss.ProjCircle(Boss.Center, 16 * 8, 0.1f, ProjectileID.CrimsonSpray, 36, -1);
 					Boss.ProjCircle(Boss.Center, 16 * 01, 4.5f, ProjectileID.DeathLaser, 120, 120);
 				}
 				else if (Timer - AccumulationTime < HitDuration)
@@ -1185,7 +1184,6 @@ namespace Starvers.Enemies.Bosses
 				}
 			}
 		}
-		#endregion
 		#endregion
 		#region Base
 		protected abstract class BossStateMachine
