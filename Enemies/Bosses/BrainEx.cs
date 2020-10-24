@@ -281,10 +281,10 @@ namespace Starvers.Enemies.Bosses
 						{
 							Rotation = Rand.NextAngle(),
 							RotationSpeed = Math.PI / 6 / 60,
-							Count = 20,
+							Count = 16,
 							Damage = 35,
-							TotalTime = 60 * 10,
-							ShotingInterval = 120,
+							TotalTime = 60 * 3,
+							ShotingInterval = 60,
 							AxisA = 16 * 6,
 							AxisB = 16 * 10,
 						};
@@ -292,11 +292,11 @@ namespace Starvers.Enemies.Bosses
 						{
 							Rotation = machine.Rotation + Math.PI / 2,
 							RotationSpeed = Math.PI / 6 / 60,
-							Count = 16,
+							Count = 10,
 							Damage = 35,
-							ShotingDelay = 60,
-							TotalTime = 60 * 10 - 60,
-							ShotingInterval = 120,
+							ShotingDelay = 30,
+							TotalTime = 60 * 3,
+							ShotingInterval = 60,
 							AxisA = 16 * 6,
 							AxisB = 16 * 10,
 						};
@@ -336,7 +336,7 @@ namespace Starvers.Enemies.Bosses
 							AngleEnd = angleMid + Math.PI / 4,
 							TotalTime = 60 * 3 * 2,
 							Interval = 180,
-							SummonDelay = 90,
+							SummonDelay = 60,
 							ServantSpeed = 9f
 						};
 						return machine;
@@ -347,7 +347,7 @@ namespace Starvers.Enemies.Bosses
 						{
 							ProjIDs = new int[] { ProjectileID.DeathLaser },
 							Damage = 55,
-							AccumulationTime = 60 * 6,
+							AccumulationTime = 60 * 4,
 							HitDuration = 60 * 2,
 							HitRadius = 16 * 80,
 							UpingSpeed = 2.4f
