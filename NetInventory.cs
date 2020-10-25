@@ -16,7 +16,7 @@ namespace Starvers
 			slots = new NetInventorySlot[player.TPlayer.inventory.Length];
 			for (int i = 0; i < slots.Length; i++)
 			{
-				slots[i] = new NetInventorySlot(player, i);
+				slots[i] = new NetInventorySlot(player.Index, i);
 			}
 		}
 		public NetInventorySlot this[int slot] => slots[slot];

@@ -121,7 +121,8 @@ namespace Starvers
 		}
 		private void OnChanged(int index, StarverPlayer old)
 		{
-			CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, Players[index], old, index));
+			var args = new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, Players[index], old, index);
+			CollectionChanged?.Invoke(this, args);
 		}
 		#endregion
 	}

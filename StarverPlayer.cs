@@ -312,7 +312,7 @@ namespace Starvers
 		{
 			return player?.TPlayer;
 		}
-		public static implicit operator int(StarverPlayer player)
+		public static explicit operator int(StarverPlayer player)
 		{
 			return player.Index;
 		}
