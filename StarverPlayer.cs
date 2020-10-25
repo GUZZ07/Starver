@@ -75,6 +75,10 @@ namespace Starvers
 		}
 		#endregion
 		#region From TPlayer
+		public string Name
+		{
+			get => TPlayer.name;
+		}
 		public bool Alive
 		{
 			get => !DeadOrGhost;
@@ -369,12 +373,6 @@ namespace Starvers
 			SaveData();
 		}
 		#endregion
-		#region BlockMPRegen
-		public void BlockMPRegen(int timeInTick)
-		{
-			noRegenMP += timeInTick;
-		}
-		#endregion
 		#region Events
 		private void OnUseItem(Item item)
 		{
@@ -632,6 +630,18 @@ MP({MP}/{MPMax})
 		}
 		#endregion
 		#region Utilities
+		#region BlockMPRegen
+		public void BlockMPRegen(int timeInTick)
+		{
+			noRegenMP += timeInTick;
+		}
+		#endregion
+		#region ToString
+		public override string ToString()
+		{
+			return Name;
+		}
+		#endregion
 		#region Projs
 		#region FromPolar
 		/// <summary>
