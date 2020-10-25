@@ -4,9 +4,10 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Starvers.Managing"
+		xmlns:sys="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
-        Title="ManagingWindow" Height="550" Width="900"
-		ResizeMode="NoResize"
+        Title="Starver管理器" Height="550" Width="900"
+		MaxHeight="550" MinHeight="550" MinWidth="900"
 		Loaded="Window_Loaded" Closing="Window_Closing">
 	<Window.Background>
 		<ImageBrush ImageSource="Background.png" Stretch="UniformToFill"/>
@@ -16,10 +17,42 @@
 			<ResourceDictionary.MergedDictionaries>
 				<ResourceDictionary Source="WPFResources.xaml"/>
 			</ResourceDictionary.MergedDictionaries>
+			<ControlTemplate x:Key="MyListBoxT" TargetType="{x:Type ListBox}">
+				<Border x:Name="Bd" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Padding="1" SnapsToDevicePixels="True">
+					<ScrollViewer Focusable="False" Padding="{TemplateBinding Padding}" Template="{StaticResource MyScrollViewer}">
+						<ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+					</ScrollViewer>
+				</Border>
+				<ControlTemplate.Triggers>
+					<Trigger Property="IsEnabled" Value="False">
+						<Setter Property="Background" TargetName="Bd" Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"/>
+					</Trigger>
+					<MultiTrigger>
+						<MultiTrigger.Conditions>
+							<Condition Property="IsGrouping" Value="True"/>
+							<Condition Property="VirtualizingPanel.IsVirtualizingWhenGrouping" Value="False"/>
+						</MultiTrigger.Conditions>
+						<Setter Property="ScrollViewer.CanContentScroll" Value="False"/>
+					</MultiTrigger>
+				</ControlTemplate.Triggers>
+			</ControlTemplate>
 		</ResourceDictionary>
 	</Window.Resources>
 	<Grid>
-		<Button Style="{StaticResource MBButton}" Click="Button_Click">N</Button>
-
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="0"/>
+			<ColumnDefinition Width="650*"/>
+			<ColumnDefinition Width="250*"/>
+		</Grid.ColumnDefinitions>
+		<Button Style="{StaticResource MBButton}" Click="Button_Click" Margin="935,171,-111,313">N</Button>
+		<ListBox Name="PlayersView"
+				 Background="#4000ffff"
+				 Grid.Column="2"
+				 VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+				 HorizontalContentAlignment="Center"
+				 Padding="2" FontSize="14" Foreground="Aqua"
+				 SelectionMode="Single"
+				 SelectionChanged="PlayersView_SelectionChanged"
+				 Template="{DynamicResource MyListBoxT}"/>
 	</Grid>
 </Window>

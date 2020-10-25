@@ -300,13 +300,17 @@ namespace Starvers
 		}
 		#endregion
 		#region Cast
+		public static explicit operator string(StarverPlayer player)
+		{
+			return player?.Name ?? "";
+		}
 		public static implicit operator TSPlayer(StarverPlayer player)
 		{
-			return player.TSPlayer;
+			return player?.TSPlayer;
 		}
 		public static implicit operator Player(StarverPlayer player)
 		{
-			return player.TPlayer;
+			return player?.TPlayer;
 		}
 		public static implicit operator int(StarverPlayer player)
 		{

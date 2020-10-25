@@ -27,6 +27,7 @@ namespace Starvers.Managing
 		private void Window_Loaded(object sender, RoutedEventArgs e)
 		{
 			Hide();
+			PlayersView.ItemsSource = Starver.Instance.Players;
 		}
 
 		private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs args)
@@ -41,6 +42,11 @@ namespace Starvers.Managing
 		private void Button_Click(object sender, RoutedEventArgs e)
 		{
 			MyMessageBox.Show("emmm", "!");
+		}
+
+		private void PlayersView_SelectionChanged(object sender, SelectionChangedEventArgs args)
+		{
+			MyMessageBox.Show(Starver.Instance.Players[PlayersView.SelectedIndex]?.Name ?? "", PlayersView.SelectedIndex.ToString());
 		}
 	}
 }
