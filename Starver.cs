@@ -17,6 +17,10 @@ namespace Starvers
 {
 	#region Using Alias
 	using Assembly = System.Reflection.Assembly;
+	using MWindow = Managing.ManagingWindow;
+	using SWindow = System.Windows.Window;
+	using Application = System.Windows.Application;
+	using ShutdownMode = System.Windows.ShutdownMode;
 	#endregion
 	#region Using Namespaces
 	using Enemies.Bosses;
@@ -48,6 +52,16 @@ namespace Starvers
 			private set;
 		}
 		public StarverConfig Config
+		{
+			get;
+			private set;
+		}
+		public MWindow Window
+		{
+			get;
+			private set;
+		}
+		public bool Unloading
 		{
 			get;
 			private set;
@@ -140,6 +154,43 @@ namespace Starvers
 				(() => NPC.downedMoonlord, 5)
 			};
 
+			#region Managing Window
+			if (Application.Current == null)
+			{
+				var wpfThread = new Thread(() =>
+				{
+					var app = new Application();
+					app.ShutdownMode = ShutdownMode.OnExplicitShutdown;
+					try
+					{
+						var hostWindow = new SWindow();
+						hostWindow.Visibility = System.Windows.Visibility.Hidden;
+						hostWindow.Loaded += (sender, args) =>
+						{
+							Window = new MWindow();
+							Window.Owner = Application.Current.MainWindow;
+							Window.Show();
+						};
+						app.Run(hostWindow);
+					}
+					catch (ThreadAbortException)
+					{
+						return;
+					}
+				});
+				wpfThread.SetApartmentState(ApartmentState.STA);
+				wpfThread.Start();
+			}
+			else
+			{
+				Application.Current.Dispatcher.Invoke(() =>
+				{
+					Window = new MWindow();
+					Window.Owner = Application.Current.MainWindow;
+					Window.Show();
+				});
+			}
+			#endregion
 			#region Test
 #if false
 			var data = new PlayerData(-444) { Level = 3 };
@@ -177,6 +228,11 @@ namespace Starvers
 		protected override void Dispose(bool disposing)
 		{
 			base.Dispose(disposing);
+			Unloading = true;
+			#region Managing Window
+			Window.Dispatcher.Invoke(() => Window.Close());
+			Window = null;
+			#endregion
 			#region Hooks
 			ServerApi.Hooks.ServerJoin.Deregister(this, OnJoin);
 			ServerApi.Hooks.ServerLeave.Deregister(this, OnLeave);
@@ -570,9 +626,97 @@ namespace Starvers
 						player.SendText($"当前等级: {player.Level}\n当前经验: {player.Exp}", Color.Yellow);
 					}
 					break;
+				case "window":
+					{
+						Window.Dispatcher.Invoke(() => Window.Show());
+						break;
+					}
+				case "set":
+					{
+						if (args.Parameters.Count < 2)
+						{
+							goto default;
+						}
+						else if (args.Parameters.Count < 3)
+						{
+							if (!args.Player.HasPermission(Perms.Aura.Set))
+							{
+								goto default;
+							}
+							if (args.Player is TSServerPlayer)
+							{
+								args.Player.SendErrorMessage("服务器无法使用该命令");
+							}
+							else if (int.TryParse(args.Parameters[1], out int level))
+							{
+								var player = Players[args.Player.Index];
+								player.Level = level;
+								player.SendText($"当前等级: {player.Level}", Color.Yellow);
+							}
+							else
+							{
+								args.Player.SendErrorMessage($"无效等级: {args.Parameters[1]}");
+							}
+						}
+						else
+						{
+							if (!args.Player.HasPermission(Perms.Aura.Set))
+							{
+								goto default;
+							}
+							#region FindPlayer
+							StarverPlayer player = null;
+							if (int.TryParse(args.Parameters[1], out int index) && index.InRange(0, Main.myPlayer) && Players[index] != null)
+							{
+								player = Players[index];
+							}
+							else
+							{
+								var finds = Players.Where(p => p != null && p.Name.StartsWith(args.Parameters[1], StringComparison.OrdinalIgnoreCase));
+								if (finds.Count() > 1)
+								{
+									args.Player.SendInfoMessage("多个匹配结果:");
+									args.Player.SendInfoMessage($"      {string.Join(", ", finds)}");
+								}
+								else if (finds.Count() == 0)
+								{
+									args.Player.SendInfoMessage($"找不到玩家: {args.Parameters[1]}");
+								}
+								else
+								{
+									player = finds.First();
+								}
+							}
+							#endregion
+							#region SetLevel
+							if (player != null)
+							{
+								if (int.TryParse(args.Parameters[2], out int level))
+								{
+									player.Level = level;
+									player.SendText($"{args.Player}将你的等级修改为: {player.Level}", Color.Yellow);
+									args.Player.SendInfoMessage($"{player} 当前等级: {player.Level}");
+								}
+								else
+								{
+									args.Player.SendErrorMessage($"无效等级: {args.Parameters[2]}");
+								}
+							}
+							#endregion
+						}
+						break;
+					}
 				default:
 					args.Player.SendInfoMessage("up    升级");
 					args.Player.SendInfoMessage("help  帮助");
+					if (args.Player.HasPermission(Perms.Aura.Set))
+					{
+						args.Player.SendInfoMessage("set <level>");
+					}
+					if (args.Player.HasPermission(Perms.Aura.SetOther))
+					{
+						args.Player.SendInfoMessage("set <player> <level>");
+					}
 					break;
 			}
 		}

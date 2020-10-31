@@ -40,14 +40,14 @@ namespace Starvers.PlayerBoosts.Skills
 					{
 						arr[i] = player.NewProj(player.Center, Rand.NextVector2(9), ProjectileID.SporeGas, damage, 20f);
 					}
-					int timer=0;
-					while (Main.projectile[arr[0]].active && Main.projectile[arr[0]].owner == player&&timer < 3000)
+					int timer = 0;
+					while (Main.projectile[arr[0]].active && Main.projectile[arr[0]].owner == player.Index && timer < 3000)
 					{
 						foreach (var idx in arr)
 						{
 							player.NewProj(Main.projectile[idx].Center, Rand.NextVector2(15), ProjectileID.TerrarianBeam, damage * 3 / 2, 20f);
 						}
-						timer+=25;Thread.Sleep(25);
+						timer += 25; Thread.Sleep(25);
 					}
 				}
 				catch

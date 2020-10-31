@@ -1,14 +1,43 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
   <PropertyGroup>
     <OutputType>library</OutputType>
     <TargetFramework>net48</TargetFramework>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 	  <LangVersion>preview</LangVersion>
 	  <RootNamespace>Starvers</RootNamespace>
+	<UseWPF>true</UseWPF>
   </PropertyGroup>
   <ItemGroup>
+    <Resource Include="Managing\Background.png" />
+    <Resource Include="Managing\BackgroundSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="MySql.Data.EntityFrameworkCore" Version="8.0.20" />
-    <PackageReference Include="TerrariaServer.TShock" Version="4.4.0.20200627-pre12" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Mono.Data.Sqlite">
+      <HintPath>Libs\Mono.Data.Sqlite.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>Libs\Newtonsoft.Json.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="OTAPI">
+      <HintPath>Libs\OTAPI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="TerrariaServer">
+      <HintPath>Libs\TerrariaServer.exe</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="TShockAPI">
+      <HintPath>Libs\TShockAPI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
@@ -21,5 +50,44 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Libs\" />
-  </ItemGroup></Project>
+    <Reference Update="System">
+      <Private>false</Private>
+    </Reference>
+    <Reference Update="System.Core">
+      <Private>false</Private>
+    </Reference>
+    <Reference Update="System.Data">
+      <Private>false</Private>
+    </Reference>
+    <Reference Update="System.Drawing">
+      <Private>false</Private>
+    </Reference>
+    <Reference Update="System.IO.Compression.FileSystem">
+      <Private>false</Private>
+    </Reference>
+    <Reference Update="System.Numerics">
+      <Private>false</Private>
+    </Reference>
+    <Reference Update="System.Runtime.Serialization">
+      <Private>false</Private>
+    </Reference>
+    <Reference Update="System.Xml">
+      <Private>false</Private>
+    </Reference>
+    <Reference Update="System.Xml.Linq">
+      <Private>false</Private>
+    </Reference>
+    <None Update="Managing\FakeMessageBoxOK.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+    <None Update="Managing\FakeMessageBoxOKCancel.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+    <None Update="Managing\ManagingWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+    <None Update="Managing\WPFResources.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+  </ItemGroup>
+</Project>

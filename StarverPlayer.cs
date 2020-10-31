@@ -75,6 +75,10 @@ namespace Starvers
 		}
 		#endregion
 		#region From TPlayer
+		public string Name
+		{
+			get => TPlayer.name;
+		}
 		public bool Alive
 		{
 			get => !DeadOrGhost;
@@ -296,15 +300,19 @@ namespace Starvers
 		}
 		#endregion
 		#region Cast
+		public static explicit operator string(StarverPlayer player)
+		{
+			return player?.Name ?? "";
+		}
 		public static implicit operator TSPlayer(StarverPlayer player)
 		{
-			return player.TSPlayer;
+			return player?.TSPlayer;
 		}
 		public static implicit operator Player(StarverPlayer player)
 		{
-			return player.TPlayer;
+			return player?.TPlayer;
 		}
-		public static implicit operator int(StarverPlayer player)
+		public static explicit operator int(StarverPlayer player)
 		{
 			return player.Index;
 		}
@@ -367,12 +375,6 @@ namespace Starvers
 				CD = Skills[slot].CD
 			};
 			SaveData();
-		}
-		#endregion
-		#region BlockMPRegen
-		public void BlockMPRegen(int timeInTick)
-		{
-			noRegenMP += timeInTick;
 		}
 		#endregion
 		#region Events
@@ -632,6 +634,18 @@ MP({MP}/{MPMax})
 		}
 		#endregion
 		#region Utilities
+		#region BlockMPRegen
+		public void BlockMPRegen(int timeInTick)
+		{
+			noRegenMP += timeInTick;
+		}
+		#endregion
+		#region ToString
+		public override string ToString()
+		{
+			return Name;
+		}
+		#endregion
 		#region Projs
 		#region FromPolar
 		/// <summary>

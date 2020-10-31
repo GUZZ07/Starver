@@ -77,7 +77,7 @@ namespace Starvers
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public void SendData()
 		{
-			Owner.SendData(PacketTypes.PlayerSlot, "", Owner, (int)Slot);
+			Owner.SendData(PacketTypes.PlayerSlot, "", Owner.Index, (int)Slot);
 		}
 		#endregion
 	}

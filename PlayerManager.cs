@@ -1,18 +1,21 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
+using System.ComponentModel;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TShockAPI;
+using System.Collections.Specialized;
 
 namespace Starvers
 {
-	public class PlayerManager : IEnumerable<StarverPlayer>
+	public class PlayerManager : IEnumerable<StarverPlayer>, INotifyCollectionChanged
 	{
 		private StarverPlayer[] Players;
 		private int timer;
+
 
 		private int SaveInterval => Starver.Instance.Config.SaveInterval;
 
@@ -20,7 +23,7 @@ namespace Starvers
 		public StarverPlayer this[int index]
 		{
 			get => Players[index];
-			set => Players[index] = value;
+			set => Set(index, value);
 		}
 		#endregion
 		#region Ctor
@@ -106,6 +109,20 @@ namespace Starvers
 		IEnumerator IEnumerable.GetEnumerator()
 		{
 			return GetEnumerator();
+		}
+		#endregion
+		#region INotifyCollectionChanged
+		public event NotifyCollectionChangedEventHandler CollectionChanged;
+		private void Set(int index, StarverPlayer value)
+		{
+			var old = Players[index];
+			Players[index] = value;
+			OnChanged(index, old);
+		}
+		private void OnChanged(int index, StarverPlayer old)
+		{
+			var args = new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, Players[index], old, index);
+			CollectionChanged?.Invoke(this, args);
 		}
 		#endregion
 	}
