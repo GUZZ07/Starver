@@ -15,6 +15,7 @@ using TShockAPI;
 
 namespace Starvers
 {
+	using PlayerBoosts;
 	[Table("Starver14")]
 	public class PlayerData
 	{
@@ -24,7 +25,12 @@ namespace Starvers
 		public int MP { get; set; }
 
 		[JsonIgnore]public string SkillDatas { get; set; }
+		[JsonIgnore] public string ItemBoostDatas { get; set; }
+		[JsonIgnore] public string AccessoryDatas { get; set; }
 		[NotMapped]	public SkillStorage?[] Skills { get; set; }
+		[NotMapped] public List<BoostData> ItemBoosts { get; set; }
+		[NotMapped] public List<BoostData> AccessoryBoosts { get; set; }
+
 		public PlayerData()
 		{
 
@@ -35,9 +41,11 @@ namespace Starvers
 			Level = 1;
 			Exp = 0;
 			Skills = new SkillStorage?[Starver.MaxSkillSlot];
+			ItemBoosts = new List<BoostData>();
+			AccessoryBoosts = new List<BoostData>();
 		}
-
-		public void GetSkillDatas(PlayerSkillData[] skills)
+        #region SkillDatas
+        public void GetSkillDatas(PlayerSkillData[] skills)
 		{
 			if (Starver.Instance.Config.StorageType == StorageType.MySql && Skills == null)
 			{
@@ -62,7 +70,6 @@ namespace Starvers
 				}
 			}
 		}
-
 		public void SetSkillDatas(PlayerSkillData[] skills)
 		{
 			for (int i = 0; i < Starver.MaxSkillSlot; i++)
@@ -74,8 +81,20 @@ namespace Starvers
 				SkillDatas = JsonConvert.SerializeObject(Skills);
 			}
 		}
-
-		public string Serialize()
+        #endregion
+        #region BoostDatas
+		public void DatasToString()
+        {
+			ItemBoostDatas = string.Join(",", ItemBoosts);
+			AccessoryDatas = string.Join(",", AccessoryBoosts);
+		}
+		public void StringToDatas()
+        {
+			ItemBoosts = BoostData.SplitFromString(ItemBoostDatas);
+			AccessoryBoosts = BoostData.SplitFromString(AccessoryDatas);
+		}
+        #endregion
+        public string Serialize()
 		{
 			return JsonConvert.SerializeObject(this, Formatting.Indented);
 		}
@@ -139,7 +158,9 @@ namespace Starvers
 					}
 				case StorageType.MySql:
 					{
-						return context.Datas.Find(userID) ?? throw new KeyNotFoundException("key: " + nameof(userID));
+						var data = context.Datas.Find(userID) ?? throw new KeyNotFoundException("key: " + nameof(userID));
+						data.StringToDatas();
+						return data;
 					}
 				default:
 					throw new NotImplementedException();
@@ -157,6 +178,7 @@ namespace Starvers
 					}
 				case StorageType.MySql:
 					{
+						data.DatasToString();
 						if (context.Datas.Find(data.UserID) == null)
 						{
 							context.Datas.Add(data);
