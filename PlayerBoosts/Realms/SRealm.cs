@@ -30,7 +30,13 @@ namespace Starvers.PlayerBoosts.Realms
 			shape.Begin(this);
 		}
 
-		public override bool InRange(Entity entity)
+        public override void Kill()
+        {
+            base.Kill();
+			shape.Kill();
+        }
+
+        public override bool InRange(Entity entity)
 		{
 			return shape.InRange(entity);
 		}

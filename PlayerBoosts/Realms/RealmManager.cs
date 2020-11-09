@@ -9,6 +9,7 @@ using TShockAPI;
 
 namespace Starvers.PlayerBoosts.Realms
 {
+	using Shapes;
 	public class RealmManager
 	{
 		private Queue<IRealm> realmQueue;
@@ -24,7 +25,9 @@ namespace Starvers.PlayerBoosts.Realms
 
 			var types = new Type[]
 			{
-				typeof(ApoptoticRealm)
+				typeof(ApoptoticRealm),
+				typeof(ReflectingRealm<Circle>),
+				typeof(BlindingRealm<Circle>)
 			};
 			RealmTypes = new ReadOnlyCollection<Type>(types);
 		}
@@ -72,7 +75,7 @@ namespace Starvers.PlayerBoosts.Realms
 		public void TriggerByCommand(CommandArgs args)
 		{
 			var player = args.Player;
-			if (args.Parameters.Count < 1 || !int.TryParse(args.Parameters[1], out int idx))
+			if (args.Parameters.Count < 1 || !int.TryParse(args.Parameters[0], out int idx))
 			{
 				ShowTo(player);
 				return;
@@ -83,14 +86,16 @@ namespace Starvers.PlayerBoosts.Realms
 				return;
 			}
 			var type = RealmTypes[idx];
-			var method = type.GetMethod("TriggerByCommand", BindingFlags.Static | BindingFlags.NonPublic);
+			var method = type.GetMethod("TriggerByCommand",BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public);
 			if (method != null)
 			{
 				method.Invoke(null, new[] { args });
 			}
 			else
 			{
-				Add((IRealm)Activator.CreateInstance(type));
+				var realm = (IRealm)Activator.CreateInstance(type);
+				realm.Center = (Vector)args.Player.TPlayer.Center;
+				Add(realm);
 			}
 		}
 	}

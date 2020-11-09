@@ -87,8 +87,20 @@ namespace Starvers
 		{
 			get => TPlayer.DeadOrGhost;
 		}
-		public int ItemUseDelay { get; set; }
-		public Item HeldItem => TPlayer.inventory[TPlayer.selectedItem];
+		public int Team
+        {
+			get => TPlayer.team;
+			set => TSPlayer.SetTeam(value);
+        }
+		public int ItemUseDelay
+		{
+			get;
+			set;
+		}
+		public Item HeldItem
+		{
+			get => TPlayer.inventory[TPlayer.selectedItem];
+		}
 		public double ItemUseAngle
 		{
 			get
@@ -101,7 +113,10 @@ namespace Starvers
 				return angle;
 			}
 		}
-		public bool ControlUseItem => TPlayer.controlUseItem;
+		public bool ControlUseItem
+		{
+			get => TPlayer.controlUseItem;
+		}
 		public NetInventory Inventory
 		{
 			get;

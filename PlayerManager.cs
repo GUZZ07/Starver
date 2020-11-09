@@ -117,7 +117,10 @@ namespace Starvers
 		{
 			var old = Players[index];
 			Players[index] = value;
-			OnChanged(index, old);
+			Starver.Instance.Window.Dispatcher.Invoke(() =>
+			{
+				OnChanged(index, old);
+			});
 		}
 		private void OnChanged(int index, StarverPlayer old)
 		{
