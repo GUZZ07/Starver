@@ -20,7 +20,7 @@ namespace Starvers
 {
 	public class StarverPlayer
 	{
-		#region Constsnts
+		#region Constants
 		private const int mpCostToUseWeapon = 2;
 		#endregion
 		#region Types
@@ -229,6 +229,16 @@ namespace Starvers
 			set => Data.MP = value;
 		}
 
+		public List<BoostData> ItemBoosts
+        {
+			get => Data.ItemBoosts;
+		}
+
+		public List<BoostData> AccessoryBoosts
+		{
+			get => Data.AccessoryBoosts;
+		}
+
 		public int MPMax
 		{
 			get;
@@ -434,6 +444,10 @@ namespace Starvers
 						skillCheckDelay += 20;
 					}
 				}
+			}
+			for (int i = 0; i < ItemBoosts.Count; i++)
+			{
+
 			}
 		}
 		public virtual void OnNewProj(GetDataHandlers.NewProjectileEventArgs args)

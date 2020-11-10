@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Starvers.PlayerBoosts
 {
+    using Items;
     /// <summary>
     /// 用于强化武器和饰品
     /// </summary>
@@ -18,7 +19,7 @@ namespace Starvers.PlayerBoosts
         {
             return $"{Type}&{Level}";
         }
-
+        #region Convert
         public static BoostData FromString(string value)
         {
             var values = value.Split('&');
@@ -30,6 +31,10 @@ namespace Starvers.PlayerBoosts
         }
         public static List<BoostData> SplitFromString(string value)
         {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return new List<BoostData>();
+            }
             var values = value.Split(',');
             var datas = new List<BoostData>(values.Length);
             for (int i = 0; i < values.Length; i++)
@@ -38,5 +43,12 @@ namespace Starvers.PlayerBoosts
             }
             return datas;
         }
+        #endregion
+
+        public ItemBoost GetItemBoost()
+        {
+            throw new NotImplementedException();
+        }
+
     }
 }
