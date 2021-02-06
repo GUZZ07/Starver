@@ -259,6 +259,10 @@ namespace Starvers
 		}
 		#endregion
 		#region DamageNPC
+		protected virtual double CalcDamage(int damage)
+		{
+			return Main.CalculateDamageNPCsTake(damage, Defense);
+		}
 		#region Strike
 		/// <summary>
 		/// 
@@ -277,7 +281,7 @@ namespace Starvers
 			var index = Math.Sqrt(Math.Sqrt(player.MP / 200.0)) * 1.2;
 			damage = (int)Math.Max(raw, damage * player.DamageIndex * index);
 			knockBack *= player.KnockBackIndex;
-			var realDamage = (int)Main.CalculateDamageNPCsTake(damage, Defense);
+			var realDamage = (int)CalcDamage(damage);
 			if (crit)
 			{
 				realDamage *= 2;

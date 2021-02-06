@@ -39,7 +39,7 @@ namespace Starvers.PlayerBoosts.Skills
 		{
 			foreach (var npc in Main.npc)
 			{
-				if (!npc.active)
+				if (!npc.active || npc.dontTakeDamage)
 				{
 					return;
 				}

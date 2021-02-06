@@ -21,6 +21,7 @@ namespace Starvers
 	using SWindow = System.Windows.Window;
 	using Application = System.Windows.Application;
 	using ShutdownMode = System.Windows.ShutdownMode;
+	using NPCManager = Enemies.Npcs.StarverNPCManager;
 	#endregion
 	#region Using Namespaces
 	using Enemies.Bosses;
@@ -82,6 +83,11 @@ namespace Starvers
 			get;
 			private set;
 		}
+		public NPCManager NPCs
+		{
+			get;
+			private set;
+		}
 		public BossManager Bosses
 		{
 			get;
@@ -127,6 +133,7 @@ namespace Starvers
 			ProjTasks = new ProjLaunchTaskManager();
 			Skills = new SkillManager();
 			Bosses = new BossManager();
+			NPCs = new NPCManager();
 			PlayerDatas = new PlayerDataManager(Config.StorageType);
 			Players = new PlayerManager(TShock.Players.Length);
 			Realms = new RealmManager();
@@ -213,6 +220,7 @@ namespace Starvers
 			ServerApi.Hooks.GameUpdate.Register(this, OnUpdate);
 			ServerApi.Hooks.GamePostUpdate.Register(this, PostUpdate);
 			ServerApi.Hooks.NetGetData.Register(this, OnGetData);
+			ServerApi.Hooks.NpcLootDrop.Register(this, OnNpcDrop);
 			PlayerHooks.PlayerPostLogin += OnPostLogin;
 			GetDataHandlers.NewProjectile += OnNewProjectile;
 			#endregion
@@ -241,6 +249,7 @@ namespace Starvers
 			ServerApi.Hooks.GameUpdate.Deregister(this, OnUpdate);
 			ServerApi.Hooks.GamePostUpdate.Deregister(this, PostUpdate);
 			ServerApi.Hooks.NetGetData.Deregister(this, OnGetData);
+			ServerApi.Hooks.NpcLootDrop.Deregister(this, OnNpcDrop);
 			PlayerHooks.PlayerPostLogin -= OnPostLogin;
 			GetDataHandlers.NewProjectile -= OnNewProjectile;
 			#endregion
@@ -297,6 +306,7 @@ namespace Starvers
 			timer++;
 			Players.Update();
 			Bosses.Update();
+			NPCs.Update();
 			ProjTasks.Update();
 			Skills.Update();
 			Realms.Update();
@@ -561,6 +571,12 @@ namespace Starvers
 			{
 				player.OnGetData(args);
 			}
+		}
+		#endregion
+		#region OnNpcDrop
+		private void OnNpcDrop(NpcLootDropEventArgs args)
+		{
+			NPCs.OnDrop(args);
 		}
 		#endregion
 		#endregion

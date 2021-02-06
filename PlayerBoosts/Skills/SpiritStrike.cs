@@ -48,7 +48,7 @@ namespace Starvers.PlayerBoosts.Skills
 					{
 						foreach (var npc in Main.npc)
 						{
-							if (npc.active && !npc.friendly && npc.Distance(player.Center) <= radium)
+							if (npc.active && !npc.dontTakeDamage && !npc.friendly && npc.Distance(player.Center) <= radium)
 							{
 								npc.StrikeNPC(140 + Rand.Next(10), 20, 0, true, fromNet: true, entity: player);
 							}

@@ -18,6 +18,8 @@ using TShockAPI;
 
 namespace Starvers
 {
+	using NPCSpawnChecker = Enemies.Npcs.SpawnChecker;
+	using BiomeType = Enemies.Npcs.BiomeType;
 	public class StarverPlayer
 	{
 		#region Constants
@@ -53,6 +55,7 @@ namespace Starvers
 		}
 		#endregion
 		#endregion
+		#region Properties
 		#region RawDatas
 		public int Index
 		{
@@ -88,10 +91,10 @@ namespace Starvers
 			get => TPlayer.DeadOrGhost;
 		}
 		public int Team
-        {
+		{
 			get => TPlayer.team;
 			set => TSPlayer.SetTeam(value);
-        }
+		}
 		public int ItemUseDelay
 		{
 			get;
@@ -204,6 +207,10 @@ namespace Starvers
 		private int noUseItem;
 
 		private int noRegenMP;
+
+		private Point tilePoint;
+
+		private Random rand;
 		#endregion
 		public bool IgnoreCD { get; set; }
 
@@ -230,7 +237,7 @@ namespace Starvers
 		}
 
 		public List<BoostData> ItemBoosts
-        {
+		{
 			get => Data.ItemBoosts;
 		}
 
@@ -271,6 +278,7 @@ namespace Starvers
 		{
 			get => 1 + 3 * Math.Log10(Math.Sqrt(Level));
 		}
+		#endregion
 		#region Ctor
 		protected StarverPlayer()
 		{
@@ -293,6 +301,8 @@ namespace Starvers
 			}
 			Data.GetSkillDatas(Skills);
 			MPMax = CalcMPMax(Level);
+
+			rand = new Random();
 		}
 		#endregion
 		#region SaveData
@@ -424,7 +434,7 @@ namespace Starvers
 			{
 				noUseItem = 0;
 				var fromUseTime = Math.Max(1, Math.Log(16.0 / item.useTime - 1 + Math.E));
-				var fromDamage =Math.Log10(10 + TPlayer.GetWeaponDamage(item) / 10.0);
+				var fromDamage = Math.Log10(10 + TPlayer.GetWeaponDamage(item) / 10.0);
 				var cost = CalcMPCost(Level) * fromDamage / fromUseTime;
 				// SendBlueText($"{cost}");
 				MP = Math.Max(0, (int)(MP - cost));
@@ -518,7 +528,7 @@ namespace Starvers
 			args.Npc.SendCombatText(realdamage.ToString(), Starver.DamageColor);
 			var realNPC = args.Npc.realLife > 0 ? Main.npc[args.Npc.realLife] : args.Npc;
 			var expGet = Math.Min(realdamage, realNPC.life);
-			if (!args.Npc.SpawnedFromStatue && args.Npc.type != NPCID.TargetDummy && expGet > 0)
+			if (!args.Npc.SpawnedFromStatue && !args.Npc.friendly && expGet > 0)
 			{
 				Exp += expGet;
 			}
@@ -531,6 +541,9 @@ namespace Starvers
 		public virtual void Update()
 		{
 			Timer++;
+			#region UpdateTilePoint
+			tilePoint = Center.ToTileCoordinates();
+			#endregion
 			#region Status Text
 			static string CalcMPStar(int MP)
 			{
@@ -663,6 +676,164 @@ MP({MP}/{MPMax})
 		}
 		#endregion
 		#region Utilities
+		#region Zones
+		public bool ZoneDirtLayerHeight => tilePoint.Y <= Main.rockLayer && tilePoint.Y > Main.worldSurface;
+		public bool ZoneBeach => ZoneOverworldHeight && (tilePoint.X < 380 || tilePoint.X > Main.maxTilesX - 380);
+		public bool ZoneOverworldHeight => tilePoint.Y <= Main.worldSurface && tilePoint.Y > Main.worldSurface * 0.349999994039536;
+		public bool ZoneRockLayerHeight => tilePoint.Y <= Main.maxTilesY - 200 && (double)tilePoint.Y > Main.rockLayer;
+		public bool ZoneRain => Main.raining && tilePoint.Y <= Main.worldSurface;
+		public bool ZoneUnderworldHeight => tilePoint.Y > Main.maxTilesY - 200;
+		public bool ZoneSkyHeight => tilePoint.Y <= Main.worldSurface * 0.349999994039536;
+		public bool ZoneHell => ZoneUnderworldHeight;
+		#endregion
+		#region RandRocket
+		public void RandomRocket(int min, int Max)
+		{
+			short[] rockets =
+			{
+				ProjectileID.RocketFireworksBoxGreen,
+				ProjectileID.RocketFireworksBoxYellow,
+				ProjectileID.RocketFireworksBoxRed,
+				ProjectileID.RocketFireworksBoxBlue,
+				ProjectileID.RocketFireworksBoxGreen,
+				ProjectileID.RocketFireworksBoxYellow,
+				ProjectileID.RocketFireworksBoxRed,
+				ProjectileID.RocketFireworksBoxBlue,
+				ProjectileID.FireworkFountainRainbow
+			};
+			int count = rand.Next(min, Max);
+			while (count-- > 0)
+			{
+				int idx = NewProj(Center + rand.NextVector2(16 * 60, 16 * 30), Vector2.Zero, rockets.Next(), 0);
+				Main.projectile[idx].timeLeft = 0;
+			}
+		}
+		#endregion
+		#region InLiquid
+		public bool InLiquid(byte type)
+		{
+			var tile = Main.tile[tilePoint.X, tilePoint.Y];
+			return tile.liquidType() == type && tile.liquid != 0;
+		}
+		#endregion
+		#region GetSpawnChecker
+		public NPCSpawnChecker GetNPCSpawnChecker()
+		{
+			NPCSpawnChecker checker = new NPCSpawnChecker();
+			#region D/N, ○/●
+			if (Main.dayTime)
+			{
+				if (Main.eclipse)
+				{
+					checker.Condition = Enemies.Npcs.SpawnConditions.Eclipse;
+				}
+				else
+				{
+					checker.Condition = Enemies.Npcs.SpawnConditions.Day;
+				}
+			}
+			else
+			{
+				if (Main.bloodMoon)
+				{
+					checker.Condition = Enemies.Npcs.SpawnConditions.BloodMoon;
+				}
+				else
+				{
+					checker.Condition = Enemies.Npcs.SpawnConditions.Night;
+				}
+			}
+			#endregion
+			BiomeType biome = default;
+			bool grass = true;
+			#region Zones
+			if (TPlayer.ZoneDesert)
+			{
+				grass = false;
+				biome |= BiomeType.Dessert;
+			}
+			if (TPlayer.ZoneHallow)
+			{
+				grass = false;
+				biome |= BiomeType.Holy;
+			}
+			if (TPlayer.ZoneCorrupt)
+			{
+				grass = false;
+				biome |= BiomeType.Corrupt;
+			}
+			if (TPlayer.ZoneCrimson)
+			{
+				grass = false;
+				biome |= BiomeType.Crimson;
+			}
+			if (ZoneDirtLayerHeight || ZoneRockLayerHeight)
+			{
+				grass = false;
+				biome |= BiomeType.UnderGround;
+			}
+			if (TPlayer.ZoneJungle)
+			{
+				grass = false;
+				biome |= BiomeType.Jungle;
+			}
+			if (TPlayer.ZoneSnow)
+			{
+				grass = false;
+				biome |= BiomeType.Icy;
+			}
+			if (TPlayer.ZoneMeteor)
+			{
+				grass = false;
+				biome |= BiomeType.Metor;
+			}
+			if (ZoneRain)
+			{
+				grass = false;
+				biome |= BiomeType.Rain;
+			}
+			if (ZoneUnderworldHeight)
+			{
+				grass = false;
+				biome |= BiomeType.Hell;
+			}
+			if (TPlayer.ZoneTowerSolar)
+			{
+				grass = false;
+				biome |= BiomeType.TowerSolar;
+			}
+			if (TPlayer.ZoneTowerNebula)
+			{
+				grass = false;
+				biome |= BiomeType.TowerNebula;
+			}
+			if (TPlayer.ZoneTowerStardust)
+			{
+				grass = false;
+				biome |= BiomeType.TowerStardust;
+			}
+			if (TPlayer.ZoneTowerVortex)
+			{
+				grass = false;
+				biome |= BiomeType.TowerVortex;
+			}
+			if (ZoneSkyHeight)
+			{
+				biome |= BiomeType.Sky;
+			}
+			if (ZoneBeach)
+			{
+				biome |= BiomeType.Beach;
+			}
+			if (grass)
+			{
+				biome |= BiomeType.Grass;
+			}
+			#endregion
+			checker.Biome = biome;
+			return checker;
+		}
+		#endregion
 		#region BlockMPRegen
 		public void BlockMPRegen(int timeInTick)
 		{
