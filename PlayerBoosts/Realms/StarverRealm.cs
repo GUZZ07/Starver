@@ -14,6 +14,7 @@ namespace Starvers.PlayerBoosts.Realms
 
 		public int? DefTimeLeft { get; set; }
 		public virtual Vector Center { get; set; }
+		public virtual Vector Velocity { get; set; }
 		public bool Active { get; set; }
 
 		public abstract bool InRange(Entity entity);
@@ -33,6 +34,7 @@ namespace Starvers.PlayerBoosts.Realms
 
 		public virtual void Update()
 		{
+			Center += Velocity;
 			InternalUpdate();
 			UpdateTimeLeft();
 		}

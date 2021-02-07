@@ -1072,7 +1072,7 @@ namespace Starvers.Enemies.Bosses
 					int time = AccumulationTime - Timer;
 					time = (int)(time / (float)AccumulationTime * 10);
 					time = (int)MathHelper.Clamp(time, 1, 10);
-					if (Timer % (30 / time) == 0)
+					if (Timer < AccumulationTime - 30 && Timer % (30 / time) == 0)
 					{
 						AccumulationEffect();
 						AccumulationEffect();

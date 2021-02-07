@@ -39,6 +39,17 @@ namespace Starvers
 			int index = Projectile.NewProjectile(position, velocity, Type, Damage, KnockBack, owner, ai0, ai1);
 			return index;
 		}
+		public static int FindEmptyNPCSlot(int begin)
+		{
+			for (int i = begin; i < Main.maxNPCs; i++)
+			{
+				if (!Main.npc[i].active)
+				{
+					return i;
+				}
+			}
+			return Main.maxNPCs;
+		}
 		#region Rands
 		/// <summary>
 		/// 随机返回1或-1

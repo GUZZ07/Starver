@@ -62,6 +62,7 @@ namespace Starvers.PlayerBoosts.Realms.Shapes
 
 		public virtual void Begin(IRealm owner)
 		{
+			this.owner = owner;
 			Border = new int[Max];
 			if (BorderProjID is not int projID)
 			{
@@ -71,7 +72,7 @@ namespace Starvers.PlayerBoosts.Realms.Shapes
 			{
 				Border[i] = Utils.NewProj(Center + Vector.FromPolar(Math.PI * 2 / 60 * i, Radium), default, projID, 1, 20, Main.myPlayer);
 				Main.projectile[Border[i]].aiStyle = -2;
-				if (DefProjTimeLeft != 0)
+				if (DefProjTimeLeft != null)
 				{
 					Main.projectile[Border[i]].timeLeft = (int)DefProjTimeLeft;
 				}
@@ -106,7 +107,7 @@ namespace Starvers.PlayerBoosts.Realms.Shapes
 				var proj = Main.projectile[Border[i]];
 				if (!proj.active || proj.type != BorderProjID)
 				{
-					Border[i] = Utils.NewProj(Center + Vector.FromPolar(Math.PI * 2 / 60 * i, Radium), default, projID, 1, 20, Main.myPlayer);
+					Border[i] = Utils.NewProj(Center + Vector.FromPolar(Math.PI * 2 / 60 * i + Rotation, Radium), default, projID, 1, 20, Main.myPlayer);
 					proj = Main.projectile[Border[i]];
 					proj.aiStyle = -2;
 					if (DefProjTimeLeft != null)
@@ -114,6 +115,7 @@ namespace Starvers.PlayerBoosts.Realms.Shapes
 						proj.timeLeft = (int)DefProjTimeLeft;
 					}
 				}
+				proj.Center = Center + Vector.FromPolar(Math.PI * 2 / 60 * i + Rotation, Radium);
 				proj.SendData();
 			}
 		}
