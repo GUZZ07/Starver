@@ -22,6 +22,7 @@ using Terraria.ID;
 namespace Starvers
 {
 	using Vector = TOFOUT.Terraria.Server.Vector2;
+	using Dropping = Terraria.GameContent.ItemDropRules.CommonCode;
 	public static class Utils
 	{
 		#region Properties
@@ -33,6 +34,8 @@ namespace Starvers
 		#region DropItemInstanced
 		public static void DropItemForEveryone(this NPC npc, Vector2 Position, int itemType, int itemStack = 1, bool interactionRequired = true)
 		{
+			Dropping.DropItemForEachInteractingPlayerOnThePlayer(npc, itemType, Main.rand, 1, 1, itemStack, true);
+			return;
 			if (itemType <= 0)
 			{
 				return;
