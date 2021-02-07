@@ -973,9 +973,10 @@ namespace Starvers
 			/*else*/
 			if (Config.EnableStrongerNPC)
 			{
-				if (npc.townNPC)
+				if (npc.townNPC || npc.damage == 0 || npc.friendly)
 				{
 					npc.life = npc.lifeMax = short.MaxValue;
+					npc.damage = 0;
 					npc.defense = -10;
 				}
 				else if (!npc.friendly)

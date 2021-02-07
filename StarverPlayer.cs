@@ -2064,8 +2064,7 @@ namespace Starvers
 				new SQLColumn { Name = "Exp", DataType = MySqlDbType.Int32, Length = 4 },
 				new SQLColumn { Name = "Skills", DataType = MySqlDbType.Text, Length = 30 },
 				new SQLColumn { Name = "Weapons", DataType = MySqlDbType.Text, Length = 80 },
-				new SQLColumn { Name = "BranchTaskDatas", DataType = MySqlDbType.VarBinary, Length = 4 * 16 },
-				new SQLColumn { Name = "ExtensionDatas", DataType = MySqlDbType.VarBinary, Length = 256 }
+				new SQLColumn { Name = "BranchTaskDatas", DataType = MySqlDbType.VarBinary, Length = 4 * 16 }
 				);
 			creator.CreateTable(Table);
 		}
