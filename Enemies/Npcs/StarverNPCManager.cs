@@ -59,17 +59,19 @@ namespace Starvers.Enemies.Npcs
 		public void Update()
 		{
 			#region CheckSpawn
+			var count = NPC.defaultMaxSpawns * Starver.Instance.Players.Count(p => p != null) - npcs.Count(npc => npc != null && npc.Active);
 			foreach (var root in roots)
 			{
 				foreach (var player in Starver.Instance.Players)
 				{
-					if (player != null && player.Alive)
+					if (player != null && count > 0 && player.Alive)
 					{
 						if (root.CheckSpawn(player))
 						{
 							if (root.TrySpawnNewNpc(player, out var npc))
 							{
 								npcs[npc.Index] = npc;
+								count--;
 							}
 						}
 					}
@@ -83,19 +85,33 @@ namespace Starvers.Enemies.Npcs
 				{
 					continue;
 				}
-				if (!npcs[i].Active)
-				{
-					npcs[i] = null;
-					return;
-				}
 				npcs[i].AI();
 			}
 			#endregion
 		}
+		public void PostUpdate()
+		{
+			for (int i = 0; i < npcs.Length; i++)
+			{
+				if (npcs[i] == null)
+				{
+					continue;
+				}
+				else if (npcs[i].Life == 0 && npcs[i].Active)
+				{
+					npcs[i].Kill();
+				}
+				if (!npcs[i].Active)
+				{
+					npcs[i] = null;
+					continue;
+				}
+			}
+		}
 		#endregion
 		#region OnDrop
 		public void OnDrop(NpcLootDropEventArgs args)
-		{
+		{TSPlayer.All.SendMessage($"{args.NpcArrayIndex}",255,255,0);
 			if (npcs[args.NpcArrayIndex] != null && npcs[args.NpcArrayIndex].Active)
 			{
 				args.Handled = npcs[args.NpcArrayIndex].OverrideRawDrop;

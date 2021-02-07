@@ -42,6 +42,9 @@ namespace Starvers.Enemies.Npcs
 		/// </summary>
 		protected double DamageIndex;
 		protected Random rand;
+		protected bool noTileCollide;
+		protected bool noGravity;
+		private Vector sSize;
 		#endregion
 		#region Properties
 		public SpawnSpaceOptions SpaceOption
@@ -76,10 +79,11 @@ namespace Starvers.Enemies.Npcs
 		}
 		#endregion
 		#region Ctor
-		public StarverNPC()
+		public StarverNPC(Vector size)
 		{
 			DamageIndex = 1;
 			rand = new Random();
+			sSize = size;
 		}
 		#endregion
 		#region Methods
@@ -89,10 +93,17 @@ namespace Starvers.Enemies.Npcs
 		}
 		protected virtual void Spawn(Vector pos)
 		{
-			int slot = Utils.FindEmptyNPCSlot(0);
+			// int slot = Utils.FindEmptyNPCSlot(0);
+			int slot = NPC.NewNPC(0, 0, 1);
 			Index = slot;
-			Main.npc[slot] = new NPC();
+			// Main.npc[slot] = new NPC();
+			// Main.npc[slot].whoAmI = Index;
+			Main.npc[slot].active = true;
+			Main.npc[slot].aiStyle = -1;
+			Main.npc[slot].noTileCollide = noTileCollide;
+			Main.npc[slot].noGravity = noGravity;
 			Initialize();
+			TNPC.netID = TNPC.type;
 			TNPC.position = pos;
 			TNPC.SendData();
 		}
@@ -182,7 +193,7 @@ namespace Starvers.Enemies.Npcs
 			{
 				return vectors[rand.Next(t)];
 			}
-			if (NoTileCollide)
+			if (noTileCollide)
 			{
 				return (Vector)(PlayerCenter + rand.NextVector2(16 * 50));
 			}
@@ -216,7 +227,7 @@ namespace Starvers.Enemies.Npcs
 			{
 				return vectors[rand.Next(t)];
 			}
-			if (NoTileCollide)
+			if (noTileCollide)
 			{
 				return (Vector)(PlayerCenter + rand.NextVector2(16 * 50));
 			}
@@ -291,8 +302,8 @@ namespace Starvers.Enemies.Npcs
 			{
 				return false;
 			}
-			int heightRequired = i + (int)Math.Ceiling(Height / 16.0);
-			int widthRequired = j + (int)Math.Ceiling(Width / 16.0);
+			int heightRequired = i + (int)Math.Ceiling(sSize.Y / 16.0);
+			int widthRequired = j + (int)Math.Ceiling(sSize.X / 16.0);
 			#region CheckSpaceOptions
 			#region Wet
 			if (SpaceOption.HasFlag(SpawnSpaceOptions.NotWet) && !NotWet(i, j, heightRequired, widthRequired))
@@ -301,7 +312,7 @@ namespace Starvers.Enemies.Npcs
 			}
 			#endregion
 			#region Ground
-			if (SpaceOption.HasFlag(SpawnSpaceOptions.StepableGround) && NoGravity == false && !HasGround(i, j, widthRequired))
+			if (SpaceOption.HasFlag(SpawnSpaceOptions.StepableGround) && !noGravity && !HasGround(i, j, widthRequired))
 			{
 				return false;
 			}

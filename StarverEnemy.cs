@@ -321,7 +321,7 @@ namespace Starvers
 			realNPC.life -= damage;
 			if (realNPC.life <= 0)
 			{
-				realNPC.checkDead();
+				Kill();
 			}
 		}
 		#endregion

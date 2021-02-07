@@ -29,11 +29,6 @@ namespace Starvers.Enemies.Npcs
 			get;
 			set;
 		}
-		public Func<bool> ExtraCheck
-		{
-			get;
-			set;
-		}
 		#endregion
 		#region Method
 		public bool Match(SpawnChecker value)

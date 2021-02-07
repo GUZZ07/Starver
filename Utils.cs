@@ -13,7 +13,7 @@ namespace Starvers
 	public static class Utils
 	{
 		private static Random rand = new Random();
-		public static void SendCombatText(Vector2 pos, string text, Color color,int remoteClient = -1, int ignoreClient = -1)
+		public static void SendCombatText(Vector2 pos, string text, Color color, int remoteClient = -1, int ignoreClient = -1)
 		{
 			NetMessage.SendData((int)PacketTypes.CreateCombatTextExtended, remoteClient, ignoreClient, NetworkText.FromLiteral(text), (int)color.PackedValue, pos.X, pos.Y, 0.0f, 0, 0, 0);
 		}

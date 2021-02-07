@@ -300,6 +300,7 @@ namespace Starvers
 		private void PostUpdate(object args)
 		{
 			Players.PostUpdate();
+			NPCs.PostUpdate();
 		}
 		private void OnUpdate(EventArgs args)
 		{

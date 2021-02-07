@@ -519,6 +519,12 @@ namespace Starvers
 				boss.Strike(this, args.Damage, args.KnockBack, args.HitDirection, args.Critical);
 				return;
 			}
+			var sNpc = Starver.Instance.NPCs[args.Npc.whoAmI];
+			if (sNpc != null && sNpc.Active)
+			{
+				sNpc.Strike(this, args.Damage, args.KnockBack, args.HitDirection, args.Critical);
+				return;
+			}
 			#region Normal
 			var raw = args.Damage;
 			var index = Math.Sqrt(Math.Sqrt(MP / 200.0)) * 1.2;
