@@ -538,7 +538,7 @@ namespace Starvers
 			}
 			if (RealNPC.life < 1)
 			{
-				if (RealNPC.SpawnedFromStatue || RealNPC.damage == 0)
+				if (!RealNPC.SpawnedFromStatue && RealNPC.damage != 0)
 				{
 					player.Exp += liferemain;
 				}
@@ -548,7 +548,7 @@ namespace Starvers
 			}
 			else
 			{
-				if (RealNPC.SpawnedFromStatue || RealNPC.damage == 0)
+				if (!RealNPC.SpawnedFromStatue && RealNPC.damage != 0)
 				{
 					player.Exp += realdamage;
 				}
