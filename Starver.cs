@@ -538,14 +538,20 @@ namespace Starvers
 			}
 			if (RealNPC.life < 1)
 			{
-				player.Exp += liferemain;
+				if (RealNPC.SpawnedFromStatue || RealNPC.damage == 0)
+				{
+					player.Exp += liferemain;
+				}
 				StarverPlayer.All.SendData(PacketTypes.NpcStrike, string.Empty, RealNPC.whoAmI, -2);
 				// RealNPC.StrikeNPC(int.MaxValue, 0, args.HitDirection);
 				NArgs.KilledNPC = true;
 			}
 			else
 			{
-				player.Exp += realdamage;
+				if (RealNPC.SpawnedFromStatue || RealNPC.damage == 0)
+				{
+					player.Exp += realdamage;
+				}
 				if (Config.EnableAura)
 				{
 					Vector knockback = (Vector)(args.Npc.Center - player.Center);
