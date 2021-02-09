@@ -538,7 +538,7 @@ namespace Starvers
 			}
 			if (RealNPC.life < 1)
 			{
-				if (!RealNPC.SpawnedFromStatue && RealNPC.damage != 0)
+				if (!RealNPC.SpawnedFromStatue && !Main.npcCatchable[RealNPC.type])
 				{
 					player.Exp += liferemain;
 				}
@@ -548,7 +548,7 @@ namespace Starvers
 			}
 			else
 			{
-				if (!RealNPC.SpawnedFromStatue && RealNPC.damage != 0)
+				if (!RealNPC.SpawnedFromStatue && !Main.npcCatchable[RealNPC.type])
 				{
 					player.Exp += realdamage;
 				}
@@ -979,7 +979,7 @@ namespace Starvers
 			/*else*/
 			if (Config.EnableStrongerNPC)
 			{
-				if (npc.townNPC || npc.damage == 0 || npc.friendly)
+				if (npc.townNPC || Main.npcCatchable[npc.type] || npc.friendly)
 				{
 					npc.life = npc.lifeMax = short.MaxValue;
 					npc.damage = 0;
