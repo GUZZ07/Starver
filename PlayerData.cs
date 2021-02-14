@@ -24,7 +24,7 @@ namespace Starvers
 		public int Exp { get; set; }
 		public int MP { get; set; }
 
-		[JsonIgnore]public string SkillDatas { get; set; }
+		[JsonIgnore] public string SkillDatas { get; set; }
 		[JsonIgnore] public string ItemBoostDatas { get; set; }
 		[JsonIgnore] public string AccessoryDatas { get; set; }
 		[NotMapped]	public SkillStorage?[] Skills { get; set; }

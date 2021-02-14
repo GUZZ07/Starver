@@ -245,7 +245,7 @@ namespace Starvers.Enemies.Bosses
 								NetMessage.SendData(27, -1, -1, null, idx);
 								var velocity = pos - (faithCenterTolaunchCenter + faithCenter);
 								velocity.PolarRadius = -speed;
-								Starver.Instance.ProjTasks.Add(new ProjLaunchTask(idx, velocity, 60 * 3 - Timer));
+								Starver.Instance.ProjsController.Add(new ProjLauncher(idx, velocity, 60 * 3 - Timer));
 								faithCenterToPos.Angle += AngleBig;
 								faithCenterTolaunchCenter.Angle += AngleBig;
 							}
@@ -273,7 +273,7 @@ namespace Starvers.Enemies.Bosses
 								NetMessage.SendData(27, -1, -1, null, idx);
 								var velocity = pos - (faithCenterTolaunchCenter + faithCenter);
 								velocity.PolarRadius = -speed;
-								Starver.Instance.ProjTasks.Add(new ProjLaunchTask(idx, velocity, 60 * 3 - Timer + 60));
+								Starver.Instance.ProjsController.Add(new ProjLauncher(idx, velocity, 60 * 3 - Timer + 60));
 								faithCenterToPos.Angle += AngleBig;
 								faithCenterTolaunchCenter.Angle += AngleBig;
 							}
@@ -301,7 +301,7 @@ namespace Starvers.Enemies.Bosses
 								NetMessage.SendData(27, -1, -1, null, idx);
 								var velocity = pos - (faithCenterTolaunchCenter + faithCenter);
 								velocity.PolarRadius = speed;
-								Starver.Instance.ProjTasks.Add(new ProjLaunchTask(idx, -velocity, 60 * 3 - Timer + 60 * 2));
+								Starver.Instance.ProjsController.Add(new ProjLauncher(idx, -velocity, 60 * 3 - Timer + 60 * 2));
 								faithCenterToPos.Angle += AngleBig;
 								faithCenterTolaunchCenter.Angle += AngleBig;
 							}
@@ -337,7 +337,7 @@ namespace Starvers.Enemies.Bosses
 								NetMessage.SendData(27, -1, -1, null, idx);
 								Vector velocity = pos - (faithCenterTolaunchCenter + faithCenter);
 								velocity.PolarRadius = speed;
-								Starver.Instance.ProjTasks.Add(new ProjLaunchTask(idx, -velocity, 60 * 3 - Timer + 60 * 6));
+								Starver.Instance.ProjsController.Add(new ProjLauncher(idx, -velocity, 60 * 3 - Timer + 60 * 6));
 								faithCenterToPos.Angle -= AngleBig;
 								faithCenterTolaunchCenter.Angle -= AngleBig;
 							}
@@ -365,7 +365,7 @@ namespace Starvers.Enemies.Bosses
 								NetMessage.SendData(27, -1, -1, null, idx);
 								Vector velocity = pos - (faithCenterTolaunchCenter + faithCenter);
 								velocity.PolarRadius = speed;
-								Starver.Instance.ProjTasks.Add(new ProjLaunchTask(idx, -velocity, 60 * 3 - Timer + 60 * 7));
+								Starver.Instance.ProjsController.Add(new ProjLauncher(idx, -velocity, 60 * 3 - Timer + 60 * 7));
 								faithCenterToPos.Angle -= AngleBig;
 								faithCenterTolaunchCenter.Angle -= AngleBig;
 							}
@@ -393,7 +393,7 @@ namespace Starvers.Enemies.Bosses
 								NetMessage.SendData(27, -1, -1, null, idx);
 								var velocity = pos - (faithCenterTolaunchCenter + faithCenter);
 								velocity.PolarRadius = speed;
-								Starver.Instance.ProjTasks.Add(new ProjLaunchTask(idx, -velocity, 60 * 3 - Timer + 60 * 8));
+								Starver.Instance.ProjsController.Add(new ProjLauncher(idx, -velocity, 60 * 3 - Timer + 60 * 8));
 								faithCenterToPos.Angle -= AngleBig;
 								faithCenterTolaunchCenter.Angle -= AngleBig;
 							}
@@ -614,7 +614,7 @@ namespace Starvers.Enemies.Bosses
 						var velocity = -source / TridentHitPlayerTime;
 						var index = Boss.NewProj(Boss.TargetPlayer.Center + source, source.ToLenOf(-1f), ProjectileID.UnholyTridentHostile, Damage);
 						projs[created++] = index;
-						Starver.Instance.ProjTasks.Add(new ProjLaunchTask(index, velocity, LaunchDelay));
+						Starver.Instance.ProjsController.Add(new ProjLauncher(index, velocity, LaunchDelay));
 					}
 				}
 				else if (Timer > CreateInterval * TridentCount + LaunchDelay * 3)
@@ -627,7 +627,7 @@ namespace Starvers.Enemies.Bosses
 			{
 				for (int i = 0; i < created; i++)
 				{
-					Starver.Instance.ProjTasks.Cancel(projs[i]);
+					Starver.Instance.ProjsController.CancelLaunch(projs[i]);
 				}
 				base.Abort();
 			}

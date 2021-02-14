@@ -8,14 +8,14 @@ using Terraria;
 
 namespace Starvers
 {
-	public struct ProjLaunchTask
+	public class ProjLauncher
 	{
 		public int Index { get; }
 		public Vector2 Velocity { get; }
 		public int Delay { get; private set; }
 		public Projectile Proj => Main.projectile[Index];
 
-		public ProjLaunchTask(int index, Vector2 velocity, int delay)
+		public ProjLauncher(int index, Vector2 velocity, int delay)
 		{
 			Index = index;
 			Velocity = velocity;

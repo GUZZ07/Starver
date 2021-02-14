@@ -457,7 +457,16 @@ namespace Starvers
 			}
 			for (int i = 0; i < ItemBoosts.Count; i++)
 			{
-
+				if (ItemBoosts[i].Type == item.type)
+				{
+					var boost = ItemBoosts[i].GetItemBoost();
+					if (boost.CanUseItem(this))
+					{
+						boost.UseItem(this);
+						boost.ControlUseItem(this);
+					}
+					break;
+				}
 			}
 		}
 		public virtual void OnNewProj(GetDataHandlers.NewProjectileEventArgs args)
@@ -478,6 +487,18 @@ namespace Starvers
 						skill.Release(this, vel);
 						skillCheckDelay += 20;
 					}
+				}
+			}
+			for (int i = 0; i < ItemBoosts.Count; i++)
+			{
+				if (ItemBoosts[i].Type > 10000 && ItemBoosts[i].Type == args.Type + 10000)
+				{
+					var boost = ItemBoosts[i].GetItemBoost();
+					if (boost.CanUseItem(this))
+					{
+						boost.UseItem(this);
+					}
+					break;
 				}
 			}
 		}

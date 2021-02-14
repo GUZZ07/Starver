@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace Starvers.PlayerBoosts.Items
 {
-    public abstract class ItemBoost
+    public class ItemBoost
     {
-		public ItemBoostID BoostID { get; }
         public int ItemType { get; }
 
 
@@ -17,11 +16,10 @@ namespace Starvers.PlayerBoosts.Items
 		/// </summary>
 		public int? UseDelay { get; }
 
-		protected ItemBoost(int itemID, int? useDelayOverride = null)
+		internal ItemBoost(int itemID, int? useDelayOverride = null)
 		{
 			ItemType = itemID;
 			UseDelay = useDelayOverride;
-			BoostID = (ItemBoostID)Enum.Parse(typeof(ItemBoostID), GetType().Name);
 		}
 
 
@@ -36,7 +34,14 @@ namespace Starvers.PlayerBoosts.Items
 		{
 			return true;
 		}
-		public abstract void UseItem(StarverPlayer player);
+		public virtual void UseItem(StarverPlayer player)
+		{
+
+		}
+		/// <summary>
+		/// 只在controlUseItem当中触发
+		/// </summary>
+		/// <param name="player"></param>
 		public virtual void ControlUseItem(StarverPlayer player)
 		{
 

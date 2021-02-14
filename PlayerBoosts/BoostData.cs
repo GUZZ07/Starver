@@ -12,7 +12,7 @@ namespace Starvers.PlayerBoosts
     /// </summary>
     public struct BoostData
     {
-        public int Type;
+        public int Type;                // 当这个值大于10000时，请将它减去10000并作为弹幕ID(因为有的武器只能靠弹幕来捕获)
         public int Level;
 
         public override string ToString()
@@ -47,7 +47,7 @@ namespace Starvers.PlayerBoosts
 
         public ItemBoost GetItemBoost()
         {
-            throw new NotImplementedException();
+            return Starver.Instance.ItemBoosts.GetBoost(Type);
         }
 
     }

@@ -154,6 +154,34 @@ namespace Starvers.Enemies.Bosses
 		}
 		protected abstract void RealAI();
 		#endregion
+		#region FindTarget
+		protected void TryFindTarget(float maxDistance = float.PositiveInfinity)
+		{
+			StarverPlayer target = null;
+			foreach (var player in Starver.Instance.Players)
+			{
+				if (player == null || !player.Alive)
+				{
+					continue;
+				}
+				if (TNPC.Distance(player.Center) < maxDistance)
+				{
+					if (target == null)
+					{
+						target = player;
+					}
+					else if (TNPC.Distance(player.Center) < TNPC.Distance(target.Center))
+					{
+						target = player;
+					}
+				}
+			}
+			if (target != null)
+			{
+				Target = target.Index;
+			}
+		}
+		#endregion
 		#region Defeated
 		protected virtual void Defeated()
 		{

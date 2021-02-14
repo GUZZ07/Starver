@@ -16,7 +16,7 @@ using System.Runtime.CompilerServices;
 using System.Security;
 namespace Starvers
 {
-	public class ProjStack : Stack<Starvers.ProjLaunchTask>, IProjSet
+	public class ProjStack : Stack<Starvers.ProjLauncher>, IProjSet
 	{
 		#region Fields
 		private int Size;
@@ -30,7 +30,7 @@ namespace Starvers
 		#region Push
 		public bool Push(int idx, Vector Velocity)
 		{
-			Push(new ProjLaunchTask(idx, Velocity, 1));
+			Push(new ProjLauncher(idx, Velocity, 1));
 			return Count < Size;
 		}
 		public bool Push(IEnumerable<int> idxes, Vector Velocity)
@@ -60,7 +60,7 @@ namespace Starvers
 		#region Launch
 		public bool Launch(int HowMany)
 		{
-			Starvers.ProjLaunchTask pair;
+			Starvers.ProjLauncher pair;
 			for (int i = 0; i < HowMany && base.Count > 0; i++)
 			{
 				pair = Pop();
@@ -70,7 +70,7 @@ namespace Starvers
 		}
 		public bool Launch(int HowMany, Vector vel)
 		{
-			Starvers.ProjLaunchTask pair;
+			Starvers.ProjLauncher pair;
 			for (int i = 0; i < HowMany && base.Count > 0; i++)
 			{
 				pair = Pop();
@@ -80,7 +80,7 @@ namespace Starvers
 		}
 		public bool LaunchTo(int HowMany, Vector Where, float speed)
 		{
-			Starvers.ProjLaunchTask pair;
+			Starvers.ProjLauncher pair;
 			for (int i = 0; i < HowMany && base.Count > 0; i++)
 			{
 				pair = Pop();

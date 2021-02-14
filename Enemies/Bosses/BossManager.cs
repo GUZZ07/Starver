@@ -50,7 +50,8 @@ namespace Starvers.Enemies.Bosses
 			bosses = new StarverBoss[]
 			{
 				new EyeEx(),
-				new BrainEx()
+				new BrainEx(),
+				new CursedSkeletron()
 			};
 			foreach (var boss in bosses)
 			{

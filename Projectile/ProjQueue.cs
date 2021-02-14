@@ -20,7 +20,7 @@ namespace Starvers
 	/// <summary>
 	/// 事先将弹幕和速度存入,稍后发射
 	/// </summary>
-	public class ProjQueue : Queue<Starvers.ProjLaunchTask>, IProjSet
+	public class ProjQueue : Queue<Starvers.ProjLauncher>, IProjSet
 	{
 		#region Fields
 		private int Size;
@@ -34,7 +34,7 @@ namespace Starvers
 		#region Push
 		public bool Push(int idx, Vector velocity)
 		{
-			Enqueue(new Starvers.ProjLaunchTask(idx, velocity, 0));
+			Enqueue(new Starvers.ProjLauncher(idx, velocity, 0));
 			return Count < Size;
 		}
 		public bool Push(IEnumerable<int> idxes, Vector vel)

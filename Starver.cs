@@ -26,7 +26,8 @@ namespace Starvers
 	#region Using Namespaces
 	using Enemies.Bosses;
 	using PlayerBoosts;
-	using Starvers.PlayerBoosts.Realms;
+	using PlayerBoosts.Realms;
+	using PlayerBoosts.Items;
 	#endregion
 	[ApiVersion(2, 1)]
 	public class Starver : TerrariaPlugin
@@ -98,7 +99,12 @@ namespace Starvers
 			get;
 			private set;
 		}
-		public ProjLaunchTaskManager ProjTasks
+		public ProjManager ProjsController
+		{
+			get;
+			private set;
+		}
+		public ItemBoostManager ItemBoosts
 		{
 			get;
 			private set;
@@ -130,13 +136,14 @@ namespace Starvers
 			};
 			rand = new Random();
 			Config = StarverConfig.Read(ConfigPath);
-			ProjTasks = new ProjLaunchTaskManager();
+			ProjsController = new ProjManager();
 			Skills = new SkillManager();
 			Bosses = new BossManager();
 			NPCs = new NPCManager();
 			PlayerDatas = new PlayerDataManager(Config.StorageType);
 			Players = new PlayerManager(TShock.Players.Length);
 			Realms = new RealmManager();
+			ItemBoosts = new ItemBoostManager();
 
 			difficultyCheckers = new List<(Func<bool> predicate, int addition)>
 			{
@@ -308,7 +315,7 @@ namespace Starvers
 			Players.Update();
 			Bosses.Update();
 			NPCs.Update();
-			ProjTasks.Update();
+			ProjsController.Update();
 			Skills.Update();
 			Realms.Update();
 			DifficultyIndex = 0;
