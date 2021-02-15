@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,10 +13,13 @@ namespace Starvers.Enemies.Npcs
 	public class StarverNPCManager
 	{
 		#region Properties
+		private class Instance<T> where T : StarverNPC
+		{
+			public static T Value;
+		}
+
 		private StarverNPC[] roots;
 		private StarverNPC[] npcs;
-		#endregion
-		#region Properties
 		public StarverNPC this[int index]
 		{
 			get
@@ -44,8 +48,15 @@ namespace Starvers.Enemies.Npcs
 			//ServerApi.Hooks.NpcKilled.Register(Starver.Instance, StarverNPC.OnNPCKilled);
 			roots = new StarverNPC[]
 			{
-				new FloatingSkeleton()
+				new FloatingSkeleton(),
+				new SkeletronExClone(),
+				new SkeletronExHand()
 			};
+			foreach (var root in roots)
+			{
+				var type = typeof(Instance<>).MakeGenericType(new[] { root.GetType() });
+				type.GetField("Value").SetValue(null, root);
+			}
 			npcs = new StarverNPC[Main.maxNPCs];
 		}
 		public void UnLoad()
@@ -117,6 +128,14 @@ namespace Starvers.Enemies.Npcs
 				args.Handled = npcs[args.NpcArrayIndex].OverrideRawDrop;
 				npcs[args.NpcArrayIndex].DropItems();
 			}
+		}
+		#endregion
+		#region SpawnNPC
+		public T SpawnNPC<T>(Vector2 pos) where T : StarverNPC
+		{
+			T npc = (T)Instance<T>.Value.ForceSpawn((Vector)pos);
+			npcs[npc.Index] = npc;
+			return npc;
 		}
 		#endregion
 		#region Command

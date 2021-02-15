@@ -18,7 +18,7 @@ namespace Starvers.Enemies.Bosses
 
 		public BrainEx() : base(NPCID.BrainofCthulhu)
 		{
-			defLifes = 8;
+			defLifes = 3;
 			defLife = 45000;
 			defDefense = 1400;
 		}

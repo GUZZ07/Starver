@@ -42,7 +42,7 @@ namespace Starvers.Enemies.Bosses
 		#region Ctor
 		public EyeEx() : base(NPCID.EyeofCthulhu)
 		{
-			defLifes = 4;
+			defLifes = 2;
 			defLife = 45000;
 			defDefense = 1000;
 			AfraidSun = true;

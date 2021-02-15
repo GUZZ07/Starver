@@ -247,6 +247,10 @@ namespace Starvers
 			#region Managing Window
 			Window.Dispatcher.Invoke(() => Window.Close());
 			Window = null;
+			if (TShock.ShuttingDown)
+			{
+				Application.Current.Dispatcher.Invoke(() => Application.Current.Shutdown());
+			}
 			#endregion
 			#region Hooks
 			ServerApi.Hooks.ServerJoin.Deregister(this, OnJoin);

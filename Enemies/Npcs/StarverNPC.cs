@@ -111,6 +111,12 @@ namespace Starvers.Enemies.Npcs
 		public abstract void Initialize();
 		public abstract void DropItems();
 		public abstract bool CheckSpawn(StarverPlayer player);
+		public virtual StarverNPC ForceSpawn(Vector pos)
+		{
+			var npc = Clone();
+			npc.Spawn(pos);
+			return npc;
+		}
 		public virtual bool TrySpawnNewNpc(StarverPlayer player, out StarverNPC npc)
 		{
 			var pos = CalcSpawnPos((Vector)player.Center);
