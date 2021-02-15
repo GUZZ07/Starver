@@ -107,7 +107,7 @@ namespace Starvers.Enemies.Bosses
 				else
 				{
 					double t = trackPara * Math.PI / 180;
-					double ρ = (2 + Math.Abs(3 * Math.Sin(2 * t)) + Math.Abs(2 * Math.Cos(3 * t))) * 16 * 24;
+					double ρ = (2 + Math.Abs(3 * Math.Sin(2 * t)) + Math.Abs(2 * Math.Cos(3 * t))) * 16 * 12;
 					relativePos = new Vector2
 					{
 						X = (float)(ρ * Math.Cos(t + Math.PI / 2)),
@@ -127,6 +127,28 @@ namespace Starvers.Enemies.Bosses
 			}
 			Velocity = FakeVelocity;
 			UpdateToClient();
+		}
+		public void CalcMovementState(double φ, out Vector2 pos, out Vector2 vel)
+		{
+			if (!withinFollowing)
+			{
+				pos = Center;
+				vel = FakeVelocity;
+				return;
+			}
+			double t = φ;
+			double ρ = (2 + Math.Abs(3 * Math.Sin(2*t)) + Math.Abs(2 * Math.Cos(3 * t))) * 16 * 12;
+			var rp = new Vector2
+			{
+				X = (float)(ρ * Math.Cos(t + Math.PI / 2)),
+				Y = (float)(ρ * Math.Sin(t + Math.PI / 2))
+			};
+			vel = (rp + fakeTarget - Center) / 4;
+			if (vel.Length() > 20)
+			{
+				vel.Length(20);
+			}
+			pos = fakeTarget + rp;
 		}
 		#endregion
 		#region ProjBehavior
@@ -150,7 +172,7 @@ namespace Starvers.Enemies.Bosses
 				{
 					case 0:
 						#region switch state
-						switch (stateCounter++ % 12 + 1)
+						switch (stateCounter % 12 + 1)
 						{
 							case 1:
 							case 3:
@@ -170,21 +192,26 @@ namespace Starvers.Enemies.Bosses
 							case 9:
 								state = 2;
 								break;
+							case 6:
 							case 12:
 								state = 3;
 								break;
+							default:
+								Starver.Instance.DebugMessage($"stateCounter % 12 + 1: {stateCounter % 12 + 1}");
+								break;
 						}
+						stateCounter++;
 						stateTimer = -1;
 						#endregion
 						break;
 					case 1:             // 1.	Boss向最玩家接连喷吐出若干团骨头
 						{
-							if (stateTimer % 150 == 0)
+							if (stateTimer % 60 == 0)
 							{
 								var vel = (TargetPlayer.Center - Center).ToLenOf(22);
 								ProjCircleEx(Center, 0, 16 * 5, vel, ProjectileID.SkeletonBone, 16, 20);
 							}
-							if (stateTimer >= 60 * 15)
+							if (stateTimer >= 60 * 8)
 							{
 								state = 0;
 							}
@@ -194,12 +221,19 @@ namespace Starvers.Enemies.Bosses
 						{
 							if (stateTimer == 0)
 							{
+								var φ = trackPara * Math.PI / 180;
 								var clone1 = Starver.Instance.NPCs.SpawnNPC<Clone>(Center);
 								var clone2 = Starver.Instance.NPCs.SpawnNPC<Clone>(Center);
 								var clone3 = Starver.Instance.NPCs.SpawnNPC<Clone>(Center);
-								clone1.SetParas(this, 0 * Math.PI / 3, Math.PI / 300, 4, 90, 00, 18, 60 * 18);
-								clone2.SetParas(this, 1 * Math.PI / 3, Math.PI / 300, 4, 90, 30, 18, 60 * 18);
-								clone3.SetParas(this, 2 * Math.PI / 3, Math.PI / 300, 4, 90, 60, 18, 60 * 18);
+								CalcMovementState(φ + 1 * Math.PI * 2 / 4, out var pos1, out clone1.Velocity);
+								CalcMovementState(φ + 2 * Math.PI * 2 / 4, out var pos2, out clone2.Velocity);
+								CalcMovementState(φ + 3 * Math.PI * 2 / 4, out var pos3, out clone3.Velocity);
+								clone1.Center = pos1;
+								clone2.Center = pos2;
+								clone3.Center = pos3;
+								clone1.SetParas(this, φ + 1 * Math.PI * 2 / 4, Math.PI / 180, 4, 90, 00, 18, 60 * 18);
+								clone2.SetParas(this, φ + 2 * Math.PI * 2 / 4, Math.PI / 180, 4, 90, 30, 18, 60 * 18);
+								clone3.SetParas(this, φ + 3 * Math.PI * 2 / 4, Math.PI / 180, 4, 90, 60, 18, 60 * 18);
 							}
 							if (stateTimer >= 60 * 18)
 							{
@@ -221,7 +255,7 @@ namespace Starvers.Enemies.Bosses
 								var vel = Rand.NextVector2(19);
 								NewProj(vel, ProjectileID.LostSoulHostile, 22);
 							}
-							if (stateTimer == 60 * 10)
+							if (stateTimer >= 60 * 10)
 							{
 								TNPC.damage = 100;
 								TNPC.aiStyle = -1;
@@ -229,9 +263,7 @@ namespace Starvers.Enemies.Bosses
 							}
 						}
 						break;
-					case 4:				// 4.	Boss周围随机位置生成若干个食人魔重踏（印象中这个是有一个向上喷发的动画的）
-										//		并吼叫一声，屏幕上端向下发射一排密集魔教徒弹幕，屏幕底端向上发射一排密集魔教徒弹幕，
-										//		两排弹幕错开并在到达屏幕中间位置时爆开
+					case 4:				// 4.	生成矩形边框围住玩家, 强迫玩家躲避弹幕
 						{
 							if (stateTimer == 0)
 							{
@@ -245,13 +277,53 @@ namespace Starvers.Enemies.Bosses
 								var pLD = new Vector2(-16 * 55, +16 * 30) + vector;
 								var pRU = new Vector2(+16 * 55, -16 * 30) + vector;
 								var pRD = new Vector2(+16 * 55, +16 * 30) + vector;
-								var vel = new Vector2(0, 55 * 16 / (60 * 14));
-								var UtoD = ProjLineReturns(pLU, pRU,  vel, 25, 33, ProjectileID.InfernoHostileBolt);
-								var DtoU = ProjLineReturns(pLD, pRD, -vel, 25, 33, ProjectileID.InfernoHostileBolt);
+								var hor = new Vector2(0.02f, 0);
+								var ver = new Vector2(0, 0.02f);
+								var LUtoLD = ProjLineReturns(pLU, pLD, ver, 20, 93, ProjectileID.SaucerLaser);
+								var RUtoRD = ProjLineReturns(pRU, pRD, ver, 20, 93, ProjectileID.SaucerLaser);
+								var LUtoRU = ProjLineReturns(pLU, pRU, hor, 20, 93, ProjectileID.SaucerLaser);
+								var LDtoRD = ProjLineReturns(pLD, pRD, hor, 20, 93, ProjectileID.SaucerLaser);
 
-								static void kill(Projectile proj, ref int timer, ref bool isEnd)
+								static void killWall(Projectile proj, ref int timer, ref bool isEnd)
 								{
-									if(timer++ == 60 * 14)
+									if (timer - proj.localAI[0] >= 60 * 5)
+									{
+										proj.active = false;
+										proj.SendData();
+										proj.active = true;
+										proj.SendData();
+										proj.localAI[0] = timer;
+									}
+									if (timer == 60 * 14)
+									{
+										isEnd = true;
+										proj.active = false;
+										proj.SendData();
+										// Starver.Instance.DebugMessage("kill wall");
+									}
+									timer++;
+								}
+								for (int i = 0; i < 20; i++)
+								{
+									Main.projectile[LUtoLD[i]].aiStyle = -1;
+									Main.projectile[RUtoRD[i]].aiStyle = -1;
+									Main.projectile[LUtoRU[i]].aiStyle = -1;
+									Main.projectile[LDtoRD[i]].aiStyle = -1;
+									Main.projectile[LUtoLD[i]].timeLeft = 60 * 70;
+									Main.projectile[RUtoRD[i]].timeLeft = 60 * 70;
+									Main.projectile[LUtoRU[i]].timeLeft = 60 * 70;
+									Main.projectile[LDtoRD[i]].timeLeft = 60 * 70;
+									Starver.Instance.ProjsController.Add(new ProjController(LUtoLD[i], killWall));
+									Starver.Instance.ProjsController.Add(new ProjController(RUtoRD[i], killWall));
+									Starver.Instance.ProjsController.Add(new ProjController(LUtoRU[i], killWall));
+									Starver.Instance.ProjsController.Add(new ProjController(LDtoRD[i], killWall));
+								}
+							}
+							if (stateTimer % 90 == 0)
+							{
+								void killVer(Projectile proj, ref int timer, ref bool isEnd)
+								{
+									if (Math.Abs(proj.Center.Y - vector.Y) >= 16 * 51)
 									{
 										isEnd = true;
 										proj.active = false;
@@ -259,22 +331,39 @@ namespace Starvers.Enemies.Bosses
 										proj.SendData();
 									}
 								}
-								for (int i = 0; i < 25; i++)
+
+								var begin = new Vector2(-16 * 55, -16 * 55);
+								var gap = Math.Abs(begin.X * 2 / 20);
+								begin.X += Rand.NextFloat(gap);
+								while (begin.X <= 16 * 55)
 								{
-									Starver.Instance.ProjsController.Add(new ProjController(UtoD[i], kill));
-									Starver.Instance.ProjsController.Add(new ProjController(DtoU[i], kill));
+									var vel = new Vector2(0, 16 * 55 * 2 / 90f);
+									var idx = NewProj(vector + begin, vel, ProjectileID.SaucerLaser, 30, 0);
+									Main.projectile[idx].timeLeft = 60 * 10;
+									Starver.Instance.ProjsController.Add(new ProjController(idx, killVer));
+									begin.X += gap;
 								}
 							}
-							if (stateTimer == 60 * 14)
+							if (stateTimer % 60 == 0)
 							{
-								var pL = new Vector2(-16 * 50, 0) + vector;
-								var pR = new Vector2(+16 * 50, 0) + vector;
-								var pU = new Vector2(0, -16 * 50) + vector;
-								var pD = new Vector2(0, +16 * 50) + vector;
-								ProjLine(pL, pR, new Vector2(0.1f, 0), 25, 33, ProjectileID.SaucerLaser);
-								ProjLine(pU, pD, new Vector2(0, 0.1f), 25, 33, ProjectileID.SaucerLaser);
+								void killHor(Projectile proj, ref int timer, ref bool isEnd)
+								{
+									if (Math.Abs(proj.Center.X - vector.X) >= 16 * 51)
+									{
+										isEnd = true;
+										proj.active = false;
+										proj.netImportant = true;
+										proj.SendData();
+									}
+								}
+								var dir = Rand.NextDirection();
+								var pos = new Vector2(16 * 55 * dir, 16 * Rand.NextFloat(-55, 55));
+								var vel = new Vector2(-dir, 0) * Rand.NextFloat(8, 18);
+								var idx = NewProj(pos + vector, vel, ProjectileID.SaucerLaser, 34, 0);
+								Main.projectile[idx].timeLeft = 60 * 10;
+								Starver.Instance.ProjsController.Add(new ProjController(idx, killHor));
 							}
-							if (stateTimer == 60 * 17)
+							if (stateTimer == 60 * 14)
 							{
 								state = 0;
 							}
@@ -296,15 +385,15 @@ namespace Starvers.Enemies.Bosses
 
 								const double π = Math.PI;
 
-								var v1L = Vector.FromPolar(π / 2 + 1 * π / 5, 16 * 30);
-								var v1D = Vector.FromPolar(π / 2 - 1 * π / 5, 16 * 30);
-								var v2L = Vector.FromPolar(π / 2 + 2 * π / 5, 16 * 30);
-								var v2D = Vector.FromPolar(π / 2 - 2 * π / 5, 16 * 30);
+								var v1L = Vector.FromPolar(π / 2 + 1 * π / 8, 16 * 20);
+								var v1D = Vector.FromPolar(π / 2 - 1 * π / 8, 16 * 20);
+								var v2L = Vector.FromPolar(π / 2 + 2 * π / 8, 16 * 20);
+								var v2D = Vector.FromPolar(π / 2 - 2 * π / 8, 16 * 20);
 
-								hand1L.SetParas(this, 60 * 9, Rand.Next(30), 30, 22, focus + v1L, v1L.ToLenOf(2));
-								hand1D.SetParas(this, 60 * 9, Rand.Next(30), 30, 22, focus + v1D, v1L.ToLenOf(2));
-								hand2L.SetParas(this, 60 * 9, Rand.Next(30), 30, 22, focus + v2L, v1L.ToLenOf(2));
-								hand2D.SetParas(this, 60 * 9, Rand.Next(30), 30, 22, focus + v2D, v1L.ToLenOf(2));
+								hand1L.SetParas(this, 60 * 9, Rand.Next(30), 60 * 2, 22, focus + v1L, v1L.ToLenOf(0.1f));
+								hand1D.SetParas(this, 60 * 9, Rand.Next(30), 60 * 2, 22, focus + v1D, v1L.ToLenOf(0.1f));
+								hand2L.SetParas(this, 60 * 9, Rand.Next(30), 60 * 2, 22, focus + v2L, v1L.ToLenOf(0.1f));
+								hand2D.SetParas(this, 60 * 9, Rand.Next(30), 60 * 2, 22, focus + v2D, v1L.ToLenOf(0.1f));
 							}
 							if (stateTimer == 60 * 9)
 							{
@@ -314,7 +403,7 @@ namespace Starvers.Enemies.Bosses
 						}
 						break;
 				}
-				if (timer % 45 == 0)
+				if (timer % 20 == 0)
 				{
 					NewProj(Vector2.Zero, ProjectileID.DD2DarkMageRaise, 22, 0);
 				}

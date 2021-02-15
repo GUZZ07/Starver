@@ -159,9 +159,11 @@ namespace Starvers
 		}
 		public static void SendData(this Projectile proj)
 		{
+			var value = proj.netImportant;
 			proj.netImportant = true;
 			NetMessage.SendData((int)PacketTypes.ProjectileNew, -1, -1, null, proj.whoAmI);
 			proj.netImportant = false;
+			proj.netImportant = value;
 		}
 		public static void SendData(this Player player)
 		{

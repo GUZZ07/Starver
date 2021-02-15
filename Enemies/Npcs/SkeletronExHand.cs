@@ -33,7 +33,7 @@ namespace Starvers.Enemies.Npcs
 			if (timeLeft == 0)
 			{
 				ProjCircle(Center, 16 * 4, 18, ProjectileID.SkeletonBone, 15, damage);
-				ProjCircleEx(Center, rand.NextAngle(), 16 * 2, 12, ProjectileID.BloodNautilusShot, 6, damage * 3 / 2);
+				ProjCircleEx(Center, rand.NextAngle(), 16 * 2, 12, ProjectileID.BloodShot, 6, damage * 3 / 2);
 				TurnToAir();
 				return;
 			}
@@ -44,8 +44,7 @@ namespace Starvers.Enemies.Npcs
 			}
 			else if (shotTimer == shotDelay)
 			{
-				Velocity.Length(17);
-				UpdateToClient();
+				Velocity.Length(10);
 			}
 			else
 			{
@@ -63,13 +62,13 @@ namespace Starvers.Enemies.Npcs
 					var projID = rand.Next(0, 6) switch
 					{
 						0 or 1 or 2 => ProjectileID.SkeletonBone,
-						3 or 4 => ProjectileID.BloodNautilusTears,
+						3 or 4 => ProjectileID.BloodShot,
 						_ => ProjectileID.WaterBolt
 					};
 					NewProj(back + vertical * rand.NextFloat(-24, 24), vel, projID, damage);
 				}
-				UpdateToClient();
 			}
+			UpdateToClient();
 			timeLeft--;
 			shotTimer++;
 		}

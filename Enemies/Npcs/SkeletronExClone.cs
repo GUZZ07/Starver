@@ -38,7 +38,10 @@ namespace Starvers.Enemies.Npcs
 				var angle = (Center - owner.TargetPlayer.Center).Angle();
 				ProjSector(Center, 16, 3, angle, Math.PI / 3, damage, ProjectileID.CursedSapling, bulletNum);
 			}
+			owner.CalcMovementState(phi, out var _, out Velocity);
+			/*
 			Center = owner.Center + Vector.FromPolar(phi, 16 * 5);
+			*/
 			phi += omega;
 			UpdateToClient();
 			shotTimer++;
@@ -58,8 +61,9 @@ namespace Starvers.Enemies.Npcs
 		public override void Initialize()
 		{
 			TNPC.type = NPCID.SkeletronHead;
-			TNPC.life = 40;
-			TNPC.lifeMax = 40;
+			TNPC.life = 32767;
+			TNPC.lifeMax = 32767;
+			TNPC.defense = 64444;
 			TNPC.aiStyle = -1;
 			TNPC.damage = 0;
 			TNPC.dontTakeDamage = true;
@@ -70,7 +74,7 @@ namespace Starvers.Enemies.Npcs
 		/// </summary>
 		/// <param name="boss">本体</param>
 		/// <param name="φ">绕本体旋转的初相</param>
-		/// <param name="ω">绕本体旋转的角速度</param>
+		/// <param name="ω">轨迹曲线参数变化率</param>
 		/// <param name="bulletnum">单次发射出的弹幕数(区分奇偶)</param>
 		/// <param name="interval">发射间隔</param>
 		/// <param name="shotdelay">初次发射的延时</param>

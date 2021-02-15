@@ -592,6 +592,16 @@ namespace Starvers
 		}
 		#endregion
 		#endregion
+		#region Utils
+		public void DebugMessage(string msg)
+		{
+			var color = Console.ForegroundColor;
+			Console.ForegroundColor = ConsoleColor.Blue;
+			Console.WriteLine("Debug: {0}", msg);
+			Console.ForegroundColor = color;
+			TSPlayer.All.SendMessage($"Debug: {msg}", Color.Blue);
+		}
+		#endregion
 		#region Commands
 		private void HotReloadCommand(CommandArgs args)
 		{

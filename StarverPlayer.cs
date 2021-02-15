@@ -552,6 +552,10 @@ namespace Starvers
 
 			args.Damage = (int)Math.Max(raw, args.Damage * DamageIndex * index);
 			var realdamage = (int)Main.CalculateDamageNPCsTake(args.Damage, args.Npc.defense);
+			if (args.Npc.dontTakeDamage)
+			{
+				realdamage = 0;
+			}
 			args.Npc.SendCombatText(realdamage.ToString(), Starver.DamageColor);
 			var realNPC = args.Npc.realLife > 0 ? Main.npc[args.Npc.realLife] : args.Npc;
 			var expGet = Math.Min(realdamage, realNPC.life);

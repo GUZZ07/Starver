@@ -242,7 +242,7 @@ namespace Starvers
 		{
 			int[] arr = new int[num];
 			Vector2 average = End - Begin;
-			average /= num;
+			average /= num - 1;
 			for (int i = 0; i < num; i++)
 			{
 				arr[i] = NewProj(Begin + average * i, Vel, type, Damage, 3f, ai0, ai1);
