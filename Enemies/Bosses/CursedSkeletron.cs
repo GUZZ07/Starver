@@ -75,7 +75,7 @@ namespace Starvers.Enemies.Bosses
 			{
 				return;
 			}
-			if(!withinFollowing)
+			if (!withinFollowing)
 			{
 				if (TNPC.Distance(TargetPlayer.Center) <= followingDistance)
 				{
@@ -102,7 +102,7 @@ namespace Starvers.Enemies.Bosses
 				if (posLockto != null)
 				{
 					relativePos = (Vector)posLockto;
-					FakeVelocity = (Vector)(relativePos - Center) / 4;
+					FakeVelocity = (Vector)(relativePos + TargetPlayer.Center - Center) / 4;
 				}
 				else
 				{
@@ -250,10 +250,11 @@ namespace Starvers.Enemies.Bosses
 								TNPC.ai[1] = 1;
 								TNPC.ai[2] = 400 - 60 * 10;
 							}
-							if (stateTimer % 30 == 0)
+							if (stateTimer % 45 == 0)
 							{
-								var vel = Rand.NextVector2(19);
-								NewProj(vel, ProjectileID.LostSoulHostile, 22);
+								NewProj(Rand.NextVector2(19), ProjectileID.LostSoulHostile, 22);
+								NewProj(Rand.NextVector2(19), ProjectileID.LostSoulHostile, 22);
+								NewProj(Rand.NextVector2(19), ProjectileID.LostSoulHostile, 22);
 							}
 							if (stateTimer >= 60 * 10)
 							{
@@ -344,7 +345,7 @@ namespace Starvers.Enemies.Bosses
 									begin.X += gap;
 								}
 							}
-							if (stateTimer % 60 == 0)
+							if (stateTimer % 20 == 0)
 							{
 								void killHor(Projectile proj, ref int timer, ref bool isEnd)
 								{
@@ -390,10 +391,10 @@ namespace Starvers.Enemies.Bosses
 								var v2L = Vector.FromPolar(π / 2 + 2 * π / 8, 16 * 20);
 								var v2D = Vector.FromPolar(π / 2 - 2 * π / 8, 16 * 20);
 
-								hand1L.SetParas(this, 60 * 9, Rand.Next(30), 60 * 2, 22, focus + v1L, v1L.ToLenOf(0.1f));
-								hand1D.SetParas(this, 60 * 9, Rand.Next(30), 60 * 2, 22, focus + v1D, v1L.ToLenOf(0.1f));
-								hand2L.SetParas(this, 60 * 9, Rand.Next(30), 60 * 2, 22, focus + v2L, v1L.ToLenOf(0.1f));
-								hand2D.SetParas(this, 60 * 9, Rand.Next(30), 60 * 2, 22, focus + v2D, v1L.ToLenOf(0.1f));
+								hand1L.SetParas(this, 60 * 9, Rand.Next(30), 30, 22, focus + v1L, v1L.ToLenOf(0.02f));
+								hand1D.SetParas(this, 60 * 9, Rand.Next(30), 30, 22, focus + v1D, v1D.ToLenOf(0.02f));
+								hand2L.SetParas(this, 60 * 9, Rand.Next(30), 30, 22, focus + v2L, v2L.ToLenOf(0.02f));
+								hand2D.SetParas(this, 60 * 9, Rand.Next(30), 30, 22, focus + v2D, v2D.ToLenOf(0.02f));
 							}
 							if (stateTimer == 60 * 9)
 							{
