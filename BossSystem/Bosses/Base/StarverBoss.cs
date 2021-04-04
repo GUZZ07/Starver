@@ -43,6 +43,7 @@ namespace Starvers.BossSystem.Bosses.Base
 		protected Vector vector = new Vector(10, 10);
 		protected Vector WhereToGo;
 		protected BossMode lastMode;
+		protected Random Rand;
 		private Vector2 RushVel;
 		private double rushRotation;
 		private string DataPath;
@@ -124,6 +125,7 @@ namespace Starvers.BossSystem.Bosses.Base
 		#region Ctor
 		private StarverBoss()
 		{
+			Rand = new Random();
 			playerInteraction = new bool[Main.myPlayer];
 			TypeName = Name = GetType().Name;
 		}

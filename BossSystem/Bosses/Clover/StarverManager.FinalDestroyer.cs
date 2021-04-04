@@ -25,7 +25,7 @@ namespace Starvers.BossSystem.Bosses.Clover
 			}
 			#endregion
 			#region DamageIndex
-			public override float DamageIndex => Manager.DamageIndex;
+			public override float DamageIndex => Manager.DamageIndex / 5;
 			#endregion
 			#region Spawn
 			public void Respawn()

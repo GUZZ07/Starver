@@ -37,7 +37,7 @@ namespace Starvers.BossSystem.Bosses
 		};
 		#endregion
 		#region Ctor
-		public StarverWander():base(4)
+		public StarverWander() : base(4)
 		{
 			TaskNeed = 27;
 			DefaultLife = 2000;
@@ -266,12 +266,12 @@ namespace Starvers.BossSystem.Bosses
 					{
 						continue;
 					}
-					ProjCircle(player.Center, 16 * 29 + 19 * floats[1], -24, ProjectileID.CultistBossFireBall, 8 + (int)floats[1], 233);
+					ProjCircle(player.Center, 16 * 29 + 19 * floats[1], -24, ProjectileID.CultistBossFireBall, 8 + (int)floats[1], 113);
 				}
 			}
 			else
 			{
-				ProjCircle(TargetPlayer.Center, 16 * 29 + 19 * floats[1], -19, ProjectileID.CultistBossFireBall, 8 + (int)floats[1], 186);
+				ProjCircle(TargetPlayer.Center, 16 * 29 + 19 * floats[1], -19, ProjectileID.CultistBossFireBall, 8 + (int)floats[1], 76);
 			}
 			floats[1]++;
 		}
@@ -301,15 +301,15 @@ namespace Starvers.BossSystem.Bosses
 			Proj(Center, Rand.NextVector2(22), Ammo, 232, 3f);
 			if (ExVersion)
 			{
-				Proj(Center, Rand.NextVector2(22), Ammo, 350, 3f);
-				Proj(Center, Rand.NextVector2(22), Ammo, 352, 3f);
+				Proj(Center, Rand.NextVector2(22), Ammo, 150, 3f);
+				Proj(Center, Rand.NextVector2(22), Ammo, 152, 3f);
 			}
 		}
 		#endregion
 		#region Shoot3
 		protected void Shoot3()
 		{
-			ProjLine(TargetPlayer.Center - new Vector2(16 * 33 * floats[1], 16 * 20), TargetPlayer.Center - new Vector2(16 * 33 * floats[1], -16 * 20), floats[1] * vector, 25, 202, Ammo);
+			ProjLine(TargetPlayer.Center - new Vector2(16 * 33 * floats[1], 16 * 20), TargetPlayer.Center - new Vector2(16 * 33 * floats[1], -16 * 20), floats[1] * vector, 25, 102, Ammo);
 			floats[1] *= -1;
 		}
 		#endregion
@@ -322,7 +322,7 @@ namespace Starvers.BossSystem.Bosses
 			ProjSector(Center - UnitY, ExVersion ? 23 : 16, 3, floats[1], PI / 4, 220, Ammo, 12);
 			if (ExVersion)
 			{
-				ProjSector(Center, 23, 3, floats[1], PI / 4, 260, Ammo, 12);
+				ProjSector(Center, 23, 3, floats[1], PI / 4, 90, Ammo, 12);
 			}
 		}
 		#endregion
@@ -353,9 +353,9 @@ namespace Starvers.BossSystem.Bosses
 			}
 			Vel = vector;
 			Vel.Y *= -1;
-			Proj(Center, UnitX, Ammo, 240, 2f);
-			Proj(Center, vector, Ammo, 240, 2f);
-			Proj(Center, Vel, Ammo, 200, 2f);
+			Proj(Center, UnitX, Ammo, 60, 2f);
+			Proj(Center, vector, Ammo, 60, 2f);
+			Proj(Center, Vel, Ammo, 50, 2f);
 		}
 		#endregion
 		#region SelectMode

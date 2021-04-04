@@ -270,12 +270,12 @@ namespace Starvers.BossSystem.Bosses
 					{
 						continue;
 					}
-					ProjSector(player.Center + vector, 15, 2, vector.Angle + PI, PI * 3 / 4, 492, ProjectileID.NebulaBolt, 18);
+					ProjSector(player.Center + vector, 15, 2, vector.Angle + PI, PI * 3 / 4, 192, ProjectileID.NebulaBolt, 18);
 				}
 			}
 			else
 			{
-				ProjSector(Center, 13, 2, vector.Angle + PI, PI / 2, 321, ProjectileID.NebulaBolt, 12);
+				ProjSector(Center, 13, 2, vector.Angle + PI, PI / 2, 81, ProjectileID.NebulaBolt, 12);
 			}
 		}
 		#endregion
