@@ -122,7 +122,7 @@ namespace Starvers.Enemies.Npcs
 		#endregion
 		#region OnDrop
 		public void OnDrop(NpcLootDropEventArgs args)
-		{TSPlayer.All.SendMessage($"{args.NpcArrayIndex}",255,255,0);
+		{
 			if (npcs[args.NpcArrayIndex] != null && npcs[args.NpcArrayIndex].Active)
 			{
 				args.Handled = npcs[args.NpcArrayIndex].OverrideRawDrop;

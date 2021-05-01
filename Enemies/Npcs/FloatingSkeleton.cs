@@ -44,6 +44,7 @@ namespace Starvers.Enemies.Npcs
 
 		public override bool CheckSpawn(StarverPlayer player)
 		{
+			return false;
 			timer++;
 			bool success = timer % sChecker.SpawnRate == 0 && rand.NextDouble() < sChecker.SpawnChance;
 			return success && sChecker.Match(player.GetNPCSpawnChecker());
