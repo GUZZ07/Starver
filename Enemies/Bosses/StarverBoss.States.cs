@@ -236,7 +236,7 @@ namespace Starvers.Enemies.Bosses
 							for (int i = 0; i < HalfRoundCount; i++)
 							{
 								var pos = faithCenter + faithCenterToPos;
-								var idx = Projectile.NewProjectile(pos, Vector2.Zero, shoot, Damage, 3);
+								var idx = Projectile.NewProjectile(Boss.GetProjSource(), pos, Vector2.Zero, shoot, Damage, 3);
 								// TSPlayer.All.SendMessage($"faithCenter: {faithCenter}, pos: {pos}", Color.Blue);
 								Main.projectile[idx].timeLeft = 6 * 60 + 30;
 								Main.projectile[idx].velocity = Vector2.Zero;
@@ -265,7 +265,7 @@ namespace Starvers.Enemies.Bosses
 							for (int i = 0; i < HalfRoundCount; i++)
 							{
 								var pos = faithCenter + faithCenterToPos;
-								var idx = Projectile.NewProjectile(pos, Vector2.Zero, shoot, Damage, 3);
+								var idx = Projectile.NewProjectile(Boss.GetProjSource(), pos, Vector2.Zero, shoot, Damage, 3);
 								Main.projectile[idx].timeLeft = 6 * 60 + 30;
 								Main.projectile[idx].velocity = Vector2.Zero;
 								Main.projectile[idx].aiStyle = -1;
@@ -293,7 +293,7 @@ namespace Starvers.Enemies.Bosses
 							for (int i = 0; i < HalfRoundCount; i++)
 							{
 								var pos = faithCenter + faithCenterToPos;
-								var idx = Projectile.NewProjectile(pos, Vector2.Zero, shoot, Damage, 3);
+								var idx = Projectile.NewProjectile(Boss.GetProjSource(), pos, Vector2.Zero, shoot, Damage, 3);
 								Main.projectile[idx].timeLeft = 6 * 60 + 30;
 								Main.projectile[idx].velocity = Vector2.Zero;
 								Main.projectile[idx].aiStyle = -1;
@@ -329,7 +329,7 @@ namespace Starvers.Enemies.Bosses
 							for (int i = 0; i < HalfRoundCount; i++)
 							{
 								var pos = faithCenter + faithCenterToPos;
-								var idx = Projectile.NewProjectile(pos, Vector2.Zero, shoot, Damage, 3);
+								var idx = Projectile.NewProjectile(Boss.GetProjSource(), pos, Vector2.Zero, shoot, Damage, 3);
 								Main.projectile[idx].timeLeft = 6 * 60 + 30;
 								Main.projectile[idx].velocity = Vector2.Zero;
 								Main.projectile[idx].aiStyle = -1;
@@ -357,7 +357,7 @@ namespace Starvers.Enemies.Bosses
 							for (int i = 0; i < HalfRoundCount; i++)
 							{
 								var pos = faithCenter + faithCenterToPos;
-								var idx = Projectile.NewProjectile(pos, Vector2.Zero, shoot, Damage, 3);
+								var idx = Projectile.NewProjectile(Boss.GetProjSource(), pos, Vector2.Zero, shoot, Damage, 3);
 								Main.projectile[idx].timeLeft = 6 * 60 + 30;
 								Main.projectile[idx].velocity = Vector2.Zero;
 								Main.projectile[idx].aiStyle = -1;
@@ -385,7 +385,7 @@ namespace Starvers.Enemies.Bosses
 							for (int i = 0; i < HalfRoundCount; i++)
 							{
 								var pos = faithCenter + faithCenterToPos;
-								var idx = Projectile.NewProjectile(pos, Vector2.Zero, shoot, Damage, 3);
+								var idx = Projectile.NewProjectile(Boss.GetProjSource(), pos, Vector2.Zero, shoot, Damage, 3);
 								Main.projectile[idx].timeLeft = 6 * 60 + 30;
 								Main.projectile[idx].velocity = Vector2.Zero;
 								Main.projectile[idx].aiStyle = -1;

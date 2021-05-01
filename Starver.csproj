@@ -13,30 +13,11 @@
   </ItemGroup>
   <ItemGroup>
 	<PackageReference Include="MySql.Data.EntityFrameworkCore" Version="8.0.20" />
+	<PackageReference Include="TerrariaServer.TShock" Version="4.5.2" />
   </ItemGroup>
   <ItemGroup>
-	<Reference Include="Mono.Data.Sqlite">
-	  <HintPath>Libs\Mono.Data.Sqlite.dll</HintPath>
-	  <Private>False</Private>
-	</Reference>
-	<Reference Include="Newtonsoft.Json">
-	  <HintPath>Libs\Newtonsoft.Json.dll</HintPath>
-	  <Private>False</Private>
-	</Reference>
-	<Reference Include="OTAPI">
-	  <HintPath>Libs\OTAPI.dll</HintPath>
-	  <Private>False</Private>
-	</Reference>
 	<Reference Include="PresentationCore" />
 	<Reference Include="PresentationFramework" />
-	<Reference Include="TerrariaServer">
-	  <HintPath>Libs\TerrariaServer.exe</HintPath>
-	  <Private>False</Private>
-	</Reference>
-	<Reference Include="TShockAPI">
-	  <HintPath>Libs\TShockAPI.dll</HintPath>
-	  <Private>False</Private>
-	</Reference>
 	<Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>

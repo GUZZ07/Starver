@@ -896,21 +896,21 @@ MP({MP}/{MPMax})
 		/// </summary>
 		public int NewProjNoBC(Vector2 position, Vector2 velocity, int Type, int Damage, float KnockBack = 20f, float ai0 = 0, float ai1 = 0)
 		{
-			return Utils.NewProjNoBC(position, velocity, Type, Damage, KnockBack, Index, ai0, ai1);
+			return Utils.NewProjNoBC(this, position, velocity, Type, Damage, KnockBack, Index, ai0, ai1);
 		}
 		/// <summary>
 		/// 生成弹幕
 		/// </summary>
 		public int NewProj(Vector2 position, Vector2 velocity, int Type, int Damage, float KnockBack = 20f, float ai0 = 0, float ai1 = 0, int extraUpdates = 0)
 		{
-			return Utils.NewProj(position, velocity, Type, Damage, KnockBack, Index, ai0, ai1, extraUpdates);
+			return Utils.NewProj(this, position, velocity, Type, Damage, KnockBack, Index, ai0, ai1, extraUpdates);
 		}
 		/// <summary>
 		/// 生成弹幕
 		/// </summary>
 		public int NewProj(Vector2 velocity, int Type, int Damage, float KnockBack = 20f, float ai0 = 0, float ai1 = 0, int extraUpdates = 0)
 		{
-			return Utils.NewProj(Center, velocity, Type, Damage, KnockBack, Index, ai0, ai1, extraUpdates);
+			return Utils.NewProj(this, Center, velocity, Type, Damage, KnockBack, Index, ai0, ai1, extraUpdates);
 		}
 		#endregion
 		#region ProjCircle

@@ -304,6 +304,7 @@ namespace Starvers.Enemies.Npcs
 		{
 			int i = (int)(Y / 16);
 			int j = (int)(X / 16);
+			if(i<0 || j < 0 || i >= Main.maxTilesX || j >= Main.maxTilesY)
 			if (Terraria.Main.tile[j, i].wall != 0)
 			{
 				return false;
